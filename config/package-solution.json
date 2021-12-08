@@ -19,6 +19,14 @@
       {  
         "resource": "Microsoft Graph",  
         "scope": "Group.ReadWrite.All"  
+      },
+      {
+        "resource": "dgcx_dev_appreg_userstats_stats",
+        "scope": "user_impersonation"
+      },
+      {
+        "resource": "Windows Azure Active Directory",
+        "scope": "User.Read"
       }
     ],
     "developer": {

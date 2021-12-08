@@ -37,6 +37,15 @@
     @include ms-fontColor-white;
   }
 
+  .statsHolder {
+    margin-right: 65px;
+    text-align: center;
+
+    .userCount {
+      font-size: 20px;
+    }
+  }
+
   .button {
     // Our button
     text-decoration: none;
