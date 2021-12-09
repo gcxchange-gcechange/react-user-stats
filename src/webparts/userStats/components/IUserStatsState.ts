@@ -1,6 +1,8 @@
 export interface IUserStatsState {
   allUsers: any;
   countAllUsers: any;
-  countAllUsersTest: any;
   groupsDelta: any;
+  communityCount: any;
+  userLoading: boolean;
+  groupLoading: boolean;
 }  

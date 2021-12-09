@@ -10,18 +10,18 @@
     "webApiPermissionRequests": [  
       {  
         "resource": "Microsoft Graph",  
-        "scope": "User.ReadWrite.All"  
+        "scope": "User.Read.All"  
       },
       {
         "resource": "Microsoft Graph",
         "scope": "Group.Read.All"
       },
-      {  
-        "resource": "Microsoft Graph",  
-        "scope": "Group.ReadWrite.All"  
-      },
       {
         "resource": "dgcx_dev_appreg_userstats_stats",
+        "scope": "user_impersonation"
+      },
+      {
+        "resource": "dgcx_dev_appreg_userstats_auth",
         "scope": "user_impersonation"
       },
       {
