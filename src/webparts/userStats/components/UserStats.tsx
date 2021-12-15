@@ -47,6 +47,12 @@ private getAadUsers(): void {
             var duplicateCount = {};
             allDates.forEach(e => duplicateCount[e] = duplicateCount[e] ? duplicateCount[e] + 1 : 1);
             var resultTest = Object.keys(duplicateCount).map(e => {return {key:e, count:duplicateCount[e]}});
+            // Sort the dates
+            resultTest.sort(function (a,b) {
+              var keyA = a.key.replace('-', '');
+              var keyB = b.key.replace('-', '');
+              return parseInt(keyA) - parseInt(keyB);
+            })
             // Set the state
             this.setState({
               allUsers: dates,
@@ -70,15 +76,15 @@ private getAadGroups(): void {
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
             console.log(r);
-            // Get a count of communities that will 
+            // Get a count of communities (Unified group type)
             var totalCommunities = []
             r.map(c => {
-              if (c.groupType.length > 0) {
+              if (c.groupType[0] === 'Unified') {
                 totalCommunities.push(c.displayName);
               }
             })
             // Filter out community groups by their type to leave mostly departments
-            var filteredR = r.filter(item => item.groupType.length <= 0);
+            var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
             // Set the state
             this.setState({
               groupsDelta: filteredR,
