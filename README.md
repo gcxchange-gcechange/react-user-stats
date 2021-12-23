@@ -2,9 +2,7 @@
 
 ## Summary
 
-Short summary on functionality and used technologies.
-
-[picture of the solution in action, if possible]
+Webpart that displays basic user and group stats from Azure Active Directory. Connects to [a custom function app](https://github.com/gcxchange-gcechange/appsvc-fnc-dev-userstats) to get user and group data.
 
 ## Used SharePoint Framework Version
 
@@ -19,20 +17,19 @@ Short summary on functionality and used technologies.
 
 ## Prerequisites
 
-> Any special pre-requisites?
+This web part connects to [this function app](https://github.com/gcxchange-gcechange/appsvc-fnc-dev-userstats).
 
 ## Solution
 
 Solution|Author(s)
 --------|---------
-folder name | Author details (name, company, twitter alias with link)
+user-stats | piet0024
 
 ## Version history
 
 Version|Date|Comments
 -------|----|--------
-1.1|March 10, 2021|Update comment
-1.0|January 29, 2021|Initial release
+1.0|Dec 9, 2021|Initial release
 
 ## Disclaimer
 
@@ -44,25 +41,23 @@ Version|Date|Comments
 
 - Clone this repository
 - Ensure that you are at the solution folder
-- in the command-line run:
+- In the command-line run:
   - **npm install**
   - **gulp serve**
-
-> Include any additional steps as needed.
+- You will need to add your client id and azure function to the `getAadUsers` and `getAadGroups` functions.
+- In the command-line run:
+  - **gulp bundle --ship**
+  - **gulp package-solution --ship**
+- Add the webpart to your tenant app store
+- Approve the web API permissions
 
 ## Features
 
-Description of the extension that expands upon high-level summary above.
-
-This extension illustrates the following concepts:
-
-- topic 1
-- topic 2
-- topic 3
-
-> Notice that better pictures and documentation will increase the sample usage and the value you are providing for others. Thanks for your submissions advance.
-
-> Share your web part with others through Microsoft 365 Patterns and Practices program to get visibility and exposure. More details on the community, open-source projects and other activities from http://aka.ms/m365pnp.
+Currently the webpart will display in data lists:
+- Total users in Active Directory
+- The number of new accounts created each month
+- Total number of 'Unified' group type groups in Active Directory
+- The number of user accounts within certain groups
 
 ## References
 
