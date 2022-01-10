@@ -20,7 +20,7 @@ constructor(props: IUserStatsProps, state: IUserStatsState) {
     countAllUsers: [],
     groupsDelta: [],
     communityCount: [],
-    testArray: [],
+    filteredDepartments: [],
     userLoading: true,
     groupLoading: true
   }
@@ -99,7 +99,7 @@ private getAadGroups(): void {
             this.setState({
               groupsDelta: filteredR,
               communityCount: totalCommunities,
-              testArray: allDepartments,
+              filteredDepartments: allDepartments,
               groupLoading: false
             });
           }));
@@ -177,8 +177,8 @@ componentDidMount() {
                         columns={departCols}
                         />
                      */
-                    this.state.testArray && 
-                    this.state.testArray.map(d => {
+                    this.state.filteredDepartments && 
+                    this.state.filteredDepartments.map(d => {
                        return <div className={ styles.departList } key={d.key}>{d}</div>
                     })
                   }
