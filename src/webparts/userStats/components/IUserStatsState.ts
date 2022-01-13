@@ -3,6 +3,7 @@ export interface IUserStatsState {
   countAllUsers: any;
   groupsDelta: any;
   communityCount: any;
+  filteredDepartments: any;
   userLoading: boolean;
   groupLoading: boolean;
 }  

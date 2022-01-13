@@ -20,6 +20,7 @@ constructor(props: IUserStatsProps, state: IUserStatsState) {
     countAllUsers: [],
     groupsDelta: [],
     communityCount: [],
+    filteredDepartments: [],
     userLoading: true,
     groupLoading: true
   }
@@ -35,7 +36,7 @@ private getAadUsers(): void {
         .get('', AadHttpClient.configurations.v1)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
-            console.log(r);
+            // console.log(r);
             // Format dates to Year-Month (ex 2021-10)
             var allDates = [];
             var dates = r.map(date => {
@@ -51,7 +52,7 @@ private getAadUsers(): void {
             resultTest.sort(function (a,b) {
               var keyA = a.key.replace('-', '');
               var keyB = b.key.replace('-', '');
-              return parseInt(keyA) - parseInt(keyB);
+              return parseInt(keyB) - parseInt(keyA);
             })
             // Set the state
             this.setState({
@@ -75,7 +76,7 @@ private getAadGroups(): void {
         .get('', AadHttpClient.configurations.v1)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
-            console.log(r);
+            // console.log(r);
             // Get a count of communities (Unified group type)
             var totalCommunities = []
             r.map(c => {
@@ -83,15 +84,25 @@ private getAadGroups(): void {
                 totalCommunities.push(c.displayName);
               }
             })
+            // console.log(totalCommunities);
             // Filter out community groups by their type to leave mostly departments
             var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
             // Set the state
+            // console.log(filteredR);
+            var allDepartments = [];
+            filteredR.map(s => {
+              var splitS = s.displayName.split("_")
+              if (splitS.length > 1) {
+                allDepartments.push(`${splitS[1]} - ${s.countMember}`);
+              }
+            });
             this.setState({
               groupsDelta: filteredR,
               communityCount: totalCommunities,
+              filteredDepartments: allDepartments,
               groupLoading: false
             });
-          }))
+          }));
           return response.json();
         })
   })
@@ -118,7 +129,6 @@ componentDidMount() {
       {key: "TEST", value:45}
     ]
     var departCols = [
-      { key: 'key', name: 'ID', fieldName: 'groupId', minWidth: 20, maxWidth: 20, isResizable: true },
       { key: 'column2', name: 'Department', fieldName: 'displayName', minWidth: 200, maxWidth: 225, isResizable: true },
       { key: 'column3', name: 'Member Count', fieldName: 'countMember', minWidth: 100, maxWidth: 125, isResizable: true },
       
@@ -158,12 +168,21 @@ componentDidMount() {
                   <div className={ styles.userCount }>{this.state.communityCount.length}</div>  
                 </div>
                 <div>
-                  <h2>Groups and Department count</h2>
-                  <DetailsList
-                    items={this.state.groupsDelta ? this.state.groupsDelta : testDepart}
-                    compact={true}
-                    columns={departCols}
-                  />
+                  <h2>Department count</h2>
+                  {
+                    /**
+                     * <DetailsList
+                        items={this.state.groupsDelta ? this.state.groupsDelta : testDepart}
+                        compact={true}
+                        columns={departCols}
+                        />
+                     */
+                    this.state.filteredDepartments && 
+                    this.state.filteredDepartments.map(d => {
+                       return <div className={ styles.departList } key={d.key}>{d}</div>
+                    })
+                  }
+                  
                 </div>
               </Stack>
             </div>
