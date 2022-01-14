@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AadHttpClient, HttpClientResponse } from '@microsoft/sp-http';
+import { AadHttpClient, HttpClientResponse, IHttpClientOptions } from '@microsoft/sp-http';
 import {
   autobind,
   DetailsList,
@@ -29,20 +29,29 @@ constructor(props: IUserStatsProps, state: IUserStatsState) {
 // User Stats Call
 @autobind
 private getAadUsers(): void {
+  const requestHeaders: Headers = new Headers();
+  requestHeaders.append("Content-type", "application/json");
+  requestHeaders.append("Cache-Control", "no-cache");
+  const postOptions: IHttpClientOptions = {
+    headers: requestHeaders,
+    body: `{ containerName: 'userstats' }`
+  };
+
   this.props.context.aadHttpClientFactory
-    .getClient('')
+    .getClient('c945fd8e-0a86-48bb-9bb9-0577ec7d2d92')
     .then((client: AadHttpClient) => {
       client
-        .get('', AadHttpClient.configurations.v1)
+        .post('https://dappsvc-fnc-dev-userstats.azurewebsites.net/api/RetreiveData', AadHttpClient.configurations.v1, postOptions)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
-            // console.log(r);
+             //console.log(r);
             // Format dates to Year-Month (ex 2021-10)
             var allDates = [];
             var dates = r.map(date => {
-              var splitDate = date.createDateTime.split("-");
+              console.log(date.creationDate);
+              var splitDate = date.creationDate.split("-");
               allDates.push(`${splitDate[0]}-${splitDate[1]}`)
-              return date.createDateTime
+              return date.creationDate
             });
             // Count duplicates 
             var duplicateCount = {};
@@ -61,6 +70,7 @@ private getAadUsers(): void {
               userLoading: false
             })
           }))
+          
           return response.json();
         })
     });
@@ -69,14 +79,23 @@ private getAadUsers(): void {
 // Group Stats Call
 @autobind
 private getAadGroups(): void {
+
+  const requestHeaders: Headers = new Headers();
+  requestHeaders.append("Content-type", "application/json");
+  requestHeaders.append("Cache-Control", "no-cache");
+  const postOptions: IHttpClientOptions = {
+    headers: requestHeaders,
+    body: `{ containerName: 'groupstats' }`
+  };
+
   this.props.context.aadHttpClientFactory
-    .getClient('')
+    .getClient('c945fd8e-0a86-48bb-9bb9-0577ec7d2d92')
     .then((client: AadHttpClient) => {
       client
-        .get('', AadHttpClient.configurations.v1)
+        .post('https://dappsvc-fnc-dev-userstats.azurewebsites.net/api/RetreiveData', AadHttpClient.configurations.v1, postOptions)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
-            // console.log(r);
+             console.log(r);
             // Get a count of communities (Unified group type)
             var totalCommunities = []
             r.map(c => {
@@ -84,7 +103,7 @@ private getAadGroups(): void {
                 totalCommunities.push(c.displayName);
               }
             })
-            // console.log(totalCommunities);
+            //console.log(totalCommunities);
             // Filter out community groups by their type to leave mostly departments
             var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
             // Set the state
@@ -109,10 +128,9 @@ private getAadGroups(): void {
 }
 
 componentDidMount() {
-  // Call APIs on mount
-  this.getAadUsers();
-  this.getAadGroups();
-}
+   this.getAadUsers();
+   this.getAadGroups();
+  }
 
   public render(): React.ReactElement<IUserStatsProps> {
     // Format detail lists columns
