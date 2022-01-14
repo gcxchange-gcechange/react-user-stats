@@ -38,17 +38,17 @@ private getAadUsers(): void {
   };
 
   this.props.context.aadHttpClientFactory
-    .getClient('c945fd8e-0a86-48bb-9bb9-0577ec7d2d92')
+    .getClient('')
     .then((client: AadHttpClient) => {
       client
-        .post('https://dappsvc-fnc-dev-userstats.azurewebsites.net/api/RetreiveData', AadHttpClient.configurations.v1, postOptions)
+        .post('', AadHttpClient.configurations.v1, postOptions)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
              //console.log(r);
             // Format dates to Year-Month (ex 2021-10)
             var allDates = [];
             var dates = r.map(date => {
-              console.log(date.creationDate);
+             // console.log(date.creationDate);
               var splitDate = date.creationDate.split("-");
               allDates.push(`${splitDate[0]}-${splitDate[1]}`)
               return date.creationDate
@@ -89,13 +89,13 @@ private getAadGroups(): void {
   };
 
   this.props.context.aadHttpClientFactory
-    .getClient('c945fd8e-0a86-48bb-9bb9-0577ec7d2d92')
+    .getClient('')
     .then((client: AadHttpClient) => {
       client
-        .post('https://dappsvc-fnc-dev-userstats.azurewebsites.net/api/RetreiveData', AadHttpClient.configurations.v1, postOptions)
+        .post('', AadHttpClient.configurations.v1, postOptions)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
-             console.log(r);
+             //console.log(r);
             // Get a count of communities (Unified group type)
             var totalCommunities = []
             r.map(c => {
