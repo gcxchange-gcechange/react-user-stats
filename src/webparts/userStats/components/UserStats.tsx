@@ -1,5 +1,5 @@
 import * as React from 'react';
-import { AadHttpClient, HttpClientResponse } from '@microsoft/sp-http';
+import { AadHttpClient, HttpClientResponse, IHttpClientOptions } from '@microsoft/sp-http';
 import {
   autobind,
   DetailsList,
@@ -20,6 +20,7 @@ constructor(props: IUserStatsProps, state: IUserStatsState) {
     countAllUsers: [],
     groupsDelta: [],
     communityCount: [],
+    filteredDepartments: [],
     userLoading: true,
     groupLoading: true
   }
@@ -28,20 +29,29 @@ constructor(props: IUserStatsProps, state: IUserStatsState) {
 // User Stats Call
 @autobind
 private getAadUsers(): void {
+  const requestHeaders: Headers = new Headers();
+  requestHeaders.append("Content-type", "application/json");
+  requestHeaders.append("Cache-Control", "no-cache");
+  const postOptions: IHttpClientOptions = {
+    headers: requestHeaders,
+    body: `{ containerName: 'userstats' }`
+  };
+
   this.props.context.aadHttpClientFactory
     .getClient('')
     .then((client: AadHttpClient) => {
       client
-        .get('', AadHttpClient.configurations.v1)
+        .post('', AadHttpClient.configurations.v1, postOptions)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
-            console.log(r);
+             //console.log(r);
             // Format dates to Year-Month (ex 2021-10)
             var allDates = [];
             var dates = r.map(date => {
-              var splitDate = date.createDateTime.split("-");
+             // console.log(date.creationDate);
+              var splitDate = date.creationDate.split("-");
               allDates.push(`${splitDate[0]}-${splitDate[1]}`)
-              return date.createDateTime
+              return date.creationDate
             });
             // Count duplicates 
             var duplicateCount = {};
@@ -51,7 +61,7 @@ private getAadUsers(): void {
             resultTest.sort(function (a,b) {
               var keyA = a.key.replace('-', '');
               var keyB = b.key.replace('-', '');
-              return parseInt(keyA) - parseInt(keyB);
+              return parseInt(keyB) - parseInt(keyA);
             })
             // Set the state
             this.setState({
@@ -60,6 +70,7 @@ private getAadUsers(): void {
               userLoading: false
             })
           }))
+          
           return response.json();
         })
     });
@@ -68,14 +79,23 @@ private getAadUsers(): void {
 // Group Stats Call
 @autobind
 private getAadGroups(): void {
+
+  const requestHeaders: Headers = new Headers();
+  requestHeaders.append("Content-type", "application/json");
+  requestHeaders.append("Cache-Control", "no-cache");
+  const postOptions: IHttpClientOptions = {
+    headers: requestHeaders,
+    body: `{ containerName: 'groupstats' }`
+  };
+
   this.props.context.aadHttpClientFactory
     .getClient('')
     .then((client: AadHttpClient) => {
       client
-        .get('', AadHttpClient.configurations.v1)
+        .post('', AadHttpClient.configurations.v1, postOptions)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
-            console.log(r);
+             //console.log(r);
             // Get a count of communities (Unified group type)
             var totalCommunities = []
             r.map(c => {
@@ -83,25 +103,34 @@ private getAadGroups(): void {
                 totalCommunities.push(c.displayName);
               }
             })
+            //console.log(totalCommunities);
             // Filter out community groups by their type to leave mostly departments
             var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
             // Set the state
+            // console.log(filteredR);
+            var allDepartments = [];
+            filteredR.map(s => {
+              var splitS = s.displayName.split("_")
+              if (splitS.length > 1) {
+                allDepartments.push(`${splitS[1]} - ${s.countMember}`);
+              }
+            });
             this.setState({
               groupsDelta: filteredR,
               communityCount: totalCommunities,
+              filteredDepartments: allDepartments,
               groupLoading: false
             });
-          }))
+          }));
           return response.json();
         })
   })
 }
 
 componentDidMount() {
-  // Call APIs on mount
-  this.getAadUsers();
-  this.getAadGroups();
-}
+   this.getAadUsers();
+   this.getAadGroups();
+  }
 
   public render(): React.ReactElement<IUserStatsProps> {
     // Format detail lists columns
@@ -118,7 +147,6 @@ componentDidMount() {
       {key: "TEST", value:45}
     ]
     var departCols = [
-      { key: 'key', name: 'ID', fieldName: 'groupId', minWidth: 20, maxWidth: 20, isResizable: true },
       { key: 'column2', name: 'Department', fieldName: 'displayName', minWidth: 200, maxWidth: 225, isResizable: true },
       { key: 'column3', name: 'Member Count', fieldName: 'countMember', minWidth: 100, maxWidth: 125, isResizable: true },
       
@@ -158,12 +186,21 @@ componentDidMount() {
                   <div className={ styles.userCount }>{this.state.communityCount.length}</div>  
                 </div>
                 <div>
-                  <h2>Groups and Department count</h2>
-                  <DetailsList
-                    items={this.state.groupsDelta ? this.state.groupsDelta : testDepart}
-                    compact={true}
-                    columns={departCols}
-                  />
+                  <h2>Department count</h2>
+                  {
+                    /**
+                     * <DetailsList
+                        items={this.state.groupsDelta ? this.state.groupsDelta : testDepart}
+                        compact={true}
+                        columns={departCols}
+                        />
+                     */
+                    this.state.filteredDepartments && 
+                    this.state.filteredDepartments.map(d => {
+                       return <div className={ styles.departList } key={d.key}>{d}</div>
+                    })
+                  }
+                  
                 </div>
               </Stack>
             </div>
