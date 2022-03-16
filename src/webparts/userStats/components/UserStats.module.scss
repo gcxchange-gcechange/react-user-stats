@@ -52,6 +52,11 @@
     padding-bottom: 8px;
   }
 
+  .ms-DetailsRow, .ms-DetailsRow-fields {
+    align-items: center;
+    align-content: center;
+  }
+
   .button {
     // Our button
     text-decoration: none;

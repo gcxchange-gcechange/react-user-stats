@@ -2,6 +2,7 @@ import * as React from 'react';
 import { AadHttpClient, HttpClientResponse, IHttpClientOptions } from '@microsoft/sp-http';
 import {
   autobind,
+  DefaultButton,
   DetailsList,
   Stack
 } from 'office-ui-fabric-react';
@@ -12,124 +13,190 @@ import { IUserStatsState } from './IUserStatsState';
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
-constructor(props: IUserStatsProps, state: IUserStatsState) {
-  super(props);
+  constructor(props: IUserStatsProps, state: IUserStatsState) {
+    super(props);
 
-  this.state = {
-    allUsers: [],
-    countAllUsers: [],
-    groupsDelta: [],
-    communityCount: [],
-    filteredDepartments: [],
-    userLoading: true,
-    groupLoading: true
+    this.state = {
+      allUsers: [],
+      countAllUsers: [],
+      groupsDelta: [],
+      communityCount: [],
+      filteredDepartments: [],
+      userLoading: true,
+      groupLoading: true
+    }
   }
-}
 
-// User Stats Call
-@autobind
-private getAadUsers(): void {
-  const requestHeaders: Headers = new Headers();
-  requestHeaders.append("Content-type", "application/json");
-  requestHeaders.append("Cache-Control", "no-cache");
-  const postOptions: IHttpClientOptions = {
-    headers: requestHeaders,
-    body: `{ "containerName": "userstats" }`
-  };
+  // User Stats Call
+  @autobind
+  private getAadUsers(): void {
+    const requestHeaders: Headers = new Headers();
+    requestHeaders.append("Content-type", "application/json");
+    requestHeaders.append("Cache-Control", "no-cache");
+    const postOptions: IHttpClientOptions = {
+      headers: requestHeaders,
+      body: `{ "containerName": "userstats" }`
+    };
 
-  this.props.context.aadHttpClientFactory
-    .getClient('9f778828-4248-474a-aa2b-ade60459fb87')
-    .then((client: AadHttpClient) => {
-      client
-        .post('https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData', AadHttpClient.configurations.v1, postOptions)
-        .then((response: HttpClientResponse): Promise<any> => {
-          response.json().then(((r) => {
-             //console.log(r);
-            // Format dates to Year-Month (ex 2021-10)
-            var allDates = [];
-            var dates = r.map(date => {
-             // console.log(date.creationDate);
-              var splitDate = date.creationDate.split("-");
-              allDates.push(`${splitDate[0]}-${splitDate[1]}`)
-              return date.creationDate
-            });
-            // Count duplicates 
-            var duplicateCount = {};
-            allDates.forEach(e => duplicateCount[e] = duplicateCount[e] ? duplicateCount[e] + 1 : 1);
-            var resultTest = Object.keys(duplicateCount).map(e => {return {key:e, count:duplicateCount[e]}});
-            // Sort the dates
-            resultTest.sort(function (a,b) {
-              var keyA = a.key.replace('-', '');
-              var keyB = b.key.replace('-', '');
-              return parseInt(keyB) - parseInt(keyA);
-            })
-            // Set the state
-            this.setState({
-              allUsers: dates,
-              countAllUsers: resultTest,
-              userLoading: false
-            })
-          }))
-          
-          return response.json();
-        })
+    this.props.context.aadHttpClientFactory
+      .getClient("9f778828-4248-474a-aa2b-ade60459fb87")
+      .then((client: AadHttpClient) => {
+        client
+          .post("https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData", AadHttpClient.configurations.v1, postOptions)
+          .then((response: HttpClientResponse): Promise<any> => {
+            response.json().then(((r) => {
+
+              var allDays = [];
+              var allMonths = [];
+
+              var dates = r.map(date => {
+                var splitDate = date.creationDate.split("-");
+
+                allMonths.push(`${splitDate[0]}-${splitDate[1]}`)
+                allDays.push(`${splitDate[0]}-${splitDate[1]}-${splitDate[2].split("T")[0]}`);
+
+                return date.creationDate
+              });
+
+              // Count duplicates 
+              var duplicateMonthCount = {};
+              allMonths.forEach(e => duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1);
+              var duplicateDayCount = {};
+              allDays.forEach(e => duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1);
+
+              var resultByMonth = Object.keys(duplicateMonthCount).map(e => {return {key:e, count:duplicateMonthCount[e], report: {
+                title: "user-stats-" + e,
+                csv: [
+                  ["Date", "New Users"]
+                ]
+              }}});
+              var resultByDay = Object.keys(duplicateDayCount).map(e => {return {key:e, count:duplicateDayCount[e]}});
+
+              // Sort the dates
+              resultByMonth.sort(function (a,b) {
+                var keyA = a.key.replace('-', '');
+                var keyB = b.key.replace('-', '');
+                return parseInt(keyB) - parseInt(keyA);
+              });
+
+              resultByDay.sort(function (a,b) {
+                var keyA = a.key.split('-').join('');
+                var keyB = b.key.split('-').join('');
+                return parseInt(keyB) - parseInt(keyA);
+              });
+
+              //console.log("By Month");
+              //console.log(resultByMonth);
+
+              //console.log("By Day");
+              //console.log(resultByDay);
+
+              // Build the csv for each month
+              resultByMonth.forEach(month => {
+
+                let index = 0;
+                while(true) {
+                  if(resultByDay[index] == undefined) { index--; break; }
+                  if(resultByDay[index].key.indexOf(month.key) === -1) { break; }
+                  
+                  month.report.csv.push([resultByDay[index].key, resultByDay[index].count]);
+                  index++;
+                }
+
+                // Remove the days we've already added
+                resultByDay.splice(0, index);
+              });
+
+              //console.log("Months List");
+              //console.log(resultByMonth);
+
+              // Set the state
+              this.setState({
+                allUsers: dates,
+                countAllUsers: resultByMonth,
+                userLoading: false
+              })
+            }))
+            
+            return response.json();
+          })
+      });
+  }
+
+  // Group Stats Call
+  @autobind
+  private getAadGroups(): void {
+
+    const requestHeaders: Headers = new Headers();
+    requestHeaders.append("Content-type", "application/json");
+    requestHeaders.append("Cache-Control", "no-cache");
+    const postOptions: IHttpClientOptions = {
+      headers: requestHeaders,
+      body: `{ "containerName": "groupstats" }`
+    };
+
+    this.props.context.aadHttpClientFactory
+      .getClient("9f778828-4248-474a-aa2b-ade60459fb87")
+      .then((client: AadHttpClient) => {
+        client
+          .post("https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData", AadHttpClient.configurations.v1, postOptions)
+          .then((response: HttpClientResponse): Promise<any> => {
+            response.json().then(((r) => {
+              //console.log(r);
+              // Get a count of communities (Unified group type)
+              var totalCommunities = []
+              r.map(c => {
+                if (c.groupType[0] === 'Unified') {
+                  totalCommunities.push(c.displayName);
+                }
+              })
+              //console.log(totalCommunities);
+              // Filter out community groups by their type to leave mostly departments
+              var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
+              // Set the state
+              // console.log(filteredR);
+              var allDepartments = [];
+              filteredR.map(s => {
+                var splitS = s.displayName.split("_")
+                if (splitS.length > 1) {
+                  allDepartments.push(`${splitS[1]} - ${s.countMember}`);
+                }
+              });
+              this.setState({
+                groupsDelta: filteredR,
+                communityCount: totalCommunities,
+                filteredDepartments: allDepartments,
+                groupLoading: false
+              });
+            }));
+            return response.json();
+          })
+    })
+  }
+
+  // https://stackoverflow.com/a/14966131
+  private downloadCSV(title: string, data: any) {
+    let content = "data:text/csv;charset=utf-8,";
+
+    data.forEach(function(rowArray) {
+      let row = rowArray.join(",");
+      content += row + "\r\n";
     });
-}
 
-// Group Stats Call
-@autobind
-private getAadGroups(): void {
+    var encodedUri = encodeURI(content);
+    var link = document.createElement("a");
 
-  const requestHeaders: Headers = new Headers();
-  requestHeaders.append("Content-type", "application/json");
-  requestHeaders.append("Cache-Control", "no-cache");
-  const postOptions: IHttpClientOptions = {
-    headers: requestHeaders,
-    body: `{ "containerName": "groupstats" }`
-  };
+    link.setAttribute("href", encodedUri);
+    link.setAttribute("download", title + ".csv");
 
-  this.props.context.aadHttpClientFactory
-    .getClient('9f778828-4248-474a-aa2b-ade60459fb87')
-    .then((client: AadHttpClient) => {
-      client
-        .post('https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData', AadHttpClient.configurations.v1, postOptions)
-        .then((response: HttpClientResponse): Promise<any> => {
-          response.json().then(((r) => {
-             //console.log(r);
-            // Get a count of communities (Unified group type)
-            var totalCommunities = []
-            r.map(c => {
-              if (c.groupType[0] === 'Unified') {
-                totalCommunities.push(c.displayName);
-              }
-            })
-            //console.log(totalCommunities);
-            // Filter out community groups by their type to leave mostly departments
-            var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
-            // Set the state
-            // console.log(filteredR);
-            var allDepartments = [];
-            filteredR.map(s => {
-              var splitS = s.displayName.split("_")
-              if (splitS.length > 1) {
-                allDepartments.push(`${splitS[1]} - ${s.countMember}`);
-              }
-            });
-            this.setState({
-              groupsDelta: filteredR,
-              communityCount: totalCommunities,
-              filteredDepartments: allDepartments,
-              groupLoading: false
-            });
-          }));
-          return response.json();
-        })
-  })
-}
+    document.body.appendChild(link);
 
-componentDidMount() {
-   this.getAadUsers();
-  this.getAadGroups();
+    link.click();
+  }
+
+  componentDidMount() {
+    this.getAadUsers();
+    this.getAadGroups();
   }
 
   public render(): React.ReactElement<IUserStatsProps> {
@@ -140,6 +207,15 @@ componentDidMount() {
     var testCols = [
       { key: 'key', name: 'Year-Month', fieldName: 'key', minWidth: 85, maxWidth: 90, isResizable: true },
       { key: 'column2', name: 'New Users', fieldName: 'count', minWidth: 200, maxWidth: 225, isResizable: true },
+      { key: 'report', name: 'Report', fieldName: 'report', minWidth: 85, maxWidth: 90, isResizable: true, onRender: (item: any) => (
+        <DefaultButton
+          onClick={() => {
+            this.downloadCSV(item.report.title, item.report.csv);
+          }}
+        >
+          Download
+        </DefaultButton>), 
+      },
     ]
     var testDepart = [
       {key: "TBS", value:100},
