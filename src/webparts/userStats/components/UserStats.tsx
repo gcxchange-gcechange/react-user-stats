@@ -34,14 +34,14 @@ private getAadUsers(): void {
   requestHeaders.append("Cache-Control", "no-cache");
   const postOptions: IHttpClientOptions = {
     headers: requestHeaders,
-    body: `{ containerName: 'userstats' }`
+    body: `{ "containerName": "userstats" }`
   };
 
   this.props.context.aadHttpClientFactory
-    .getClient('')
+    .getClient('9f778828-4248-474a-aa2b-ade60459fb87')
     .then((client: AadHttpClient) => {
       client
-        .post('', AadHttpClient.configurations.v1, postOptions)
+        .post('https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData', AadHttpClient.configurations.v1, postOptions)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
              //console.log(r);
@@ -85,14 +85,14 @@ private getAadGroups(): void {
   requestHeaders.append("Cache-Control", "no-cache");
   const postOptions: IHttpClientOptions = {
     headers: requestHeaders,
-    body: `{ containerName: 'groupstats' }`
+    body: `{ "containerName": "groupstats" }`
   };
 
   this.props.context.aadHttpClientFactory
-    .getClient('')
+    .getClient('9f778828-4248-474a-aa2b-ade60459fb87')
     .then((client: AadHttpClient) => {
       client
-        .post('', AadHttpClient.configurations.v1, postOptions)
+        .post('https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData', AadHttpClient.configurations.v1, postOptions)
         .then((response: HttpClientResponse): Promise<any> => {
           response.json().then(((r) => {
              //console.log(r);
@@ -129,7 +129,7 @@ private getAadGroups(): void {
 
 componentDidMount() {
    this.getAadUsers();
-   this.getAadGroups();
+  this.getAadGroups();
   }
 
   public render(): React.ReactElement<IUserStatsProps> {
