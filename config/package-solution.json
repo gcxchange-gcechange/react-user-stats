@@ -8,25 +8,9 @@
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "webApiPermissionRequests": [  
-      {  
-        "resource": "Microsoft Graph",  
-        "scope": "User.Read.All"  
-      },
-      {
-        "resource": "Microsoft Graph",
-        "scope": "Group.Read.All"
-      },
-      {
-        "resource": "dgcx_dev_appreg_userstats_stats",
-        "scope": "user_impersonation"
-      },
       {
         "resource": "dgcx_dev_appreg_userstats_auth",
         "scope": "user_impersonation"
-      },
-      {
-        "resource": "Windows Azure Active Directory",
-        "scope": "User.Read"
       }
     ],
     "developer": {
