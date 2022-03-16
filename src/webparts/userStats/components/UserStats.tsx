@@ -34,7 +34,7 @@ private getAadUsers(): void {
   requestHeaders.append("Cache-Control", "no-cache");
   const postOptions: IHttpClientOptions = {
     headers: requestHeaders,
-    body: `{ containerName: 'userstats' }`
+    body: `{ "containerName": "userstats" }`
   };
 
   this.props.context.aadHttpClientFactory
@@ -129,7 +129,7 @@ private getAadGroups(): void {
 
 componentDidMount() {
    this.getAadUsers();
-   this.getAadGroups();
+  this.getAadGroups();
   }
 
   public render(): React.ReactElement<IUserStatsProps> {
