@@ -44,7 +44,7 @@ Version|Date|Comments
 - In the command-line run:
   - **npm install**
   - **gulp serve**
-- You will need to add your client id and azure function to the `getAadUsers` and `getAadGroups` functions.
+- You will need to add your client id and azure function to the `clientId` and `url` classs members at the top of the UserStats.tsx file.
 - In the command-line run:
   - **gulp bundle --ship**
   - **gulp package-solution --ship**

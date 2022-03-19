@@ -13,6 +13,11 @@ import { IUserStatsState } from './IUserStatsState';
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
+  // *** replace these ***
+  private clientId = '';
+  private url = '';
+  // *********************
+
   constructor(props: IUserStatsProps, state: IUserStatsState) {
     super(props);
 
@@ -42,10 +47,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     };
 
     this.props.context.aadHttpClientFactory
-      .getClient("9f778828-4248-474a-aa2b-ade60459fb87")
+      .getClient(this.clientId)
       .then((client: AadHttpClient) => {
         client
-          .post("https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData", AadHttpClient.configurations.v1, postOptions)
+          .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             response.json().then(((r) => {
 
@@ -139,10 +144,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     };
 
     this.props.context.aadHttpClientFactory
-      .getClient("9f778828-4248-474a-aa2b-ade60459fb87")
+      .getClient(this.clientId)
       .then((client: AadHttpClient) => {
         client
-          .post("https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData", AadHttpClient.configurations.v1, postOptions)
+          .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             response.json().then(((r) => {
               //console.log(r);
@@ -266,11 +271,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
             // No entry exists, create one.
             if(communityDate > indexDate) {
               monthCount[i].report.csv.splice(k, 0, [communitiesPerDay[c][0], 0, communitiesPerDay[c][1]]);
-              k += 2; // increment by 2 so we account for the new entry,
+              k += 2; // increment csv by 2 so we account for the new entry,
             }
             // Entry exists, add community count.
             else if (communityDate == indexDate) {
               monthCount[i].report.csv[k][2] = communitiesPerDay[c][1];
+              c++; // increment community counter
             }
           }
 
