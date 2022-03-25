@@ -30,7 +30,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       communitiesPerMonth: [],
       filteredDepartments: [],
       userLoading: true,
-      groupLoading: true
+      groupLoading: true,
+      totalactiveuser: ""
     }
   }
 
@@ -234,9 +235,42 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     link.click();
   }
 
+  // Active user Stats Call
+  @autobind
+  private getAadActive(): void {
+
+    const requestHeaders: Headers = new Headers();
+    requestHeaders.append("Content-type", "application/json");
+    requestHeaders.append("Cache-Control", "no-cache");
+    const postOptions: IHttpClientOptions = {
+      headers: requestHeaders,
+      body: `{ containerName: 'activeusers' }`
+    };
+
+    this.props.context.aadHttpClientFactory
+      .getClient(this.clientId)
+      .then((client: AadHttpClient) => {
+        client
+          .post(this.url, AadHttpClient.configurations.v1, postOptions)
+          .then((response: HttpClientResponse): Promise<any> => {
+            response.json().then(((r) => {
+              var activeusers = ""
+              r.map(c => {
+                activeusers = c.countActiveusers;
+              })
+              this.setState({
+                totalactiveuser: activeusers,
+              });
+            }));
+            return response.json();
+          })
+      })
+  }
+
   componentDidMount() {
     this.getAadUsers();
     this.getAadGroups();
+    this.getAadActive();
   }
 
   componentDidUpdate(prevProps, prevState) {
@@ -345,6 +379,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                       columns={testCols}
                     />
                   </div>
+                </div>
+                <div className={styles.statsHolder}>
+                  <h2>Total active Users</h2><h3>In the last 30 days:</h3>
+                  <div className={styles.userCount}>{this.state.totalactiveuser}</div>
                 </div>
               </Stack>
               <div>
