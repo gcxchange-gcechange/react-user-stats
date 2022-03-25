@@ -3,7 +3,7 @@
   "solution": {
     "name": "user-stats-client-side-solution",
     "id": "195502b1-b4bf-4f51-b0ab-66d4927f909b",
-    "version": "1.0.0.0",
+    "version": "1.0.0.1",
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
