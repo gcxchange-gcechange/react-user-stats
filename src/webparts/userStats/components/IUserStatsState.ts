@@ -8,5 +8,4 @@ export interface IUserStatsState {
   filteredDepartments: any;
   userLoading: boolean;
   groupLoading: boolean;
-  totalactiveuser: string;
 }  

@@ -2,7 +2,7 @@
 
 ## Summary
 
-Webpart that displays basic user, group stats and the total number of active user in the last 30 days from Azure Active Directory. Connects to [a custom function app](https://github.com/gcxchange-gcechange/appsvc-fnc-dev-userstats) to get user and group data. You can download a csv of each month data. 
+Webpart that displays basic user and group stats from Azure Active Directory. Connects to [a custom function app](https://github.com/gcxchange-gcechange/appsvc-fnc-dev-userstats) to get user and group data.
 
 ## Used SharePoint Framework Version
 
@@ -30,7 +30,6 @@ user-stats | piet0024
 Version|Date|Comments
 -------|----|--------
 1.0|Dec 9, 2021|Initial release
-1.1|March 25, 2022|Add active user
 
 ## Disclaimer
 
@@ -59,8 +58,6 @@ Currently the webpart will display in data lists:
 - The number of new accounts created each month
 - Total number of 'Unified' group type groups in Active Directory
 - The number of user accounts within certain groups
-- Total active user in the last month
-- Ability to download monthly data
 
 ## References
 
