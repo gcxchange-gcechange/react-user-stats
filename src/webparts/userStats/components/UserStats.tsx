@@ -15,8 +15,8 @@ import * as moment from 'moment';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
-  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
+  private clientId = '';
+  private url = '';
   // *********************
 
   constructor(props: IUserStatsProps, state: IUserStatsState) {
@@ -330,51 +330,57 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   private buildCSV() {
-    console.log('build csv');
     var monthCount = JSON.parse(JSON.stringify(this.state.countByMonth));
     var communitiesPerDay = JSON.parse(JSON.stringify(this.state.communitiesPerDay));
 
-    for(let i = 0; i < monthCount.length; i++) {
+    try {
+      // Loop through each year-month in the list
+      for(let i = 0; i < monthCount.length; i++) {
 
-      monthCount[i].communities = this.state.communitiesPerMonth[monthCount[i].key] ? 
-      this.state.communitiesPerMonth[monthCount[i].key] : monthCount[i].communities;
+        // Update the list with the total communities for that month
+        monthCount[i].communities = this.state.communitiesPerMonth[monthCount[i].key] ? 
+        this.state.communitiesPerMonth[monthCount[i].key] : monthCount[i].communities;
 
-      for(let c = 0;c < communitiesPerDay.length; c++) {
-
-        let key = communitiesPerDay[c][0].substring(0, 7);
-
-        // Check if the year-month match
-        if(monthCount[i].key == key) {
-
-          let communityDate = communitiesPerDay[c][0].split('-').join('');
-
-          // Start at index 1 since the first index is the table header
-          for(let k = 1; k < monthCount[i].report.csv.length; k++) {
-
-            let indexDate = monthCount[i].report.csv[k][0].split('-').join('');
-
-            // No entry exists, create one.
-            if(communityDate > indexDate) {
-              monthCount[i].report.csv.splice(k, 0, [communitiesPerDay[c][0], 0, communitiesPerDay[c][1]]);
-              k += 2;
+        // Loop through the communities per day list
+        for(let c = 0;c < communitiesPerDay.length; c++) {
+        
+          let key = communitiesPerDay[c][0].substring(0, 7);
+        
+          // Check if the year-month match, add them to the CSV
+          if(monthCount[i].key == key) {
+          
+            let communityDate = communitiesPerDay[c][0].split('-').join('');
+          
+            // Loops through the rows in our CSV
+            // Start at index 1 since the first index is the table header
+            for(let k = 1; k < monthCount[i].report.csv.length; k++) {
+            
+              let indexDate = monthCount[i].report.csv[k][0].split('-').join('');
+            
+              // No entry exists, create one.
+              if(communityDate > indexDate) {
+                monthCount[i].report.csv.splice(k, 0, [communitiesPerDay[c][0], 0, communitiesPerDay[c][1]]);
+                break;
+              }
+              // Entry exists, add community count.
+              else if (communityDate == indexDate) {
+                monthCount[i].report.csv[k][2] = communitiesPerDay[c][1];
+                break;
+              }
             }
-            // Entry exists, add community count.
-            else if (communityDate == indexDate) {
-              monthCount[i].report.csv[k][2] = communitiesPerDay[c][1];
-              c++; // increment community counter
+          
+            // Add any dates that are earlier than the earliest date in the CSV
+            let earliestDate = monthCount[i].report.csv[monthCount[i].report.csv.length - 1][0].split('-').join('');
+            if(communityDate < earliestDate) {
+              monthCount[i].report.csv.push([communitiesPerDay[c][0], 0 , communitiesPerDay[c][1]]);
             }
-
-            console.log(communitiesPerDay[c][0]);
-            console.log(monthCount[i].report.csv);
-          }
-
-          // Add any dates that are earlier than the earliest date in the CSV
-          let earliestDate = monthCount[i].report.csv[monthCount[i].report.csv.length - 1][0].split('-').join('');
-          if(communityDate < earliestDate) {
-            monthCount[i].report.csv.push([communitiesPerDay[c][0], 0 , communitiesPerDay[c][1]]);
           }
         }
       }
+    }
+    catch(e) {
+      console.log("Error creating CSV");
+      console.log(e);
     }
     
     this.setState({
