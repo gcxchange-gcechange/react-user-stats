@@ -10,12 +10,13 @@ import {
 import styles from './UserStats.module.scss';
 import { IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
+import * as moment from 'moment';
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '';
-  private url = '';
+  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
+  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
 
   constructor(props: IUserStatsProps, state: IUserStatsState) {
@@ -61,7 +62,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               var allUserCount = r.map(date => {
                 var splitDate = date.creationDate.split("-");
 
-                allMonths.push(`${splitDate[0]}-${splitDate[1]}`)
+                allMonths.push(`${splitDate[0]}-${splitDate[1]}`);
                 allDays.push(`${splitDate[0]}-${splitDate[1]}-${splitDate[2].split("T")[0]}`);
 
                 return date.creationDate
@@ -119,10 +120,39 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               //console.log("Months List");
               //console.log(resultByMonth);
 
+              // Add entries up to the current date (if no new users for those months) so there are no gaps
+              let today = moment(new Date());
+              let currYear = today.format('YYYY');
+              let currMonth = today.format('MM');
+
+              let startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]);
+              let startMonth = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]);
+
+              // Get the number of months from today's date to the oldest date in the list
+              let monthsDifference = parseInt(currMonth) + 1 - startMonth + 12 * (parseInt(currYear) - startYear);
+
+              let fullResults = [];
+              let earliestDate = moment(startYear + '-' + startMonth);
+              for(let i = 0; i < monthsDifference; i++) {
+
+                if(i !== 0) 
+                  earliestDate.add(1, 'months');
+                
+                let entry = this.generateEntry(earliestDate.format('YYYY'), earliestDate.format('MM'));
+                fullResults.push(entry);
+
+                for(let c = 0; c < resultByMonth.length; c++) {
+                  if(fullResults[i].key == resultByMonth[c].key) {
+                    fullResults[i] = resultByMonth[c];
+                    break;
+                  }
+                }
+              }
+
               // Set the state
               this.setState({
                 allUsers: allUserCount,
-                countByMonth: resultByMonth,
+                countByMonth: fullResults.reverse(),
                 userLoading: false
               });
             }));
@@ -215,6 +245,26 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     })
   }
 
+  private generateEntry(year, month) {
+    let formattedMonth = this.formatMonth(month);
+    return {
+      key: year + '-' + formattedMonth,
+      count: 0,
+      communities: 0,
+      report: {
+        title: 'gcx-stats-' + year + '-' + formattedMonth,
+        csv: [
+          ['Date', 'New Users', 'New Communities'],
+          [year + '-' + formattedMonth + '-01', '0', '0']
+        ]
+      }
+    };
+  }
+
+  private formatMonth(month) {
+    return month.toString().length === 1 ? '0' + month : month;
+  }
+
   // https://stackoverflow.com/a/14966131
   private downloadCSV(title: string, data: any) {
     let content = "data:text/csv;charset=utf-8,";
@@ -280,6 +330,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   private buildCSV() {
+    console.log('build csv');
     var monthCount = JSON.parse(JSON.stringify(this.state.countByMonth));
     var communitiesPerDay = JSON.parse(JSON.stringify(this.state.communitiesPerDay));
 
@@ -305,13 +356,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
             // No entry exists, create one.
             if(communityDate > indexDate) {
               monthCount[i].report.csv.splice(k, 0, [communitiesPerDay[c][0], 0, communitiesPerDay[c][1]]);
-              k += 2; // increment csv by 2 so we account for the new entry,
+              k += 2;
             }
             // Entry exists, add community count.
             else if (communityDate == indexDate) {
               monthCount[i].report.csv[k][2] = communitiesPerDay[c][1];
               c++; // increment community counter
             }
+
+            console.log(communitiesPerDay[c][0]);
+            console.log(monthCount[i].report.csv);
           }
 
           // Add any dates that are earlier than the earliest date in the CSV
