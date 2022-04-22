@@ -46,11 +46,15 @@ Version|Date|Comments
   - **npm install**
   - **gulp serve**
 - You will need to add your client id and azure function to the `clientId` and `url` classs members at the top of the UserStats.tsx file.
-- In the command-line run:
+- To debug in the front end:
+  - go to the `serve.json` file and update `initialPage` to `https://devgcx.sharepoint.com/_layouts/15/workbench.aspx`
+  - Run the command **gulp serve**
+- To deploy: in the command-line run
   - **gulp bundle --ship**
   - **gulp package-solution --ship**
 - Add the webpart to your tenant app store
 - Approve the web API permissions
+
 
 ## Features
 
