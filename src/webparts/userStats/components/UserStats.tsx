@@ -32,7 +32,13 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       filteredDepartments: [],
       userLoading: true,
       groupLoading: true,
-      totalactiveuser: ""
+      totalactiveuser: "",
+      nmb_com_member_3: 0,
+      nmb_com_member_5: 0,
+      nmb_com_member_10: 0,
+      nmb_com_member_20: 0,
+      nmb_com_member_30: 0,
+      nmb_com_member_31: 0,
     }
   }
 
@@ -166,6 +172,13 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   @autobind
   private async getAadGroups(): Promise<any> {
 
+    var nmb_com_member_3 = 0;
+    var nmb_com_member_5 = 0;
+    var nmb_com_member_10 = 0;
+    var nmb_com_member_20 = 0;
+    var nmb_com_member_30 = 0;
+    var nmb_com_member_31 = 0;
+
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
     requestHeaders.append("Cache-Control", "no-cache");
@@ -192,13 +205,27 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   let splitDate = c.creationDate.split(" ")[0].split("/");
 
                   // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
-                  let formattedDate = splitDate[2] + "-" 
-                  + (splitDate[0].length === 1 ? "0" + splitDate[0] : splitDate[0]) + "-" 
-                  + (splitDate[1].length === 1 ? "0" + splitDate[1] : splitDate[1]);
+                  let formattedDate = splitDate[2] + "-"
+                    + (splitDate[0].length === 1 ? "0" + splitDate[0] : splitDate[0]) + "-"
+                    + (splitDate[1].length === 1 ? "0" + splitDate[1] : splitDate[1]);
 
                   allMonths.push(formattedDate.substring(0, 7));
 
-                  totalCommunities.push({title: c.displayName, creationDate: formattedDate});
+                  totalCommunities.push({ title: c.displayName, creationDate: formattedDate });
+
+                  if (c.countMember <= 3) {
+                    nmb_com_member_3++
+                  } else if (c.countMember <= 5) {
+                    nmb_com_member_5++
+                  } else if (c.countMember <= 10) {
+                    nmb_com_member_10++
+                  } else if (c.countMember <= 20) {
+                    nmb_com_member_20++
+                  } else if (c.countMember <= 30) {
+                    nmb_com_member_30++
+                  } else {
+                    nmb_com_member_31++
+                  }
                 }
               });
 
@@ -225,10 +252,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               var allDepartments = [];
               filteredR.map(s => {
                 var splitS = s.displayName.split("_")
-                if (splitS.length > 1) {
-                  allDepartments.push(`${splitS[1]} - ${s.countMember}`);
+                console.log(splitS.lenght);
+                if (splitS.length > 1 && splitS.lenght < 2) {
+                  if (splitS[1] == "DFO") {
+                    allDepartments.push(`${splitS[1]} - ${s.countMember - 12166}`); //To be remove
+                  } else {
+                    allDepartments.push(`${splitS[1]} - ${s.countMember}`);
+                  }
                 }
               });
+
 
               // Set the state
               this.setState({
@@ -237,6 +270,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 communitiesPerDay: communitiesPerDay,
                 communitiesPerMonth: communitiesPerMonth,
                 filteredDepartments: allDepartments,
+                nmb_com_member_3: nmb_com_member_3,
+                nmb_com_member_5: nmb_com_member_5,
+                nmb_com_member_10: nmb_com_member_10,
+                nmb_com_member_20: nmb_com_member_20,
+                nmb_com_member_30: nmb_com_member_30,
+                nmb_com_member_31: nmb_com_member_31,
                 groupLoading: false,
               });
             }));
@@ -415,8 +454,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     var departCols = [
       { key: 'column2', name: 'Department', fieldName: 'displayName', minWidth: 200, maxWidth: 225, isResizable: true },
       { key: 'column3', name: 'Member Count', fieldName: 'countMember', minWidth: 100, maxWidth: 125, isResizable: true },
-      
     ]
+
+    var allusercountminus = this.state.allUsers.length;
+    var allusercountminus2 = allusercountminus - 12166
+
+
     return (
       <div className={ styles.userStats }>
         <div>
@@ -426,9 +469,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 {this.state.userLoading && 'Loading Users...'}
               </div>
               <Stack horizontal disableShrink>
-                <div className={ styles.statsHolder }>
+                <div className={styles.statsHolder}>
                   <h2>Total Users:</h2>
-                  <div className={ styles.userCount }>{this.state.allUsers.length}</div>  
+                  <div className={styles.userCount}>{allusercountminus2}</div>
                 </div>
                 <div>
                   <h2>Breakdown by Month</h2>
@@ -449,11 +492,11 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 {this.state.groupLoading && 'Loading Groups...'}
               </div>
               <Stack horizontal disableShrink>
-                <div className={ styles.statsHolder }>
+                <div className={styles.statsHolder}>
                   <h2>Total Communities:</h2>
-                  <div className={ styles.userCount }>{this.state.communityCount.length}</div>  
+                  <div className={styles.userCount}>{this.state.communityCount.length}</div>
                 </div>
-                <div>
+                <div className={styles.statsHolder}>
                   <h2>Department count</h2>
                   {
                     /**
@@ -463,12 +506,20 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                         columns={departCols}
                         />
                      */
-                    this.state.filteredDepartments && 
+                    this.state.filteredDepartments &&
                     this.state.filteredDepartments.map(d => {
-                       return <div className={ styles.departList } key={d.key}>{d}</div>
+                      return <div className={styles.departList} key={d.key}>{d}</div>
                     })
                   }
-                  
+                </div>
+                <div>
+                  <h2>Number of community that have:</h2>
+                  <div className={styles.userCount}>3 members or less: {this.state.nmb_com_member_3}</div>
+                  <div className={styles.userCount}>More than 3 members but 5 members or less:{this.state.nmb_com_member_5}</div>
+                  <div className={styles.userCount}>More than 5 members but 10 members or less:{this.state.nmb_com_member_10}</div>
+                  <div className={styles.userCount}>More than 10 members but 20 members or less:{this.state.nmb_com_member_20}</div>
+                  <div className={styles.userCount}>More than 20 members but  30 members or less:{this.state.nmb_com_member_30}</div>
+                  <div className={styles.userCount}>More than 31 members {this.state.nmb_com_member_31}</div>
                 </div>
               </Stack>
             </div>

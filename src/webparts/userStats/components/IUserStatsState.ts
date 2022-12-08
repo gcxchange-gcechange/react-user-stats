@@ -9,4 +9,11 @@ export interface IUserStatsState {
   userLoading: boolean;
   groupLoading: boolean;
   totalactiveuser: string;
+  nmb_com_member_3: any;
+  nmb_com_member_5: any;
+  nmb_com_member_10: any;
+  nmb_com_member_20: any;
+  nmb_com_member_30: any;
+  nmb_com_member_31: any;
 }  
+
