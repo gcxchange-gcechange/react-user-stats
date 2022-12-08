@@ -252,11 +252,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               var allDepartments = [];
               filteredR.map(s => {
                 var splitS = s.displayName.split("_")
-                console.log(splitS.lenght);
-                if (splitS.length > 1 && splitS.lenght < 2) {
+                
+                if (splitS.length > 1){
                   if (splitS[1] == "DFO") {
                     allDepartments.push(`${splitS[1]} - ${s.countMember - 12166}`); //To be remove
-                  } else {
+                  }
+                  else if (splitS[2] != "B2B") {
                     allDepartments.push(`${splitS[1]} - ${s.countMember}`);
                   }
                 }
