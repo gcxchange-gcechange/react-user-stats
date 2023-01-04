@@ -250,17 +250,32 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
 
               var allDepartments = [];
+              var allDepartmentsB2B = [];// Only depart that have a B2B group
+              var allDepartmentsFinal = []; //Final array that is use
+
               filteredR.map(s => {
                 var splitS = s.displayName.split("_")
-                
-                if (splitS.length > 1){
+
+               if (splitS.length > 1){
+                  if (splitS[2] == "B2B") {
+                    allDepartmentsB2B.push(`${splitS[1]} - ${s.countMember}`); //Create an array of B2B to compare
+                    allDepartmentsFinal.push(`${splitS[1]} - ${s.countMember}`);// B2B are the final group
+                  }
                   if (splitS[1] == "DFO") {
                     allDepartments.push(`${splitS[1]} - ${s.countMember - 12166}`); //To be remove
-                  }
-                  else if (splitS[2] != "B2B") {
+                  } else {
                     allDepartments.push(`${splitS[1]} - ${s.countMember}`);
                   }
                 }
+              });
+
+              allDepartments.map(s => {
+                var splits = s.split("-")
+
+                if (allDepartmentsB2B.find((user) => user.includes(splits[0])) == undefined) { // If no b2b group exist for the depart, add the regular group to the final list
+                  console.log(" IN B2B" + splits[0])
+                  allDepartmentsFinal.push(`${s}`);
+                } 
               });
 
 
@@ -270,7 +285,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 communityCount: totalCommunities,
                 communitiesPerDay: communitiesPerDay,
                 communitiesPerMonth: communitiesPerMonth,
-                filteredDepartments: allDepartments,
+                filteredDepartments: allDepartmentsFinal,
                 nmb_com_member_3: nmb_com_member_3,
                 nmb_com_member_5: nmb_com_member_5,
                 nmb_com_member_10: nmb_com_member_10,
