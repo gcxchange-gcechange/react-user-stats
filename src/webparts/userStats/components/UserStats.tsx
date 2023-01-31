@@ -254,12 +254,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 var splitS = s.displayName.split("_")
                 console.log(splitS.lenght);
                 if (splitS.length > 1 && splitS.lenght < 2) {
-                  if (splitS[1] == "DFO") {
-                    allDepartments.push(`${splitS[1]} - ${s.countMember - 12166}`); //To be remove
-                  } else {
                     allDepartments.push(`${splitS[1]} - ${s.countMember}`);
                   }
-                }
               });
 
 
@@ -457,7 +453,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     ]
 
     var allusercountminus = this.state.allUsers.length;
-    var allusercountminus2 = allusercountminus - 12166
 
 
     return (
@@ -471,7 +466,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               <Stack horizontal disableShrink>
                 <div className={styles.statsHolder}>
                   <h2>Total Users:</h2>
-                  <div className={styles.userCount}>{allusercountminus2}</div>
+                  <div className={styles.userCount}>{allusercountminus}</div>
                 </div>
                 <div>
                   <h2>Breakdown by Month</h2>
