@@ -261,16 +261,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   if (splitS[2] == "B2B") {
                     allDepartmentsB2B.push(`${splitS[1]} - ${s.countMember}`); //Create an array of B2B to compare
                     allDepartmentsFinal.push(`${splitS[1]} - ${s.countMember}`);// B2B are the final group
-                  }
-                  if (splitS[1] == "DFO") {
-                    allDepartments.push(`${splitS[1]} - ${s.countMember - 12166}`); //To be remove
                   } else {
-
-                console.log(splitS.lenght);
-                if (splitS.length > 1 && splitS.lenght < 2) {
-
                     allDepartments.push(`${splitS[1]} - ${s.countMember}`);
                   }
+                }
               });
 
               allDepartments.map(s => {
