@@ -2,8 +2,12 @@ import * as React from 'react';
 import { AadHttpClient, HttpClientResponse, IHttpClientOptions } from '@microsoft/sp-http';
 import {
   autobind,
+  Calendar,
+  DatePicker,
+  DayOfWeek,
   DefaultButton,
   DetailsList,
+  IDatePickerStyles,
   Stack
 } from 'office-ui-fabric-react';
 
@@ -39,6 +43,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_com_member_20: 0,
       nmb_com_member_30: 0,
       nmb_com_member_31: 0,
+      selectedDate: DayOfWeek.Sunday,
     }
   }
 
@@ -74,7 +79,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 return date.creationDate
               });
 
-              // Count duplicates 
+              // Count duplicates
               var duplicateMonthCount = {};
               allMonths.forEach(e => duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1);
               var duplicateDayCount = {};
@@ -114,7 +119,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 while(true) {
                   if(resultByDay[index] == undefined) { index--; break; }
                   if(resultByDay[index].key.indexOf(month.key) === -1) { break; }
-                  
+
                   month.report.csv.push([resultByDay[index].key, resultByDay[index].count, 0]);
                   index++;
                 }
@@ -141,9 +146,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               let earliestDate = moment(startYear + '-' + startMonth);
               for(let i = 0; i < monthsDifference; i++) {
 
-                if(i !== 0) 
+                if(i !== 0)
                   earliestDate.add(1, 'months');
-                
+
                 let entry = this.generateEntry(earliestDate.format('YYYY'), earliestDate.format('MM'));
                 fullResults.push(entry);
 
@@ -162,7 +167,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 userLoading: false
               });
             }));
-            
+
             return response.json();
           })
       });
@@ -271,9 +276,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 var splits = s.split("-")
 
                 if (allDepartmentsB2B.find((user) => user.includes(splits[0])) == undefined) { // If no b2b group exist for the depart, add the regular group to the final list
-                  console.log(" IN B2B" + splits[0])
+                  console.log(" IN B2B" + splits[0]);
                   allDepartmentsFinal.push(`${s}`);
-                } 
+                }
               });
 
 
@@ -391,25 +396,25 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       for(let i = 0; i < monthCount.length; i++) {
 
         // Update the list with the total communities for that month
-        monthCount[i].communities = this.state.communitiesPerMonth[monthCount[i].key] ? 
+        monthCount[i].communities = this.state.communitiesPerMonth[monthCount[i].key] ?
         this.state.communitiesPerMonth[monthCount[i].key] : monthCount[i].communities;
 
         // Loop through the communities per day list
         for(let c = 0;c < communitiesPerDay.length; c++) {
-        
+
           let key = communitiesPerDay[c][0].substring(0, 7);
-        
+
           // Check if the year-month match, add them to the CSV
           if(monthCount[i].key == key) {
-          
+
             let communityDate = communitiesPerDay[c][0].split('-').join('');
-          
+
             // Loops through the rows in our CSV
             // Start at index 1 since the first index is the table header
             for(let k = 1; k < monthCount[i].report.csv.length; k++) {
-            
+
               let indexDate = monthCount[i].report.csv[k][0].split('-').join('');
-            
+
               // No entry exists, create one.
               if(communityDate > indexDate) {
                 monthCount[i].report.csv.splice(k, 0, [communitiesPerDay[c][0], 0, communitiesPerDay[c][1]]);
@@ -421,7 +426,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 break;
               }
             }
-          
+
             // Add any dates that are earlier than the earliest date in the CSV
             let earliestDate = monthCount[i].report.csv[monthCount[i].report.csv.length - 1][0].split('-').join('');
             if(communityDate < earliestDate) {
@@ -435,17 +440,22 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       console.log("Error creating CSV");
       console.log(e);
     }
-    
+
     this.setState({
       countByMonth: monthCount,
     });
   }
 
+  private onSelectDate = (date: Date): void => {
+    // Handle date selection
+    console.log('Selected date:', date);
+  };
+
   public render(): React.ReactElement<IUserStatsProps> {
     // Format detail lists columns
     var testItem = [
       {key: "Loading...", count: 10},
-    ]
+    ];
     var testCols = [
       { key: 'key', name: 'Year-Month', fieldName: 'key', minWidth: 85, maxWidth: 90, isResizable: true },
       { key: 'newUsers', name: 'New Users', fieldName: 'count', minWidth: 100, maxWidth: 115, isResizable: true },
@@ -457,9 +467,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           }}
         >
           Download
-        </DefaultButton>), 
+        </DefaultButton>),
       },
-    ]
+    ];
     var testDepart = [
       {key: "TBS", value:100},
       {key: "SSC", value:75},
@@ -468,9 +478,15 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     var departCols = [
       { key: 'column2', name: 'Department', fieldName: 'displayName', minWidth: 200, maxWidth: 225, isResizable: true },
       { key: 'column3', name: 'Member Count', fieldName: 'countMember', minWidth: 100, maxWidth: 125, isResizable: true },
-    ]
+    ];
 
     var allusercountminus = this.state.allUsers.length;
+
+    // const calendarFieldStyles: Partial<IDatePickerStyles>= {
+    //   root: {
+    //     width: '60%'
+    //   },
+    // }
 
 
     return (
@@ -478,6 +494,15 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         <div>
           <div>
             <div>
+              <div>
+                <DatePicker
+                  className = {styles.calendarFieldStyles}
+                  firstDayOfWeek={this.state.selectedDate}
+                  placeholder="Select a date..."
+                  ariaLabel="Select a date"
+                  minDate={new Date(2000,12,30)}
+                />
+              </div>
               <div>
                 {this.state.userLoading && 'Loading Users...'}
               </div>
