@@ -361,6 +361,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         client
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
+            console.log("Response", response)
             response.json().then(((r) => {
               var activeusers = ""
               r.map(c => {
@@ -448,10 +449,24 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   private onSelectDate = (date: Date): void => {
     // Handle date selection
-    console.log('Selected date:', date);
+
+    const formattedSelectedDate = date.toLocaleDateString('en-CA');
+
+    this.setState({
+      selectedDate: formattedSelectedDate
+    })
   };
 
+  private onFormatDate = (date: Date): string => {
+
+    return date.toLocaleDateString('en-CA');
+  };
+
+
+
   public render(): React.ReactElement<IUserStatsProps> {
+
+
     // Format detail lists columns
     var testItem = [
       {key: "Loading...", count: 10},
@@ -487,7 +502,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     //     width: '60%'
     //   },
     // }
-
+    console.log("SelectedDate State", this.state.selectedDate);
 
     return (
       <div className={ styles.userStats }>
@@ -497,10 +512,13 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               <div>
                 <DatePicker
                   className = {styles.calendarFieldStyles}
-                  firstDayOfWeek={this.state.selectedDate}
                   placeholder="Select a date..."
                   ariaLabel="Select a date"
                   minDate={new Date(2000,12,30)}
+                  onSelectDate={this.onSelectDate}
+                  showGoToToday= {true}
+                  formatDate={this.onFormatDate}
+
                 />
               </div>
               <div>
