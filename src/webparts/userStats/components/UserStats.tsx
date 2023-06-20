@@ -56,7 +56,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     requestHeaders.append("Cache-Control", "no-cache");
     const postOptions: IHttpClientOptions = {
       headers: requestHeaders,
-      body: `{ "containerName": "userstats" }`
+      body: `{
+        "containerName": "userstats",
+        "filename":"${this.state.selectedDate}"
+    }`
     };
 
     this.props.context.aadHttpClientFactory
@@ -189,7 +192,11 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     requestHeaders.append("Cache-Control", "no-cache");
     const postOptions: IHttpClientOptions = {
       headers: requestHeaders,
-      body: `{ "containerName": "groupstats" }`
+      body: `{
+
+        "containerName": "groupstats",
+        "filename":"${this.state.selectedDate}"
+      }`
     };
 
     this.props.context.aadHttpClientFactory
@@ -352,7 +359,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     requestHeaders.append("Cache-Control", "no-cache");
     const postOptions: IHttpClientOptions = {
       headers: requestHeaders,
-      body: `{ containerName: 'activeusers' }`
+      body: `{
+        containerName: 'activeusers',
+        "filename":"${this.state.selectedDate}"
+      }`
     };
 
     this.props.context.aadHttpClientFactory
@@ -449,9 +459,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   private onSelectDate = (date: Date): void => {
     // Handle date selection
+    // format date to be day-mm-yyyy so it matches the filename in storageData
 
-    const formattedSelectedDate = date.toLocaleDateString('en-CA');
+    const day = ("0" + (date.getDate())).slice(-2)
+    const month =  ("0" + (date.getMonth() + 1)).slice(-2);
+    const year = date.getFullYear();
 
+    // console.log("day", day);
+
+    const formattedSelectedDate = day + '-' + month + '-' +  year;
+    // console.log("date",formattedSelectedDate);
     this.setState({
       selectedDate: formattedSelectedDate
     })
