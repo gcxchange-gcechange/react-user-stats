@@ -19,8 +19,8 @@ import * as moment from 'moment';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '';
-  private url = '';
+  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
+  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
 
   constructor(props: IUserStatsProps, state: IUserStatsState) {
@@ -43,7 +43,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_com_member_20: 0,
       nmb_com_member_30: 0,
       nmb_com_member_31: 0,
-      selectedDate: DayOfWeek.Sunday,
+      selectedDate: new Date().toLocaleDateString('en-GB').replace(/\//g, '-'),
     }
   }
 
@@ -58,8 +58,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       headers: requestHeaders,
       body: `{
         "containerName": "userstats",
-        "filename":"${this.state.selectedDate}"
-    }`
+        "selectedDate":"${this.state.selectedDate}"
+      }`
     };
 
     this.props.context.aadHttpClientFactory
@@ -69,6 +69,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             response.json().then(((r) => {
+              console.log("UserStats", r);
 
               var allDays = [];
               var allMonths = [];
@@ -79,6 +80,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 allMonths.push(`${splitDate[0]}-${splitDate[1]}`);
                 allDays.push(`${splitDate[0]}-${splitDate[1]}-${splitDate[2].split("T")[0]}`);
 
+                console.log("DATE",date.creationDate)
                 return date.creationDate
               });
 
@@ -195,7 +197,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       body: `{
 
         "containerName": "groupstats",
-        "filename":"${this.state.selectedDate}"
+        "selectedDate":"${this.state.selectedDate}"
       }`
     };
 
@@ -206,7 +208,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             response.json().then(((r) => {
-              //console.log(r);
+              console.log("GroupsRes", r);
 
               // Get a count of communities (Unified group type)
               var totalCommunities = [];
@@ -361,7 +363,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       headers: requestHeaders,
       body: `{
         containerName: 'activeusers',
-        "filename":"${this.state.selectedDate}"
+        "selectedDate":"${this.state.selectedDate}"
       }`
     };
 
@@ -392,11 +394,25 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     this.getAadActive();
   }
 
+  componentWillUnmount(): void {
+    this.setState({
+      selectedDate: ""
+    })
+  }
+
   componentDidUpdate(prevProps, prevState) {
     if ((prevState.groupLoading === true && this.state.groupLoading === false) || (prevState.userLoading === true && this.state.userLoading === false)) {
       this.buildCSV();
     }
+
+    if(prevState.selectedDate !== this.state.selectedDate ) {
+      this.getAadUsers();
+      this.getAadGroups();
+      this.getAadActive();
+    }
   }
+
+
 
   private buildCSV() {
     var monthCount = JSON.parse(JSON.stringify(this.state.countByMonth));
@@ -472,6 +488,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     this.setState({
       selectedDate: formattedSelectedDate
     })
+
+    // this.getAadUsers();
+    // this.getAadGroups();
+    // this.getAadActive();
   };
 
   private onFormatDate = (date: Date): string => {
@@ -523,6 +543,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     return (
       <div className={ styles.userStats }>
+      <h2>Stats date: {this.state.selectedDate.toString()}</h2>
         <div>
           <div>
             <div>
@@ -541,6 +562,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               <div>
                 {this.state.userLoading && 'Loading Users...'}
               </div>
+              <div className={styles.statsContainer}>
               <Stack horizontal disableShrink>
                 <div className={styles.statsHolder}>
                   <h2>Total Users:</h2>
@@ -561,9 +583,11 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   <div className={styles.userCount}>{this.state.totalactiveuser}</div>
                 </div>
               </Stack>
+              </div>
               <div>
                 {this.state.groupLoading && 'Loading Groups...'}
               </div>
+              <div className={styles.statsContainer}>
               <Stack horizontal disableShrink>
                 <div className={styles.statsHolder}>
                   <h2>Total Communities:</h2>
@@ -595,6 +619,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   <div className={styles.userCount}>More than 31 members {this.state.nmb_com_member_31}</div>
                 </div>
               </Stack>
+              </div>
             </div>
           </div>
         </div>
