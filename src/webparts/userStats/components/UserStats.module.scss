@@ -5,6 +5,7 @@
     max-width: 700px;
     margin: 0px auto;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
+    padding: 20px;
   }
 
   .row {
@@ -52,10 +53,13 @@
     padding-bottom: 8px;
   }
 
-  .ms-DetailsRow, .ms-DetailsRow-fields {
-    align-items: center;
-    align-content: center;
-  }
+  // global {
+  //   .ms-DetailsRow, .ms-DetailsRow-fields {
+  //     align-items: center;
+  //     align-content: center;
+  //   }
+
+  // }
 
   .button {
     // Our button
@@ -92,12 +96,21 @@
     }
   }
   .calendarFieldStyles {
-    width: 60%;
+    width: 37%;
     margin-bottom: 20px;
   }
 
-  .statsContainer{
-    box-shadow: 0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
-    padding: 20px;
+
+  table {
+      border-collapse: collapse;
   }
+
+  th, td {
+    padding: 10px;
+    border: 1px solid;
+  }
+
+
+
+
 }
