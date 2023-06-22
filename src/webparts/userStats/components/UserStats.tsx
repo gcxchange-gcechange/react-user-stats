@@ -2,12 +2,11 @@ import * as React from 'react';
 import { AadHttpClient, HttpClientResponse, IHttpClientOptions } from '@microsoft/sp-http';
 import {
   autobind,
-  Calendar,
   DatePicker,
   DayOfWeek,
   DefaultButton,
   DetailsList,
-  IDatePickerStyles,
+  IStackTokens,
   Stack
 } from 'office-ui-fabric-react';
 
@@ -80,7 +79,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 allMonths.push(`${splitDate[0]}-${splitDate[1]}`);
                 allDays.push(`${splitDate[0]}-${splitDate[1]}-${splitDate[2].split("T")[0]}`);
 
-                console.log("DATE",date.creationDate)
+                // console.log("DATE",date.creationDate)
                 return date.creationDate
               });
 
@@ -96,16 +95,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   ["Date", "New Users", "New Communities"]
                 ]
               }}});
-              var resultByDay = Object.keys(duplicateDayCount).map(e => {return {key:e, count:duplicateDayCount[e]}});
+              var resultByDay = Object.keys(duplicateDayCount).map(e => { return {key:e, count:duplicateDayCount[e]};});
 
               // Sort the dates
-              resultByMonth.sort(function (a,b) {
+              resultByMonth.sort((a,b) =>  {
                 var keyA = a.key.replace('-', '');
                 var keyB = b.key.replace('-', '');
                 return parseInt(keyB) - parseInt(keyA);
               });
 
-              resultByDay.sort(function (a,b) {
+              resultByDay.sort((a,b) => {
                 var keyA = a.key.split('-').join('');
                 var keyB = b.key.split('-').join('');
                 return parseInt(keyB) - parseInt(keyA);
@@ -244,7 +243,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               });
 
               // Sort by creation date
-              totalCommunities.sort(function (a,b) {
+              totalCommunities.sort( (a,b) =>  {
                 var keyA = a.creationDate.split('-').join('');
                 var keyB = b.creationDate.split('-').join('');
                 return parseInt(keyB) - parseInt(keyA);
@@ -309,7 +308,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
             }));
             return response.json();
           })
-    })
+    });
   }
 
   private generateEntry(year, month) {
@@ -336,7 +335,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   private downloadCSV(title: string, data: any) {
     let content = "data:text/csv;charset=utf-8,";
 
-    data.forEach(function(rowArray) {
+    data.forEach((rowArray) => {
       let row = rowArray.join(",");
       content += row + "\r\n";
     });
@@ -388,24 +387,29 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       })
   }
 
-  componentDidMount() {
+  public componentDidMount() {
+    console.log("RENDER=", this.state.selectedDate);
     this.getAadUsers();
     this.getAadGroups();
     this.getAadActive();
   }
 
-  componentWillUnmount(): void {
-    this.setState({
-      selectedDate: ""
-    })
-  }
+  // public componentWillUnmount(): void {
+  //   this.setState({
+  //     selectedDate: ""
+  //   })
+  // }
 
-  componentDidUpdate(prevProps, prevState) {
+
+  public componentDidUpdate(prevProps, prevState) {
+
     if ((prevState.groupLoading === true && this.state.groupLoading === false) || (prevState.userLoading === true && this.state.userLoading === false)) {
       this.buildCSV();
     }
 
-    if(prevState.selectedDate !== this.state.selectedDate ) {
+    if(this.state.selectedDate !== prevState.selectedDate ) {
+
+      console.log("UPDATE=", this.state.selectedDate);
       this.getAadUsers();
       this.getAadGroups();
       this.getAadActive();
@@ -487,17 +491,15 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     // console.log("date",formattedSelectedDate);
     this.setState({
       selectedDate: formattedSelectedDate
-    })
+    });
 
-    // this.getAadUsers();
-    // this.getAadGroups();
-    // this.getAadActive();
-  };
 
-  private onFormatDate = (date: Date): string => {
+  }
 
-    return date.toLocaleDateString('en-CA');
-  };
+  // private onFormatDate = (date: Date): string => {
+  //   console.log("date", date);
+  //   return date.toLocaleDateString('en-CA');
+  // }
 
 
 
@@ -522,15 +524,15 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         </DefaultButton>),
       },
     ];
-    var testDepart = [
-      {key: "TBS", value:100},
-      {key: "SSC", value:75},
-      {key: "TEST", value:45}
-    ]
-    var departCols = [
-      { key: 'column2', name: 'Department', fieldName: 'displayName', minWidth: 200, maxWidth: 225, isResizable: true },
-      { key: 'column3', name: 'Member Count', fieldName: 'countMember', minWidth: 100, maxWidth: 125, isResizable: true },
-    ];
+    // var testDepart = [
+    //   {key: "TBS", value:100},
+    //   {key: "SSC", value:75},
+    //   {key: "TEST", value:45}
+    // ]
+    // var departCols = [
+    //   { key: 'column2', name: 'Department', fieldName: 'displayName', minWidth: 200, maxWidth: 225, isResizable: true },
+    //   { key: 'column3', name: 'Member Count', fieldName: 'countMember', minWidth: 100, maxWidth: 125, isResizable: true },
+    // ];
 
     var allusercountminus = this.state.allUsers.length;
 
@@ -541,9 +543,15 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     // }
     console.log("SelectedDate State", this.state.selectedDate);
 
+    const verticalGapStackTokens: IStackTokens = {
+      childrenGap: 10,
+
+    };
+
+    // const value = this.state.selectedDate;
     return (
       <div className={ styles.userStats }>
-      <h2>Stats date: {this.state.selectedDate.toString()}</h2>
+      <h2>Date: {this.state.selectedDate.toString()}</h2>
         <div>
           <div>
             <div>
@@ -555,21 +563,22 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   minDate={new Date(2000,12,30)}
                   onSelectDate={this.onSelectDate}
                   showGoToToday= {true}
-                  formatDate={this.onFormatDate}
+                  // formatDate={this.onFormatDate}
+                  firstDayOfWeek={DayOfWeek.Sunday}
+
 
                 />
               </div>
               <div>
                 {this.state.userLoading && 'Loading Users...'}
               </div>
-              <div className={styles.statsContainer}>
-              <Stack horizontal disableShrink>
+              <Stack horizontal disableShrink horizontalAlign="space-evenly">
                 <div className={styles.statsHolder}>
                   <h2>Total Users:</h2>
                   <div className={styles.userCount}>{allusercountminus}</div>
                 </div>
                 <div>
-                  <h2>Breakdown by Month</h2>
+                  <h2 style={{textAlign:'center'}}>Breakdown by Month</h2>
                   <div>
                     <DetailsList
                       items={this.state.countByMonth ?  this.state.countByMonth : testItem}
@@ -583,17 +592,15 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   <div className={styles.userCount}>{this.state.totalactiveuser}</div>
                 </div>
               </Stack>
-              </div>
               <div>
                 {this.state.groupLoading && 'Loading Groups...'}
               </div>
-              <div className={styles.statsContainer}>
-              <Stack horizontal disableShrink>
+              <Stack horizontal disableShrink horizontalAlign="space-evenly" >
                 <div className={styles.statsHolder}>
                   <h2>Total Communities:</h2>
                   <div className={styles.userCount}>{this.state.communityCount.length}</div>
                 </div>
-                <div className={styles.statsHolder}>
+                <div className={styles.statsHolder} style={{width: '400px'}}>
                   <h2>Department count</h2>
                   {
                     /**
@@ -610,16 +617,52 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   }
                 </div>
                 <div>
-                  <h2>Number of community that have:</h2>
-                  <div className={styles.userCount}>3 members or less: {this.state.nmb_com_member_3}</div>
-                  <div className={styles.userCount}>More than 3 members but 5 members or less:{this.state.nmb_com_member_5}</div>
-                  <div className={styles.userCount}>More than 5 members but 10 members or less:{this.state.nmb_com_member_10}</div>
-                  <div className={styles.userCount}>More than 10 members but 20 members or less:{this.state.nmb_com_member_20}</div>
-                  <div className={styles.userCount}>More than 20 members but  30 members or less:{this.state.nmb_com_member_30}</div>
-                  <div className={styles.userCount}>More than 31 members {this.state.nmb_com_member_31}</div>
+                  <h2>Community membership count</h2>
+
+                  <table>
+                    <tr>
+                      <th>Number of Community Members</th>
+                      <th>Number of Communities</th>
+                    </tr>
+                    <tr>
+                      <td>3 or less</td>
+                      <td>{this.state.nmb_com_member_3}</td>
+                    </tr>
+                    <tr>
+                      <td> 4 to 5</td>
+                      <td>{this.state.nmb_com_member_5} </td>
+                    </tr>
+                    <tr>
+                      <td>6 to 10</td>
+                      <td>{this.state.nmb_com_member_10} </td>
+                    </tr>
+                    <tr>
+                      <td>11 to 20</td>
+                      <td>{this.state.nmb_com_member_20} </td>
+                    </tr>
+                    <tr>
+                      <td>21 to 30</td>
+                      <td>{this.state.nmb_com_member_30} </td>
+                    </tr>
+                    <tr>
+                      <td>31 or more</td>
+                      <td>{this.state.nmb_com_member_31} </td>
+                    </tr>
+                  </table>
+
+
+                    {/*
+                    <Stack tokens={verticalGapStackTokens}>
+                      <Stack.Item>3 members or less: {this.state.nmb_com_member_3}</Stack.Item>
+                      <Stack.Item>More than 3 members but 5 members or less: {this.state.nmb_com_member_5}</Stack.Item>
+                      <Stack.Item>More than 5 members but 10 members or less: {this.state.nmb_com_member_10}</Stack.Item>
+                      <Stack.Item>More than 10 members but 20 members or less: {this.state.nmb_com_member_20}</Stack.Item>
+                      <Stack.Item>More than 20 members but  30 members or less: {this.state.nmb_com_member_30}</Stack.Item>
+                      <Stack.Item>More than 31 members {this.state.nmb_com_member_31}</Stack.Item>
+                    </Stack> */}
+
                 </div>
               </Stack>
-              </div>
             </div>
           </div>
         </div>
