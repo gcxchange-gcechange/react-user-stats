@@ -1,7 +1,6 @@
 import * as React from 'react';
 import { AadHttpClient, HttpClientResponse, IHttpClientOptions } from '@microsoft/sp-http';
 import {
-  autobind,
   DatePicker,
   DayOfWeek,
   DefaultButton,
@@ -21,6 +20,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
   private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
+
+
 
   constructor(props: IUserStatsProps, state: IUserStatsState) {
     super(props);
@@ -47,7 +48,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   // User Stats Call
-  @autobind
   private async getAadUsers(): Promise<any> {
 
     const requestHeaders: Headers = new Headers();
@@ -68,7 +68,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             response.json().then(((r) => {
-              console.log("UserStats", r);
+              // console.log("UserStats", r);
 
               var allDays = [];
               var allMonths = [];
@@ -79,7 +79,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 allMonths.push(`${splitDate[0]}-${splitDate[1]}`);
                 allDays.push(`${splitDate[0]}-${splitDate[1]}-${splitDate[2].split("T")[0]}`);
 
-                // console.log("DATE",date.creationDate)
+
                 return date.creationDate
               });
 
@@ -113,8 +113,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               //console.log("By Month");
               //console.log(resultByMonth);
 
-              //console.log("By Day");
-              //console.log(resultByDay);
+              // console.log("By Day");
+              // console.log(resultByDay);
 
               // Build the csv for each month
               resultByMonth.forEach(month => {
@@ -136,9 +136,18 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               //console.log(resultByMonth);
 
               // Add entries up to the current date (if no new users for those months) so there are no gaps
-              let today = moment(new Date());
-              let currYear = today.format('YYYY');
-              let currMonth = today.format('MM');
+              //  let today = moment(new Date());
+
+              const selectedDate = this.state.selectedDate;
+              const [day, monthFormat, year] = selectedDate.split('-');
+              const currYear = `${year}`;
+              const currMonth = `${monthFormat}`;
+              // let today = moment(new Date(this.state.selectedDate));
+              // let currYear = today.format('YYYY');
+              // // let currentYear = today.getFullYear();
+              // // let currYear = today.format('YYYY');
+
+              // let currMonth = today.format('MM');
 
               let startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]);
               let startMonth = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]);
@@ -178,7 +187,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   // Group Stats Call
-  @autobind
+
   private async getAadGroups(): Promise<any> {
 
     var nmb_com_member_3 = 0;
@@ -207,7 +216,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             response.json().then(((r) => {
-              console.log("GroupsRes", r);
+              // console.log("GroupsRes", r);
 
               // Get a count of communities (Unified group type)
               var totalCommunities = [];
@@ -252,6 +261,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               var communitiesPerMonth = {};
               allMonths.forEach(e => communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1);
 
+              console.log("COMM", communitiesPerMonth);
               // Count duplicates to get the communities created per day
               let communitiesPerDay = {};
               totalCommunities.forEach(community => {
@@ -284,7 +294,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 var splits = s.split("-")
 
                 if (allDepartmentsB2B.find((user) => user.includes(splits[0])) == undefined) { // If no b2b group exist for the depart, add the regular group to the final list
-                  console.log(" IN B2B" + splits[0]);
+                  // console.log(" IN B2B" + splits[0]);
                   allDepartmentsFinal.push(`${s}`);
                 }
               });
@@ -333,6 +343,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   // https://stackoverflow.com/a/14966131
   private downloadCSV(title: string, data: any) {
+
+    console.log("data", data)
     let content = "data:text/csv;charset=utf-8,";
 
     data.forEach((rowArray) => {
@@ -352,7 +364,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   // Active user Stats Call
-  @autobind
+
   private getAadActive(): void {
 
     const requestHeaders: Headers = new Headers();
@@ -372,7 +384,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         client
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
-            console.log("Response", response)
+            // console.log("Response", response)
             response.json().then(((r) => {
               var activeusers = ""
               r.map(c => {
@@ -388,31 +400,29 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   public componentDidMount() {
-    console.log("RENDER=", this.state.selectedDate);
+    // console.log("RENDER=", this.state.selectedDate);
     this.getAadUsers();
     this.getAadGroups();
     this.getAadActive();
   }
 
-  // public componentWillUnmount(): void {
-  //   this.setState({
-  //     selectedDate: ""
-  //   })
-  // }
-
 
   public componentDidUpdate(prevProps, prevState) {
+    console.log("Updated GROUP", this.state.groupLoading)
+    console.log("Updated USER LOADING", this.state.userLoading)
 
     if ((prevState.groupLoading === true && this.state.groupLoading === false) || (prevState.userLoading === true && this.state.userLoading === false)) {
       this.buildCSV();
     }
 
-    if(this.state.selectedDate !== prevState.selectedDate ) {
 
-      console.log("UPDATE=", this.state.selectedDate);
+    if (this.state.selectedDate !== prevState.selectedDate ) {
+
+      // console.log("UPDATE=", this.state.selectedDate);
       this.getAadUsers();
       this.getAadGroups();
       this.getAadActive();
+
     }
   }
 
@@ -421,6 +431,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   private buildCSV() {
     var monthCount = JSON.parse(JSON.stringify(this.state.countByMonth));
     var communitiesPerDay = JSON.parse(JSON.stringify(this.state.communitiesPerDay));
+    console.log("MonthCOUNT", this.state.countByMonth)
+    console.log("COMMPERDAY", this.state.communitiesPerDay)
 
     try {
       // Loop through each year-month in the list
@@ -484,13 +496,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     const day = ("0" + (date.getDate())).slice(-2)
     const month =  ("0" + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
-
-    // console.log("day", day);
-
     const formattedSelectedDate = day + '-' + month + '-' +  year;
-    // console.log("date",formattedSelectedDate);
+
     this.setState({
-      selectedDate: formattedSelectedDate
+      selectedDate: formattedSelectedDate,
+      userLoading: false,
+      groupLoading: false
     });
 
 
@@ -535,7 +546,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     // ];
 
     var allusercountminus = this.state.allUsers.length;
-
     // const calendarFieldStyles: Partial<IDatePickerStyles>= {
     //   root: {
     //     width: '60%'
@@ -545,13 +555,18 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     const verticalGapStackTokens: IStackTokens = {
       childrenGap: 10,
-
     };
 
-    // const value = this.state.selectedDate;
+    const selectedDate = this.state.selectedDate;
+    const [day, month, year] = selectedDate.split('-');
+    // The converted date is now in mm-dd-yyyy format
+    const convertedDate = `${month}-${day}-${year}`;
+
+
+
     return (
       <div className={ styles.userStats }>
-      <h2>Date: {this.state.selectedDate.toString()}</h2>
+      {/* <h2>Date: {this.state.selectedDate.toString()}</h2> */}
         <div>
           <div>
             <div>
@@ -563,8 +578,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   minDate={new Date(2000,12,30)}
                   onSelectDate={this.onSelectDate}
                   showGoToToday= {true}
-                  // formatDate={this.onFormatDate}
                   firstDayOfWeek={DayOfWeek.Sunday}
+                  value={new Date(convertedDate)}
 
 
                 />
