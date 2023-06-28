@@ -17,8 +17,8 @@ import * as moment from 'moment';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
-  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
+  private clientId = '';
+  private url = '';
   // *********************
 
 
@@ -67,7 +67,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         client
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
-            response.json().then(((r) => {
+            return response.json().then(((r) => {
               // console.log("UserStats", r);
 
               var allDays = [];
@@ -136,27 +136,22 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               //console.log(resultByMonth);
 
               // Add entries up to the current date (if no new users for those months) so there are no gaps
-              //  let today = moment(new Date());
 
               const selectedDate = this.state.selectedDate;
               const [day, monthFormat, year] = selectedDate.split('-');
               const currYear = `${year}`;
               const currMonth = `${monthFormat}`;
-              // let today = moment(new Date(this.state.selectedDate));
-              // let currYear = today.format('YYYY');
-              // // let currentYear = today.getFullYear();
-              // // let currYear = today.format('YYYY');
 
-              // let currMonth = today.format('MM');
+              let startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]); //output = 2021
 
-              let startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]);
-              let startMonth = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]);
+              let startMonth = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]);// output = 10 (October)
 
-              // Get the number of months from today's date to the oldest date in the list
+              // Get the number of months from selected  date to the oldest date in the list
               let monthsDifference = parseInt(currMonth) + 1 - startMonth + 12 * (parseInt(currYear) - startYear);
 
               let fullResults = [];
               let earliestDate = moment(startYear + '-' + startMonth);
+
               for(let i = 0; i < monthsDifference; i++) {
 
                 if(i !== 0)
@@ -181,7 +176,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               });
             }));
 
-            return response.json();
+            // return response.json();
           })
       });
   }
@@ -215,23 +210,26 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         client
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
-            response.json().then(((r) => {
-              // console.log("GroupsRes", r);
+            return response.json().then(((r) => {
+              console.log("GroupsRes", r);
 
               // Get a count of communities (Unified group type)
               var totalCommunities = [];
               var allMonths = [];
               r.map(c => {
+                const unified = [];
                 if (c.groupType[0] === 'Unified') {
 
                   let splitDate = c.creationDate.split(" ")[0].split("/");
 
-                  // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
+
+                  // // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
                   let formattedDate = splitDate[2] + "-"
                     + (splitDate[0].length === 1 ? "0" + splitDate[0] : splitDate[0]) + "-"
                     + (splitDate[1].length === 1 ? "0" + splitDate[1] : splitDate[1]);
 
                   allMonths.push(formattedDate.substring(0, 7));
+
 
                   totalCommunities.push({ title: c.displayName, creationDate: formattedDate });
 
@@ -261,14 +259,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               var communitiesPerMonth = {};
               allMonths.forEach(e => communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1);
 
-              console.log("COMM", communitiesPerMonth);
+              console.log("COMM - GROUPS", communitiesPerMonth);
               // Count duplicates to get the communities created per day
               let communitiesPerDay = {};
               totalCommunities.forEach(community => {
                 communitiesPerDay[community.creationDate] = (communitiesPerDay[community.creationDate] || 0) + 1;
               });
               communitiesPerDay = Object.keys(communitiesPerDay).map((key) => [key, communitiesPerDay[key]]);
-
+              console.log("commPerDAY- GROUPS", communitiesPerDay);
               // Filter out community groups by their type to leave mostly departments
               var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
 
@@ -316,9 +314,13 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 groupLoading: false,
               });
             }));
-            return response.json();
+
+
+            // return response.json();
           })
-    });
+
+        });
+        console.log("STATE=COMM_PER_DAY-GROUPS = ", this.state.communitiesPerDay)
   }
 
   private generateEntry(year, month) {
@@ -385,7 +387,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             // console.log("Response", response)
-            response.json().then(((r) => {
+            return response.json().then(((r) => {
               var activeusers = ""
               r.map(c => {
                 activeusers = c.countActiveusers;
@@ -394,22 +396,21 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 totalactiveuser: activeusers,
               });
             }));
-            return response.json();
+
           })
       })
   }
 
   public componentDidMount() {
-    // console.log("RENDER=", this.state.selectedDate);
     this.getAadUsers();
     this.getAadGroups();
     this.getAadActive();
   }
 
 
+
+
   public componentDidUpdate(prevProps, prevState) {
-    console.log("Updated GROUP", this.state.groupLoading)
-    console.log("Updated USER LOADING", this.state.userLoading)
 
     if ((prevState.groupLoading === true && this.state.groupLoading === false) || (prevState.userLoading === true && this.state.userLoading === false)) {
       this.buildCSV();
@@ -418,7 +419,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     if (this.state.selectedDate !== prevState.selectedDate ) {
 
-      // console.log("UPDATE=", this.state.selectedDate);
+      this.setState({
+        allUsers: [],
+        countByMonth: [],
+        communityCount: [],
+        communitiesPerDay: [],
+        communitiesPerMonth: [],
+      })
+
       this.getAadUsers();
       this.getAadGroups();
       this.getAadActive();
@@ -427,17 +435,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
 
-
   private buildCSV() {
     var monthCount = JSON.parse(JSON.stringify(this.state.countByMonth));
     var communitiesPerDay = JSON.parse(JSON.stringify(this.state.communitiesPerDay));
-    console.log("MonthCOUNT", this.state.countByMonth)
-    console.log("COMMPERDAY", this.state.communitiesPerDay)
+
 
     try {
       // Loop through each year-month in the list
       for(let i = 0; i < monthCount.length; i++) {
-
         // Update the list with the total communities for that month
         monthCount[i].communities = this.state.communitiesPerMonth[monthCount[i].key] ?
         this.state.communitiesPerMonth[monthCount[i].key] : monthCount[i].communities;
@@ -472,6 +477,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
             // Add any dates that are earlier than the earliest date in the CSV
             let earliestDate = monthCount[i].report.csv[monthCount[i].report.csv.length - 1][0].split('-').join('');
+
+            // console.log("earlyDate",earliestDate);
             if(communityDate < earliestDate) {
               monthCount[i].report.csv.push([communitiesPerDay[c][0], 0 , communitiesPerDay[c][1]]);
             }
@@ -500,10 +507,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     this.setState({
       selectedDate: formattedSelectedDate,
-      userLoading: false,
-      groupLoading: false
+      userLoading: true,
+      groupLoading: true,
     });
-
 
   }
 
