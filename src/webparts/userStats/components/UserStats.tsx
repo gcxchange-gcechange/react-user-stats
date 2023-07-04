@@ -68,7 +68,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
-              // console.log("UserStats", r);
 
               var allDays = [];
               var allMonths = [];
@@ -110,12 +109,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 return parseInt(keyB) - parseInt(keyA);
               });
 
-              //console.log("By Month");
-              //console.log(resultByMonth);
-
-              // console.log("By Day");
-              // console.log(resultByDay);
-
               // Build the csv for each month
               resultByMonth.forEach(month => {
 
@@ -132,8 +125,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 resultByDay.splice(0, index);
               });
 
-              //console.log("Months List");
-              //console.log(resultByMonth);
 
               // Add entries up to the current date (if no new users for those months) so there are no gaps
 
@@ -175,8 +166,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 userLoading: false
               });
             }));
-
-            // return response.json();
           })
       });
   }
@@ -223,7 +212,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   let splitDate = c.creationDate.split(" ")[0].split("/");
 
 
-                  // // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
+                  // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
                   let formattedDate = splitDate[2] + "-"
                     + (splitDate[0].length === 1 ? "0" + splitDate[0] : splitDate[0]) + "-"
                     + (splitDate[1].length === 1 ? "0" + splitDate[1] : splitDate[1]);
@@ -314,13 +303,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 groupLoading: false,
               });
             }));
-
-
-            // return response.json();
           })
 
         });
-        console.log("STATE=COMM_PER_DAY-GROUPS = ", this.state.communitiesPerDay)
+
   }
 
   private generateEntry(year, month) {
@@ -386,7 +372,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         client
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
-            // console.log("Response", response)
             return response.json().then(((r) => {
               var activeusers = ""
               r.map(c => {
@@ -478,7 +463,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
             // Add any dates that are earlier than the earliest date in the CSV
             let earliestDate = monthCount[i].report.csv[monthCount[i].report.csv.length - 1][0].split('-').join('');
 
-            // console.log("earlyDate",earliestDate);
             if(communityDate < earliestDate) {
               monthCount[i].report.csv.push([communitiesPerDay[c][0], 0 , communitiesPerDay[c][1]]);
             }
@@ -497,9 +481,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   private onSelectDate = (date: Date): void => {
-    // Handle date selection
-    // format date to be day-mm-yyyy so it matches the filename in storageData
-
     const day = ("0" + (date.getDate())).slice(-2)
     const month =  ("0" + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
@@ -512,12 +493,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     });
 
   }
-
-  // private onFormatDate = (date: Date): string => {
-  //   console.log("date", date);
-  //   return date.toLocaleDateString('en-CA');
-  // }
-
 
 
   public render(): React.ReactElement<IUserStatsProps> {
@@ -552,12 +527,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     // ];
 
     var allusercountminus = this.state.allUsers.length;
-    // const calendarFieldStyles: Partial<IDatePickerStyles>= {
-    //   root: {
-    //     width: '60%'
-    //   },
-    // }
-    console.log("SelectedDate State", this.state.selectedDate);
 
     const verticalGapStackTokens: IStackTokens = {
       childrenGap: 10,
@@ -572,7 +541,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     return (
       <div className={ styles.userStats }>
-      {/* <h2>Date: {this.state.selectedDate.toString()}</h2> */}
         <div>
           <div>
             <div>
@@ -670,18 +638,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                       <td>{this.state.nmb_com_member_31} </td>
                     </tr>
                   </table>
-
-
-                    {/*
-                    <Stack tokens={verticalGapStackTokens}>
-                      <Stack.Item>3 members or less: {this.state.nmb_com_member_3}</Stack.Item>
-                      <Stack.Item>More than 3 members but 5 members or less: {this.state.nmb_com_member_5}</Stack.Item>
-                      <Stack.Item>More than 5 members but 10 members or less: {this.state.nmb_com_member_10}</Stack.Item>
-                      <Stack.Item>More than 10 members but 20 members or less: {this.state.nmb_com_member_20}</Stack.Item>
-                      <Stack.Item>More than 20 members but  30 members or less: {this.state.nmb_com_member_30}</Stack.Item>
-                      <Stack.Item>More than 31 members {this.state.nmb_com_member_31}</Stack.Item>
-                    </Stack> */}
-
                 </div>
               </Stack>
             </div>
