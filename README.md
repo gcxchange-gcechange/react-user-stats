@@ -6,7 +6,9 @@ Webpart that displays basic user, group stats and the total number of active use
 
 ## Used SharePoint Framework Version
 
-![version](https://img.shields.io/badge/version-1.11-green.svg)
+![SPFx 1.11](https://img.shields.io/badge/SPFx-1.11-green.svg)
+
+![Node.js v10](https://img.shields.io/badge/Node.js-10.22.0-green.svg)
 
 ## Applies to
 
