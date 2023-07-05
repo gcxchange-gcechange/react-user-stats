@@ -13,12 +13,13 @@ import styles from './UserStats.module.scss';
 import { IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import * as moment from 'moment';
+import CSV from './CSV';
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '';
-  private url = '';
+  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
+  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
 
 
@@ -44,6 +45,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_com_member_30: 0,
       nmb_com_member_31: 0,
       selectedDate: new Date().toLocaleDateString('en-GB').replace(/\//g, '-'),
+      monthlyData: [],
     }
   }
 
@@ -68,9 +70,39 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
-
+              console.log("USERS Res", r)
               var allDays = [];
               var allMonths = [];
+
+              let monthArray = [];
+
+
+              r.map((date) => {
+                let dates = new Date(date.creationDate);
+                const newDate = dates.toLocaleDateString('en-CA')
+                monthArray.push(newDate)
+              })
+
+              const months = {};
+                monthArray.forEach(date => {
+
+                const [yr, month] = date.split('-');
+                const key = `${yr}-${month}`;
+
+                 if(months[key]) {
+                  months[key]++;
+                 } else {
+                  months[key] = 1;
+                 }
+
+              })
+
+              this.setState({
+                monthlyData: months
+              })
+              console.log("MONTHS", months)
+
+
 
               var allUserCount = r.map(date => {
                 var splitDate = date.creationDate.split("-");
@@ -87,6 +119,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               allMonths.forEach(e => duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1);
               var duplicateDayCount = {};
               allDays.forEach(e => duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1);
+
+              console.log("ResultbyMonth", duplicateMonthCount);
 
               var resultByMonth = Object.keys(duplicateMonthCount).map(e => {return {key:e, count:duplicateMonthCount[e], communities: 0, report: {
                 title: "gcx-stats-" + e,
@@ -108,6 +142,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 var keyB = b.key.split('-').join('');
                 return parseInt(keyB) - parseInt(keyA);
               });
+
 
               // Build the csv for each month
               resultByMonth.forEach(month => {
@@ -139,6 +174,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
               // Get the number of months from selected  date to the oldest date in the list
               let monthsDifference = parseInt(currMonth) + 1 - startMonth + 12 * (parseInt(currYear) - startYear);
+
+              console.log(monthsDifference);
 
               let fullResults = [];
               let earliestDate = moment(startYear + '-' + startMonth);
@@ -200,7 +237,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
-              console.log("GroupsRes", r);
+              // console.log("GroupsRes", r);
 
               // Get a count of communities (Unified group type)
               var totalCommunities = [];
@@ -248,14 +285,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               var communitiesPerMonth = {};
               allMonths.forEach(e => communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1);
 
-              console.log("COMM - GROUPS", communitiesPerMonth);
+              // console.log("COMM - GROUPS", communitiesPerMonth);
               // Count duplicates to get the communities created per day
               let communitiesPerDay = {};
               totalCommunities.forEach(community => {
                 communitiesPerDay[community.creationDate] = (communitiesPerDay[community.creationDate] || 0) + 1;
               });
               communitiesPerDay = Object.keys(communitiesPerDay).map((key) => [key, communitiesPerDay[key]]);
-              console.log("commPerDAY- GROUPS", communitiesPerDay);
+              // console.log("commPerDAY- GROUPS", communitiesPerDay);
               // Filter out community groups by their type to leave mostly departments
               var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
 
@@ -324,6 +361,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       }
     };
   }
+
 
   private formatMonth(month) {
     return month.toString().length === 1 ? '0' + month : month;
@@ -558,6 +596,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
                 />
               </div>
+
               <div>
                 {this.state.userLoading && 'Loading Users...'}
               </div>
@@ -567,14 +606,15 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   <div className={styles.userCount}>{allusercountminus}</div>
                 </div>
                 <div>
-                  <h2 style={{textAlign:'center'}}>Breakdown by Month</h2>
+                <div><CSV items={this.state.monthlyData}/></div>
+                  {/* <h2 style={{textAlign:'center'}}>Breakdown by Month</h2>
                   <div>
                     <DetailsList
                       items={this.state.countByMonth ?  this.state.countByMonth : testItem}
                       compact={true}
                       columns={testCols}
                     />
-                  </div>
+                  </div> */}
                 </div>
                 <div className={styles.statsHolder}>
                   <h2>Total active Users</h2><h3>In the last 30 days:</h3>
