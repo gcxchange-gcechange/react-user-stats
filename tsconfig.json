@@ -24,7 +24,8 @@
     ],
     "lib": [
       "es6",
-      "dom"
+      "dom",
+      "ES2017.Object"
     ]
   },
   "include": [
