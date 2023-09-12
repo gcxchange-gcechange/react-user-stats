@@ -6,7 +6,8 @@ import {
   DefaultButton,
   DetailsList,
   IStackTokens,
-  Stack
+  Stack,
+
 } from 'office-ui-fabric-react';
 
 import styles from './UserStats.module.scss';
@@ -14,11 +15,12 @@ import { IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import * as moment from 'moment';
 
+
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '';
-  private url = '';
+  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
+  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData?';
   // *********************
 
 
@@ -44,6 +46,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_com_member_30: 0,
       nmb_com_member_31: 0,
       selectedDate: new Date().toLocaleDateString('en-GB').replace(/\//g, '-'),
+      nmb_member_per_comm_3: 0,
+      nmb_member_per_comm_5: 0,
+      nmb_member_per_comm_10: 0,
+      nmb_member_per_comm_20: 0,
     }
   }
 
@@ -283,6 +289,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 if (allDepartmentsB2B.find((user) => user.includes(splits[0])) == undefined) { // If no b2b group exist for the depart, add the regular group to the final list
                   // console.log(" IN B2B" + splits[0]);
                   allDepartmentsFinal.push(`${s}`);
+
                 }
               });
 
@@ -302,10 +309,88 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 nmb_com_member_31: nmb_com_member_31,
                 groupLoading: false,
               });
+              this.getUserperCommunity(filteredR);
             }));
           })
-
         });
+
+  }
+
+
+  public getUserperCommunity(groups: any) {
+
+    console.log("G",groups)
+
+    let communityCounts = [];
+
+    let users = '';
+    let allUsers: any[] = [];
+    let community: string =  '';
+    // let user = '';
+    let u = {};
+    let count = 0;
+
+    groups.forEach((element) => {
+      users = element.userlist;
+      allUsers.push(users)
+
+    });
+
+    console.log("allUsers", allUsers)
+
+    allUsers.forEach((row) => {
+      row.forEach((item) => {
+        communityCounts.push(item);
+
+      });
+    });
+
+    const countMap = new Map();
+      communityCounts.forEach(value =>  {
+      if (countMap.has(value)) {
+      countMap.set(value, countMap.get(value) + 1);
+      } else {
+      countMap.set(value, 1);
+      }
+    });
+
+    console.log("CP",countMap)
+
+    let result_1 = [];
+    let result_2 = [];
+    let result_3 = [];
+    let result_4 = [];
+
+
+
+
+    countMap.forEach((key, value) => {
+
+      if (key <= 3 ) {
+        result_1.push(key)
+      }
+      else if ( key <= 5) {
+        result_2.push(key)
+      }
+      else if ( key <= 10) {
+        result_3.push(key)
+      }
+      else if( key <= 20 ) {
+        result_4.push(key)
+      }
+
+    })
+
+    this.setState({
+      nmb_member_per_comm_3: result_1.length,
+      nmb_member_per_comm_5: result_2.length,
+      nmb_member_per_comm_10: result_3.length,
+      nmb_member_per_comm_20: result_4.length,
+    })
+    console.log("res", result_1)
+    console.log("res2", result_2)
+
+
 
   }
 
@@ -605,6 +690,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     })
                   }
                 </div>
+                <Stack >
                 <div>
                   <h2>Community membership count</h2>
 
@@ -639,6 +725,34 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     </tr>
                   </table>
                 </div>
+                <div>
+                  <h2>Members per Community</h2>
+
+                  <table>
+                    <tr>
+                      <th>Number of Communities</th>
+                      <th>Number of Members</th>
+                    </tr>
+                    <tr>
+                      <td>3 or less</td>
+                      <td>{ this.state.nmb_member_per_comm_3 } </td>
+                    </tr>
+                    <tr>
+                      <td> 4 to 5</td>
+                      <td>{ this.state.nmb_member_per_comm_5 } </td>
+                    </tr>
+                    <tr>
+                      <td>6 to 10</td>
+                      <td>{ this.state.nmb_member_per_comm_10 } </td>
+                    </tr>
+                    <tr>
+                      <td>11 to 20</td>
+                      <td>{ this.state.nmb_member_per_comm_20 }  </td>
+                    </tr>
+                  </table>
+                </div>
+
+                </Stack>
               </Stack>
             </div>
           </div>
