@@ -46,6 +46,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_com_member_30: 0,
       nmb_com_member_31: 0,
       selectedDate: new Date().toLocaleDateString('en-GB').replace(/\//g, '-'),
+      nmb_member_per_comm_0: 0,
       nmb_member_per_comm_3: 0,
       nmb_member_per_comm_5: 0,
       nmb_member_per_comm_10: 0,
@@ -356,15 +357,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     console.log("CP",countMap)
 
+    let result_0 = [];
     let result_1 = [];
     let result_2 = [];
     let result_3 = [];
     let result_4 = [];
 
-
-
-
     countMap.forEach((key, value) => {
+
 
       if (key <= 3 ) {
         result_1.push(key)
@@ -381,14 +381,31 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     })
 
+    const nmb_member_per_comm_3 = result_1.length;
+    const nmb_member_per_comm_5 = result_2.length;
+    const nmb_member_per_comm_10 = result_3.length;
+    const nmb_member_per_comm_20 = result_4.length;
+
+    const arrayTotal = nmb_member_per_comm_3 + nmb_member_per_comm_5 + nmb_member_per_comm_10 + nmb_member_per_comm_20;
+
+    // console.log("total", total);
+
+    let totalUsers = this.state.allUsers.length;
+    // console.log("totalUsers", totalUsers)
+
+    const usersWithNoComm = totalUsers - arrayTotal;
+
+
+    console.log("usersNoComm", usersWithNoComm)
+
     this.setState({
-      nmb_member_per_comm_3: result_1.length,
-      nmb_member_per_comm_5: result_2.length,
-      nmb_member_per_comm_10: result_3.length,
-      nmb_member_per_comm_20: result_4.length,
+      nmb_member_per_comm_0: usersWithNoComm,
+      nmb_member_per_comm_3: nmb_member_per_comm_3,
+      nmb_member_per_comm_5: nmb_member_per_comm_5,
+      nmb_member_per_comm_10: nmb_member_per_comm_10,
+      nmb_member_per_comm_20: nmb_member_per_comm_20,
     })
-    console.log("res", result_1)
-    console.log("res2", result_2)
+
 
 
 
@@ -691,7 +708,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   }
                 </div>
                 <Stack >
-                <div>
+                <div style={{overflowX: 'auto'}}>
                   <h2>Community membership count</h2>
 
                   <table>
@@ -725,16 +742,20 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     </tr>
                   </table>
                 </div>
-                <div>
+                <div style={{overflowX: 'auto'}}>
                   <h2>Members per Community</h2>
 
                   <table>
                     <tr>
-                      <th>Number of Communities</th>
-                      <th>Number of Members</th>
+                      <th>Communities Joined</th>
+                      <th>Total Members</th>
                     </tr>
                     <tr>
-                      <td>3 or less</td>
+                      <td>0</td>
+                      <td>{ this.state.nmb_member_per_comm_0 } </td>
+                    </tr>
+                    <tr>
+                      <td>1 to 3</td>
                       <td>{ this.state.nmb_member_per_comm_3 } </td>
                     </tr>
                     <tr>

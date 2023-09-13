@@ -16,6 +16,7 @@ export interface IUserStatsState {
   nmb_com_member_30: any;
   nmb_com_member_31: any;
   selectedDate: any;
+  nmb_member_per_comm_0: any;
   nmb_member_per_comm_3: any;
   nmb_member_per_comm_5: any;
   nmb_member_per_comm_10: any;
