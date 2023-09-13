@@ -51,6 +51,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_member_per_comm_5: 0,
       nmb_member_per_comm_10: 0,
       nmb_member_per_comm_20: 0,
+      nmb_member_per_comm_21: 0,
     }
   }
 
@@ -244,7 +245,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   }
                 }
               });
-
+              console.log("totalComm", totalCommunities);
               // Sort by creation date
               totalCommunities.sort( (a,b) =>  {
                 var keyA = a.creationDate.split('-').join('');
@@ -265,6 +266,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               console.log("commPerDAY- GROUPS", communitiesPerDay);
               // Filter out community groups by their type to leave mostly departments
               var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
+              console.log("filtered", filteredR)
 
               var allDepartments = [];
               var allDepartmentsB2B = [];// Only depart that have a B2B group
@@ -310,7 +312,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 nmb_com_member_31: nmb_com_member_31,
                 groupLoading: false,
               });
-              this.getUserperCommunity(filteredR);
+
+              console.log("groupsDelta", this.state.groupsDelta);
+              this.getUserperCommunity(r);
             }));
           })
         });
@@ -320,34 +324,29 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   public getUserperCommunity(groups: any) {
 
-    console.log("G",groups)
+    const unifiedGroups = groups.filter((group) => group.groupType[0] === 'Unified');
+
+    const allUsers = unifiedGroups.flatMap((item) => item.userlist).flat();
 
     let communityCounts = [];
+    // let users = '';
+    // let allUsers: any[] = [];
 
-    let users = '';
-    let allUsers: any[] = [];
-    let community: string =  '';
-    // let user = '';
-    let u = {};
-    let count = 0;
+    // unifiedGroups.forEach((element) => {
+    //   users = element.userlist;
+    //   allUsers.push(users)
 
-    groups.forEach((element) => {
-      users = element.userlist;
-      allUsers.push(users)
+    // });
 
-    });
+    // allUsers.forEach((row) => {
+    //   row.forEach((item) => {
+    //     communityCounts.push(item);
 
-    console.log("allUsers", allUsers)
-
-    allUsers.forEach((row) => {
-      row.forEach((item) => {
-        communityCounts.push(item);
-
-      });
-    });
-
+    //   });
+    // });
+    console.log("AllUsers", allUsers);
     const countMap = new Map();
-      communityCounts.forEach(value =>  {
+      allUsers.forEach(value =>  {
       if (countMap.has(value)) {
       countMap.set(value, countMap.get(value) + 1);
       } else {
@@ -355,48 +354,45 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       }
     });
 
-    console.log("CP",countMap)
 
-    let result_0 = [];
+    console.log("count", countMap);
     let result_1 = [];
     let result_2 = [];
     let result_3 = [];
     let result_4 = [];
+    let result_5 = [];
 
-    countMap.forEach((key, value) => {
+    const result = [0, 0, 0, 0, 0];
 
+    countMap.forEach((key) => {
 
       if (key <= 3 ) {
-        result_1.push(key)
+        result[0]++
       }
       else if ( key <= 5) {
-        result_2.push(key)
+        result[1]++
       }
       else if ( key <= 10) {
-        result_3.push(key)
+        result[2]++
       }
       else if( key <= 20 ) {
-        result_4.push(key)
+        result[3]++
       }
+      else if( key >= 21 ) {
+        result[4]++
+      }
+
+      console.log("Res",result)
 
     })
 
-    const nmb_member_per_comm_3 = result_1.length;
-    const nmb_member_per_comm_5 = result_2.length;
-    const nmb_member_per_comm_10 = result_3.length;
-    const nmb_member_per_comm_20 = result_4.length;
+    const [nmb_member_per_comm_3, nmb_member_per_comm_5, nmb_member_per_comm_10, nmb_member_per_comm_20, nmb_member_per_comm_21] = result;
 
-    const arrayTotal = nmb_member_per_comm_3 + nmb_member_per_comm_5 + nmb_member_per_comm_10 + nmb_member_per_comm_20;
-
-    // console.log("total", total);
+    const arrayTotal = nmb_member_per_comm_3 + nmb_member_per_comm_5 + nmb_member_per_comm_10 + nmb_member_per_comm_20 + nmb_member_per_comm_21;
 
     let totalUsers = this.state.allUsers.length;
-    // console.log("totalUsers", totalUsers)
 
     const usersWithNoComm = totalUsers - arrayTotal;
-
-
-    console.log("usersNoComm", usersWithNoComm)
 
     this.setState({
       nmb_member_per_comm_0: usersWithNoComm,
@@ -404,11 +400,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_member_per_comm_5: nmb_member_per_comm_5,
       nmb_member_per_comm_10: nmb_member_per_comm_10,
       nmb_member_per_comm_20: nmb_member_per_comm_20,
+      nmb_member_per_comm_21: nmb_member_per_comm_21
     })
-
-
-
-
   }
 
   private generateEntry(year, month) {
@@ -747,28 +740,32 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
                   <table>
                     <tr>
-                      <th>Communities Joined</th>
                       <th>Total Members</th>
+                      <th>Number of Communities Joined</th>
                     </tr>
                     <tr>
-                      <td>0</td>
-                      <td>{ this.state.nmb_member_per_comm_0 } </td>
+                      <td>{ this.state.nmb_member_per_comm_0 }</td>
+                      <td>None</td>
                     </tr>
                     <tr>
-                      <td>1 to 3</td>
                       <td>{ this.state.nmb_member_per_comm_3 } </td>
+                      <td>1 to 3</td>
                     </tr>
                     <tr>
-                      <td> 4 to 5</td>
                       <td>{ this.state.nmb_member_per_comm_5 } </td>
+                      <td>4 to 5</td>
                     </tr>
                     <tr>
-                      <td>6 to 10</td>
                       <td>{ this.state.nmb_member_per_comm_10 } </td>
+                      <td>6 to 10</td>
                     </tr>
                     <tr>
+                      <td>{ this.state.nmb_member_per_comm_20 } </td>
                       <td>11 to 20</td>
-                      <td>{ this.state.nmb_member_per_comm_20 }  </td>
+                    </tr>
+                    <tr>
+                      <td>{ this.state.nmb_member_per_comm_21 } </td>
+                      <td>21 or more</td>
                     </tr>
                   </table>
                 </div>
