@@ -5,8 +5,10 @@ import {
   DayOfWeek,
   DefaultButton,
   DetailsList,
+  IButtonStyles,
   IStackTokens,
-  Stack
+  Stack,
+  StackItem
 } from 'office-ui-fabric-react';
 
 import styles from './UserStats.module.scss';
@@ -494,6 +496,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   }
 
+  private downloadDataFile = (): void => {
+    console.log("clicke")
+  }
+
 
   public render(): React.ReactElement<IUserStatsProps> {
 
@@ -537,6 +543,11 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     // The converted date is now in mm-dd-yyyy format
     const convertedDate = `${month}-${day}-${year}`;
 
+    const IconStyle: Partial<IButtonStyles> = {
+      icon: {color: 'white'},
+      iconHovered: { color: '#c19c00'},
+      rootHovered: { color: '#c19c00'}
+    }
 
 
     return (
@@ -640,6 +651,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </table>
                 </div>
               </Stack>
+              <div>
+                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
+                  <StackItem align='center' >
+                    <DefaultButton styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={()=> this.downloadDataFile()}>Download User Data</DefaultButton>
+                  </StackItem>
+                  <StackItem align='center' >
+                    <DefaultButton styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile()}>Download Group Data</DefaultButton>
+                  </StackItem>
+                </Stack>
+              </div>
             </div>
           </div>
         </div>

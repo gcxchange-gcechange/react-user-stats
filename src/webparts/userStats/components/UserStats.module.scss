@@ -109,8 +109,20 @@
     padding: 10px;
     border: 1px solid;
   }
+}
 
 
+.downloadData {
+  width: 275px;
+  height: 50px;
+  background-color: black;
+  color: white;
+  font-size: 19px;
+  border-radius: 5px;
+  justify-content: center!important;
 
+  &:hover {
+   color:  #c19c00;
+  }
 
 }
