@@ -1,9 +1,16 @@
 @import '~office-ui-fabric-react/dist/sass/References.scss';
 
+:global {
+  #workbenchPageContent, .CanvasComponent.LCS .CanvasZone {
+    max-width: 100% !important;
+  }
+
+}
+
 .userStats {
   .container {
     max-width: 700px;
-    margin: 0px auto;
+    margin: 0px ;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
     padding: 20px;
   }
@@ -106,6 +113,7 @@
   }
 
   th, td {
+    width: 30%;
     padding: 10px;
     border: 1px solid;
   }

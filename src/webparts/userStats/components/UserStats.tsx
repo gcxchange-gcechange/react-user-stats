@@ -16,6 +16,7 @@ import { IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import * as moment from 'moment';
 
+
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
@@ -46,6 +47,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_com_member_30: 0,
       nmb_com_member_31: 0,
       selectedDate: new Date().toLocaleDateString('en-GB').replace(/\//g, '-'),
+      nmb_member_per_comm_0: 0,
+      nmb_member_per_comm_3: 0,
+      nmb_member_per_comm_5: 0,
+      nmb_member_per_comm_10: 0,
+      nmb_member_per_comm_20: 0,
+      nmb_member_per_comm_21: 0,
     }
   }
 
@@ -239,7 +246,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   }
                 }
               });
-
+              console.log("totalComm", totalCommunities);
               // Sort by creation date
               totalCommunities.sort( (a,b) =>  {
                 var keyA = a.creationDate.split('-').join('');
@@ -260,6 +267,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               console.log("commPerDAY- GROUPS", communitiesPerDay);
               // Filter out community groups by their type to leave mostly departments
               var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
+              console.log("filtered", filteredR)
 
               var allDepartments = [];
               var allDepartmentsB2B = [];// Only depart that have a B2B group
@@ -285,6 +293,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 if (allDepartmentsB2B.find((user) => user.includes(splits[0])) == undefined) { // If no b2b group exist for the depart, add the regular group to the final list
                   // console.log(" IN B2B" + splits[0]);
                   allDepartmentsFinal.push(`${s}`);
+
                 }
               });
 
@@ -304,11 +313,76 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 nmb_com_member_31: nmb_com_member_31,
                 groupLoading: false,
               });
+
+              // console.log("groupsDelta", this.state.groupsDelta);
+              this.getUserperCommunity(r);
+              this.downloadDataFile(r);
             }));
           })
-
         });
 
+  }
+
+
+  public getUserperCommunity(groups: any) {
+
+    const unifiedGroups = groups.filter((group) => group.groupType[0] === 'Unified');
+
+    const allUsers = unifiedGroups.flatMap((item) => item.userlist).flat();
+
+    console.log("AllUsers", allUsers);
+    const countMap = new Map();
+      allUsers.forEach(value =>  {
+      if (countMap.has(value)) {
+      countMap.set(value, countMap.get(value) + 1);
+      } else {
+      countMap.set(value, 1);
+      }
+    });
+
+
+    // console.log("count", countMap);
+
+    const result = [0, 0, 0, 0, 0];
+
+    countMap.forEach((key) => {
+
+      if (key <= 3 ) {
+        result[0]++
+      }
+      else if ( key <= 5) {
+        result[1]++
+      }
+      else if ( key <= 10) {
+        result[2]++
+      }
+      else if( key <= 20 ) {
+        result[3]++
+      }
+      else if( key >= 21 ) {
+        result[4]++
+      }
+
+      // console.log("Res",result)
+
+    })
+
+    const [nmb_member_per_comm_3, nmb_member_per_comm_5, nmb_member_per_comm_10, nmb_member_per_comm_20, nmb_member_per_comm_21] = result;
+
+    const arrayTotal = nmb_member_per_comm_3 + nmb_member_per_comm_5 + nmb_member_per_comm_10 + nmb_member_per_comm_20 + nmb_member_per_comm_21;
+
+    let totalUsers = this.state.allUsers.length;
+
+    const usersWithNoComm = totalUsers - arrayTotal;
+
+    this.setState({
+      nmb_member_per_comm_0: usersWithNoComm,
+      nmb_member_per_comm_3: nmb_member_per_comm_3,
+      nmb_member_per_comm_5: nmb_member_per_comm_5,
+      nmb_member_per_comm_10: nmb_member_per_comm_10,
+      nmb_member_per_comm_20: nmb_member_per_comm_20,
+      nmb_member_per_comm_21: nmb_member_per_comm_21
+    })
   }
 
   private generateEntry(year, month) {
@@ -496,9 +570,31 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   }
 
-  private downloadDataFile = (): void => {
-    const date = this.state.selectedDate;
-    console.log("date", date)
+  private downloadDataFile = (data: any): void => {
+
+    const content = JSON.stringify(data);
+    const file = new Blob( [data], {type: "text/plain"});
+
+    const dataStr =
+      'data:application/json;charset=utf-8,' +
+      encodeURIComponent(JSON.stringify(data));
+
+    // const url = URL.createObjectURL(dataStr);
+    const element = document.createElement("a");
+    // element.setAttribute('href', dataStr);
+    // element.href = url;
+    element.download = `${this.state.selectedDate}-Group.txt`
+
+    // document.body.appendChild(element);
+    element.setAttribute("href", dataStr);
+    element.setAttribute("download", this.state.selectedDate + ".txt");
+
+    document.body.appendChild(element);
+
+    element.click();
+
+    console.log("Content",content)
+    console.log("File", file);
   }
 
 
@@ -617,7 +713,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     })
                   }
                 </div>
-                <div>
+                <Stack >
+                <div style={{overflowX: 'auto'}}>
                   <h2>Community membership count</h2>
 
                   <table>
@@ -651,14 +748,50 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     </tr>
                   </table>
                 </div>
+                <div style={{overflowX: 'auto'}}>
+                  <h2>Members per Community</h2>
+
+                  <table>
+                    <tr>
+                      <th>Total Members</th>
+                      <th>Number of Communities Joined</th>
+                    </tr>
+                    <tr>
+                      <td>{ this.state.nmb_member_per_comm_0 }</td>
+                      <td>None</td>
+                    </tr>
+                    <tr>
+                      <td>{ this.state.nmb_member_per_comm_3 } </td>
+                      <td>1 to 3</td>
+                    </tr>
+                    <tr>
+                      <td>{ this.state.nmb_member_per_comm_5 } </td>
+                      <td>4 to 5</td>
+                    </tr>
+                    <tr>
+                      <td>{ this.state.nmb_member_per_comm_10 } </td>
+                      <td>6 to 10</td>
+                    </tr>
+                    <tr>
+                      <td>{ this.state.nmb_member_per_comm_20 } </td>
+                      <td>11 to 20</td>
+                    </tr>
+                    <tr>
+                      <td>{ this.state.nmb_member_per_comm_21 } </td>
+                      <td>21 or more</td>
+                    </tr>
+                  </table>
+                </div>
+
+                </Stack>
               </Stack>
               <div>
                 <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
                   <StackItem align='center' >
-                    <DefaultButton styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={()=> this.downloadDataFile()}>Download User Data</DefaultButton>
+                    <DefaultButton styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={this.downloadDataFile} value="download">Download User Data</DefaultButton>
                   </StackItem>
                   <StackItem align='center' >
-                    <DefaultButton styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile()}>Download Group Data</DefaultButton>
+                    <DefaultButton styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={this.downloadDataFile}>Download Group Data</DefaultButton>
                   </StackItem>
                 </Stack>
               </div>
