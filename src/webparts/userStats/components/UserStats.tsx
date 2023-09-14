@@ -19,8 +19,8 @@ import * as moment from 'moment';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '';
-  private url = '';
+  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
+  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
 
 
@@ -497,7 +497,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   private downloadDataFile = (): void => {
-    console.log("clicke")
+    const date = this.state.selectedDate;
+    console.log("date", date)
   }
 
 
