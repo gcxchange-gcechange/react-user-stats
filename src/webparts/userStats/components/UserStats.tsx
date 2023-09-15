@@ -53,6 +53,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_member_per_comm_10: 0,
       nmb_member_per_comm_20: 0,
       nmb_member_per_comm_21: 0,
+      apiGroupData: [],
+      apiUserData: [],
     }
   }
 
@@ -77,6 +79,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           .post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
+
+              this.setState({ apiUserData: r});
 
               var allDays = [];
               var allMonths = [];
@@ -211,6 +215,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
             return response.json().then(((r) => {
               console.log("GroupsRes", r);
 
+              this.setState({apiGroupData: r});
+
               // Get a count of communities (Unified group type)
               var totalCommunities = [];
               var allMonths = [];
@@ -316,7 +322,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
               // console.log("groupsDelta", this.state.groupsDelta);
               this.getUserperCommunity(r);
-              this.downloadDataFile(r);
             }));
           })
         });
@@ -330,7 +335,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     const allUsers = unifiedGroups.flatMap((item) => item.userlist).flat();
 
-    console.log("AllUsers", allUsers);
+    // console.log("AllUsers", allUsers);
     const countMap = new Map();
       allUsers.forEach(value =>  {
       if (countMap.has(value)) {
@@ -570,31 +575,40 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   }
 
-  private downloadDataFile = (data: any): void => {
+  private downloadDataGroupFile = (): void => {
 
-    const content = JSON.stringify(data);
-    const file = new Blob( [data], {type: "text/plain"});
+    const groupData = this.state.apiGroupData;
 
     const dataStr =
-      'data:application/json;charset=utf-8,' +
-      encodeURIComponent(JSON.stringify(data));
+      'data:text/json;chatset=utf-8,' +
+      encodeURIComponent(JSON.stringify(groupData));
 
-    // const url = URL.createObjectURL(dataStr);
-    const element = document.createElement("a");
-    // element.setAttribute('href', dataStr);
-    // element.href = url;
-    element.download = `${this.state.selectedDate}-Group.txt`
+    const link = document.createElement("a");
+    link.setAttribute("href", dataStr);
+    link.setAttribute("download", this.state.selectedDate + "-" +"groupStats" + ".txt");
 
-    // document.body.appendChild(element);
-    element.setAttribute("href", dataStr);
-    element.setAttribute("download", this.state.selectedDate + ".txt");
+    document.body.appendChild(link);
 
-    document.body.appendChild(element);
+    link.click();
 
-    element.click();
+  }
 
-    console.log("Content",content)
-    console.log("File", file);
+  private downloadDataUserFile = (): void => {
+
+    const userData = this.state.apiUserData;
+
+    const dataStr =
+      'data:text/json;chatset=utf-8,' +
+      encodeURIComponent(JSON.stringify(userData));
+
+    const link = document.createElement("a");
+    link.setAttribute("href", dataStr);
+    link.setAttribute("download", this.state.selectedDate + "-" +"userStats" + ".txt");
+
+    document.body.appendChild(link);
+
+    link.click();
+
   }
 
 
@@ -788,10 +802,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               <div>
                 <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
                   <StackItem align='center' >
-                    <DefaultButton styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={this.downloadDataFile} value="download">Download User Data</DefaultButton>
+                    <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={this.downloadDataUserFile} >Download User Data</DefaultButton>
                   </StackItem>
                   <StackItem align='center' >
-                    <DefaultButton styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={this.downloadDataFile}>Download Group Data</DefaultButton>
+                    <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={this.downloadDataGroupFile}>Download Group Data</DefaultButton>
                   </StackItem>
                 </Stack>
               </div>

@@ -22,5 +22,7 @@ export interface IUserStatsState {
   nmb_member_per_comm_10: any;
   nmb_member_per_comm_20: any;
   nmb_member_per_comm_21: any;
+  apiGroupData: any;
+  apiUserData: any;
 }
 
