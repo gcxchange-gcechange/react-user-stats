@@ -575,35 +575,25 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   }
 
-  private downloadDataGroupFile = (): void => {
+  private downloadDataFile = (dataType: string): void => {
 
-    const groupData = this.state.apiGroupData;
+    let data: any, fileName: any;
 
-    const dataStr =
-      'data:text/json;chatset=utf-8,' +
-      encodeURIComponent(JSON.stringify(groupData));
-
-    const link = document.createElement("a");
-    link.setAttribute("href", dataStr);
-    link.setAttribute("download", this.state.selectedDate + "-" +"groupStats" + ".txt");
-
-    document.body.appendChild(link);
-
-    link.click();
-
-  }
-
-  private downloadDataUserFile = (): void => {
-
-    const userData = this.state.apiUserData;
+    if (dataType === 'user') {
+      data = this.state.apiUserData;
+      fileName =  this.state.selectedDate + "-" +"UserStats" + ".txt";
+    } else if (dataType === 'group') {
+      data = this.state.apiGroupData;
+      fileName = this.state.selectedDate + "-" +"GroupStats" + ".txt";
+    }
 
     const dataStr =
       'data:text/json;chatset=utf-8,' +
-      encodeURIComponent(JSON.stringify(userData));
+      encodeURIComponent(JSON.stringify(data));
 
     const link = document.createElement("a");
     link.setAttribute("href", dataStr);
-    link.setAttribute("download", this.state.selectedDate + "-" +"userStats" + ".txt");
+    link.setAttribute("download", fileName)
 
     document.body.appendChild(link);
 
@@ -802,10 +792,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               <div>
                 <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
                   <StackItem align='center' >
-                    <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={this.downloadDataUserFile} >Download User Data</DefaultButton>
+                    <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('user')}>Download User Data</DefaultButton>
                   </StackItem>
                   <StackItem align='center' >
-                    <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={this.downloadDataGroupFile}>Download Group Data</DefaultButton>
+                    <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('group')}>Download Group Data</DefaultButton>
                   </StackItem>
                 </Stack>
               </div>
