@@ -320,7 +320,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 groupLoading: false,
               });
 
-              // console.log("groupsDelta", this.state.groupsDelta);
+              // add time out to allow the data of all user to be load before the calculation (For PROD env.)
+              setTimeout(() => {
+                this.getUserperCommunity(r);
+              }, 2000);
               this.getUserperCommunity(r);
             }));
           })
@@ -376,10 +379,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     const arrayTotal = nmb_member_per_comm_3 + nmb_member_per_comm_5 + nmb_member_per_comm_10 + nmb_member_per_comm_20 + nmb_member_per_comm_21;
 
-    let totalUsers = this.state.allUsers.length;
+    let totalUsers = this.state.apiUserData.length;
 
     const usersWithNoComm = totalUsers - arrayTotal;
-
     this.setState({
       nmb_member_per_comm_0: usersWithNoComm,
       nmb_member_per_comm_3: nmb_member_per_comm_3,
@@ -388,6 +390,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_member_per_comm_20: nmb_member_per_comm_20,
       nmb_member_per_comm_21: nmb_member_per_comm_21
     })
+
   }
 
   private generateEntry(year, month) {
