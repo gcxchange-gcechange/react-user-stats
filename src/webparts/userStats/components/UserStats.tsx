@@ -324,7 +324,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               setTimeout(() => {
                 this.getUserperCommunity(r);
               }, 2000);
-              this.getUserperCommunity(r);
             }));
           })
         });
