@@ -68,6 +68,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       headers: requestHeaders,
       body: `{
         "containerName": "groupsitestorage",
+        "selectedDate":"${this.state.selectedDate}"
       }`
     };
 
@@ -87,7 +88,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   public bytesToGB(bytes) {
-    const GB = (bytes / Math.pow(1024, 3))
+    const GB = (bytes / (1000 * 1000 * 1000))
     return Math.round(GB);
   }
 
@@ -103,8 +104,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     return sortbyName.map(item => (
       <tr key={item.id}>
         <td>{item.displayName}</td>
-        <td>{this.bytesToGB(item.remainingStorage).toFixed(2)}</td>
+        <td>{this.bytesToGB(item.remainingStorage)}</td>
         <td>{this.bytesToMB(item.usedStorage).toFixed(2)}</td>
+        <td>{this.bytesToGB(item.totalStorage).toFixed(2)}</td>
       </tr>
     ));
   }
@@ -523,7 +525,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     this.getAadUsers();
     this.getAadGroups();
     this.getAadActive();
-    this.getSiteStorage()
+    this.getSiteStorage();
+
   }
 
 
@@ -550,6 +553,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       this.getAadGroups();
       this.getAadActive();
       this.getSiteStorage();
+
     }
   }
 
@@ -848,6 +852,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                         <th>Name</th>
                         <th>Remaining Storage Size (GB)</th>
                         <th>Used Storage Size (MB)</th>
+                        <th>Total Storage Size (GB)</th>
                       </tr>
                     </thead>
                       <tbody>
