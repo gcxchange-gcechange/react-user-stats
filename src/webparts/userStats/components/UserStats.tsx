@@ -97,7 +97,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   public renderTableRows() {
 
-    return this.state.siteStorage.map(item => (
+    const sortbyName = this.state.siteStorage.sort((a, b) => a.displayName.toUpperCase() > b.displayName.toUpperCase() ? 0 : -1);
+    console.log("SORTBYNAME",sortbyName)
+
+    return sortbyName.map(item => (
       <tr key={item.id}>
         <td>{item.displayName}</td>
         <td>{this.bytesToGB(item.remainingStorage).toFixed(2)}</td>
@@ -837,21 +840,22 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </table>
                 </div>
 
-              <div>
-              <h2>Communities Storage Capacity</h2>
-              <table>
-                <thead>
-                  <tr>
-                    <th>Name</th>
-                    <th>Remaining Storage Size (GB)</th>
-                    <th>Used Storage Size (MB)</th>
-                  </tr>
-                </thead>
-                  <tbody>
-                  {this.renderTableRows()}
-                  </tbody>
-              </table>
-            </div>
+                <div style={{marginBottom: "12px"}}>
+                  <h2>Communities Storage Capacity</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Name</th>
+                        <th>Remaining Storage Size (GB)</th>
+                        <th>Used Storage Size (MB)</th>
+                      </tr>
+                    </thead>
+                      <tbody>
+                      {this.renderTableRows()}
+                      </tbody>
+                  </table>
+                </div>
+
                 </Stack>
               </Stack>
               <div>
