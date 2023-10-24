@@ -24,5 +24,7 @@ export interface IUserStatsState {
   nmb_member_per_comm_21: any;
   apiGroupData: any;
   apiUserData: any;
+  siteStorage: any;
+  remainingStorage: any;
 }
 

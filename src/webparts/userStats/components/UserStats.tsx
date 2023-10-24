@@ -55,8 +55,57 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_member_per_comm_21: 0,
       apiGroupData: [],
       apiUserData: [],
+      siteStorage: [],
+      remainingStorage: [],
     }
   }
+
+  private async getSiteStorage(): Promise<any> {
+    const requestHeaders: Headers = new Headers();
+    requestHeaders.append("Content-type", "application/json");
+    requestHeaders.append("Cache-Control", "no-cache");
+    const postOptions: IHttpClientOptions = {
+      headers: requestHeaders,
+      body: `{
+        "containerName": "groupsitestorage",
+      }`
+    };
+
+    this.props.context.aadHttpClientFactory
+      .getClient(this.clientId)
+      .then((client: AadHttpClient) => {
+        client
+          .post(this.url, AadHttpClient.configurations.v1, postOptions)
+          .then((response: HttpClientResponse): Promise<any> => {
+            return response.json().then(((r) => {
+              console.log("R", r);
+              this.setState({siteStorage: r});
+
+            }));
+          });
+        })
+  }
+
+  public bytesToGB(bytes) {
+    const GB = (bytes / Math.pow(1024, 3))
+    return Math.round(GB);
+  }
+
+  public bytesToMB(bytes) {
+    return (bytes / Math.pow(1024, 2))
+  }
+
+  public renderTableRows() {
+
+    return this.state.siteStorage.map(item => (
+      <tr key={item.id}>
+        <td>{item.displayName}</td>
+        <td>{this.bytesToGB(item.remainingStorage).toFixed(2)}</td>
+        <td>{this.bytesToMB(item.usedStorage).toFixed(2)}</td>
+      </tr>
+    ));
+  }
+
 
   // User Stats Call
   private async getAadUsers(): Promise<any> {
@@ -471,6 +520,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     this.getAadUsers();
     this.getAadGroups();
     this.getAadActive();
+    this.getSiteStorage()
   }
 
 
@@ -496,7 +546,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       this.getAadUsers();
       this.getAadGroups();
       this.getAadActive();
-
+      this.getSiteStorage();
     }
   }
 
@@ -787,6 +837,21 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </table>
                 </div>
 
+              <div>
+              <h2>Communities Storage Capacity</h2>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Name</th>
+                    <th>Remaining Storage Size (GB)</th>
+                    <th>Used Storage Size (MB)</th>
+                  </tr>
+                </thead>
+                  <tbody>
+                  {this.renderTableRows()}
+                  </tbody>
+              </table>
+            </div>
                 </Stack>
               </Stack>
               <div>
