@@ -20,8 +20,8 @@ import * as moment from 'moment';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
-  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
+  private clientId = ' ';
+  private url = ' ';
   // *********************
 
 
@@ -99,14 +99,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   public renderTableRows() {
 
     const sortbyName = this.state.siteStorage.sort((a, b) => a.displayName.toUpperCase() > b.displayName.toUpperCase() ? 0 : -1);
-    console.log("SORTBYNAME",sortbyName)
 
     return sortbyName.map(item => (
       <tr key={item.id}>
         <td>{item.displayName}</td>
         <td>{this.bytesToGB(item.remainingStorage)}</td>
-        <td>{this.bytesToMB(item.usedStorage).toFixed(2)}</td>
-        <td>{this.bytesToGB(item.totalStorage).toFixed(2)}</td>
+        <td>{item.folderlist.length}</td>
       </tr>
     ));
   }
@@ -851,8 +849,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                       <tr>
                         <th>Name</th>
                         <th>Remaining Storage Size (GB)</th>
-                        <th>Used Storage Size (MB)</th>
-                        <th>Total Storage Size (GB)</th>
+                        <th>Document Count</th>
                       </tr>
                     </thead>
                       <tbody>
