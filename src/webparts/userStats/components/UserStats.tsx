@@ -687,11 +687,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     } else if (dataType === 'group') {
       data = this.state.apiGroupData;
       fileName = this.state.selectedDate + "-" +"GroupStats" + ".txt";
+    } else if (dataType === 'siteStorage') {
+      data = this.state.siteStorage;
+      fileName = this.state.selectedDate + "-" + "SiteStorage" + ".txt";
     }
 
     const dataStr =
       'data:text/json;chatset=utf-8,' +
-      encodeURIComponent(JSON.stringify(data));
+      encodeURIComponent(JSON.stringify(data, null, 2));
 
     const link = document.createElement("a");
     link.setAttribute("href", dataStr);
@@ -922,13 +925,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
                 </Stack>
               </Stack>
-              <div>
+              <div style={{marginTop: '15px'}}>
                 <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
                   <StackItem align='center' >
                     <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('user')}>Download User Data</DefaultButton>
                   </StackItem>
                   <StackItem align='center' >
                     <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('group')}>Download Group Data</DefaultButton>
+                  </StackItem>
+                  <StackItem align='center' >
+                    <DefaultButton id="siteStorage" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('siteStorage')}>Download Site Storage Data</DefaultButton>
                   </StackItem>
                 </Stack>
               </div>
