@@ -15,13 +15,14 @@ import styles from './UserStats.module.scss';
 import { IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import * as moment from 'moment';
+import { forEach } from 'lodash';
 
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = ' ';
-  private url = ' ';
+  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
+  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
 
 
@@ -107,6 +108,51 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         <td>{item.folderlist.length}</td>
       </tr>
     ));
+  }
+
+
+  public renderFolderTableRows() {
+
+    const documentData = this.state.siteStorage;
+
+    let results = [0,0,0,0];
+
+
+    documentData.forEach(item => {
+      if(item.folderlist.length <= 5) {
+        results[0]++
+      }
+      else if(item.folderlist.length >=6 && item.folderlist.length <= 20){
+        results[1]++
+      }
+      else if(item.folderlist.length >=21 && item.folderlist.length <= 30){
+        results[2]++
+      }
+      else if(item.folderlist.length > 31) {
+        results[3]++
+      }
+
+    });
+
+    return (
+      <><tr>
+          <td> 5 or less </td>
+          <td>{results[0]}</td>
+        </tr>
+        <tr>
+          <td> 6 - 20 </td>
+          <td>{results[1]}</td>
+        </tr>
+        <tr>
+          <td> 21 - 30 </td>
+          <td>{results[2]}</td>
+        </tr>
+        <tr>
+          <td> 31 or more </td>
+          <td>{results[3]}</td>
+        </tr>
+      </>
+    )
   }
 
 
@@ -545,6 +591,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         communityCount: [],
         communitiesPerDay: [],
         communitiesPerMonth: [],
+        siteStorage: [],
       })
 
       this.getAadUsers();
@@ -854,6 +901,21 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     </thead>
                       <tbody>
                       {this.renderTableRows()}
+                      </tbody>
+                  </table>
+                </div>
+
+                <div style={{marginBottom: "12px"}}>
+                  <h2>File Count per Community</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Number of Communities</th>
+                        <th>Document Count</th>
+                      </tr>
+                    </thead>
+                      <tbody>
+                      {this.renderFolderTableRows()}
                       </tbody>
                   </table>
                 </div>
