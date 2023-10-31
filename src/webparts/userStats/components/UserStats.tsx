@@ -97,17 +97,71 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     return (bytes / Math.pow(1024, 2))
   }
 
-  public renderTableRows() {
+  public renderStorageTableRows() {
 
-    const sortbyName = this.state.siteStorage.sort((a, b) => a.displayName.toUpperCase() > b.displayName.toUpperCase() ? 0 : -1);
 
-    return sortbyName.map(item => (
-      <tr key={item.id}>
-        <td>{item.displayName}</td>
-        <td>{this.bytesToGB(item.remainingStorage)}</td>
-        <td>{item.folderlist.length}</td>
-      </tr>
-    ));
+    const siteStorageData = this.state.siteStorage;
+
+    const range0To20 = 0.20;
+    const range21To40 = 0.40;
+    const range41To60 = 0.60;
+    const range60To80 = 0.80;
+    const range81To100 = 1.0;
+
+    let results = [0,0,0,0,0];
+
+    siteStorageData.forEach(item => {
+
+
+      const percentage = (item.totalStorage / item.usedStorage) * 100 ;
+      const usage = (percentage/ (item.totalStorage * 1024* 1024* 1024)) * 100;
+
+      console.log("percentage", percentage);
+      if( usage > 0 && usage <= range0To20) {
+        results[0]++
+      } else if ( usage > range0To20 && usage <= range21To40 ) {
+        results[1]++
+      } else if ( usage > range21To40 && usage <= range41To60 ) {
+        results[2]++
+      } else if ( usage > range41To60 && usage <= range41To60 ) {
+        results[3]++
+      } else if ( usage > range60To80 && usage <= range81To100 ) {
+        results[4]++
+      }
+
+    })
+
+    return (
+      <><tr>
+          <td>0 - 20%</td>
+          <td>{results[0]}</td>
+        </tr>
+        <tr>
+          <td>21-40%</td>
+          <td>{results[1]}</td>
+        </tr>
+        <tr>
+          <td>41-60%</td>
+          <td>{results[2]}</td>
+        </tr>
+        <tr>
+          <td>61-80%</td>
+          <td>{results[3]}</td>
+        </tr>
+        <tr>
+          <td>81-100%</td>
+          <td>{results[4]}</td>
+        </tr>
+      </>
+    )
+
+
+    // return sortbyName.map(item => (
+    //   <tr key={item.id}>
+    //     <td>{item.displayName}</td>
+    //     <td>{results[0]}</td>
+    //   </tr>
+    // ));
   }
 
 
@@ -897,13 +951,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   <table>
                     <thead>
                       <tr>
-                        <th>Name</th>
-                        <th>Remaining Storage Size (GB)</th>
-                        <th>Document Count</th>
+                        <th>Storage Usage Range</th>
+                        <th>Number of Communities</th>
                       </tr>
                     </thead>
                       <tbody>
-                      {this.renderTableRows()}
+                      {this.renderStorageTableRows()}
                       </tbody>
                   </table>
                 </div>
