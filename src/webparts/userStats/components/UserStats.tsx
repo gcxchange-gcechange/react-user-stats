@@ -21,8 +21,8 @@ import { forEach } from 'lodash';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
-  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
+  private clientId = ' ';
+  private url = ' ';
   // *********************
 
 
@@ -112,20 +112,18 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     siteStorageData.forEach(item => {
 
-
-      const percentage = (item.totalStorage / item.usedStorage) * 100 ;
-      const usage = (percentage/ (item.totalStorage * 1024* 1024* 1024)) * 100;
+      const percentage = (item.usedStorage / item.totalStorage) * 100 ;
 
       console.log("percentage", percentage);
-      if( usage > 0 && usage <= range0To20) {
+      if( percentage > 0 && percentage <= range0To20) {
         results[0]++
-      } else if ( usage > range0To20 && usage <= range21To40 ) {
+      } else if ( percentage > range0To20 && percentage <= range21To40 ) {
         results[1]++
-      } else if ( usage > range21To40 && usage <= range41To60 ) {
+      } else if ( percentage > range21To40 && percentage <= range41To60 ) {
         results[2]++
-      } else if ( usage > range41To60 && usage <= range41To60 ) {
+      } else if ( percentage > range41To60 && percentage <= range41To60 ) {
         results[3]++
-      } else if ( usage > range60To80 && usage <= range81To100 ) {
+      } else if ( percentage > range60To80 && percentage <= range81To100 ) {
         results[4]++
       }
 
@@ -155,13 +153,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       </>
     )
 
-
-    // return sortbyName.map(item => (
-    //   <tr key={item.id}>
-    //     <td>{item.displayName}</td>
-    //     <td>{results[0]}</td>
-    //   </tr>
-    // ));
   }
 
 
@@ -404,7 +395,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   }
                 }
               });
-              console.log("totalComm", totalCommunities);
+
               // Sort by creation date
               totalCommunities.sort( (a,b) =>  {
                 var keyA = a.creationDate.split('-').join('');
@@ -415,17 +406,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               var communitiesPerMonth = {};
               allMonths.forEach(e => communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1);
 
-              console.log("COMM - GROUPS", communitiesPerMonth);
               // Count duplicates to get the communities created per day
               let communitiesPerDay = {};
               totalCommunities.forEach(community => {
                 communitiesPerDay[community.creationDate] = (communitiesPerDay[community.creationDate] || 0) + 1;
               });
               communitiesPerDay = Object.keys(communitiesPerDay).map((key) => [key, communitiesPerDay[key]]);
-              console.log("commPerDAY- GROUPS", communitiesPerDay);
               // Filter out community groups by their type to leave mostly departments
               var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
-              console.log("filtered", filteredR)
 
               var allDepartments = [];
               var allDepartmentsB2B = [];// Only depart that have a B2B group
@@ -471,9 +459,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 nmb_com_member_31: nmb_com_member_31,
                 groupLoading: false,
               });
-
-              // console.log("groupsDelta", this.state.groupsDelta);
-              this.getUserperCommunity(r);
             }));
           })
         });
@@ -481,13 +466,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
 
-  public getUserperCommunity(groups: any) {
+  public getUserperCommunity( ) {
 
-    const unifiedGroups = groups.filter((group) => group.groupType[0] === 'Unified');
+    const unifiedGroups = this.state.apiGroupData.filter((group) => group.groupType[0] === 'Unified');
 
     const allUsers = unifiedGroups.flatMap((item) => item.userlist).flat();
 
-    // console.log("AllUsers", allUsers);
     const countMap = new Map();
       allUsers.forEach(value =>  {
       if (countMap.has(value)) {
@@ -496,9 +480,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       countMap.set(value, 1);
       }
     });
-
-
-    // console.log("count", countMap);
 
     const result = [0, 0, 0, 0, 0];
 
@@ -520,26 +501,33 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         result[4]++
       }
 
-      // console.log("Res",result)
-
     })
 
-    const [nmb_member_per_comm_3, nmb_member_per_comm_5, nmb_member_per_comm_10, nmb_member_per_comm_20, nmb_member_per_comm_21] = result;
+    return (
+      <><tr>
+          <td>{result[0]}</td>
+          <td> None </td>
+        </tr>
+        <tr>
+          <td>{result[1]}</td>
+          <td> 1 - 3 </td>
+        </tr>
+        <tr>
+          <td>{result[2]}</td>
+          <td> 4 - 5 </td>
+        </tr>
+        <tr>
+          <td>{result[3]}</td>
+          <td> 6 - 10</td>
+        </tr>
+        <tr>
+          <td>{result[4]}</td>
+          <td> 11 - 20 </td>
+        </tr>
+      </>
+    )
 
-    const arrayTotal = nmb_member_per_comm_3 + nmb_member_per_comm_5 + nmb_member_per_comm_10 + nmb_member_per_comm_20 + nmb_member_per_comm_21;
 
-    let totalUsers = this.state.allUsers.length;
-
-    const usersWithNoComm = totalUsers - arrayTotal;
-
-    this.setState({
-      nmb_member_per_comm_0: usersWithNoComm,
-      nmb_member_per_comm_3: nmb_member_per_comm_3,
-      nmb_member_per_comm_5: nmb_member_per_comm_5,
-      nmb_member_per_comm_10: nmb_member_per_comm_10,
-      nmb_member_per_comm_20: nmb_member_per_comm_20,
-      nmb_member_per_comm_21: nmb_member_per_comm_21
-    })
   }
 
   private generateEntry(year, month) {
@@ -855,6 +843,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               <div>
                 {this.state.groupLoading && 'Loading Groups...'}
               </div>
+              <div style={{marginBottom: '30px'}}>
               <Stack horizontal disableShrink horizontalAlign="space-evenly" >
                 <div className={styles.statsHolder}>
                   <h2>Total Communities:</h2>
@@ -913,36 +902,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 </div>
                 <div style={{overflowX: 'auto'}}>
                   <h2>Members per Community</h2>
-
                   <table>
-                    <tr>
-                      <th>Total Members</th>
-                      <th>Number of Communities Joined</th>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_0 }</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_3 } </td>
-                      <td>1 to 3</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_5 } </td>
-                      <td>4 to 5</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_10 } </td>
-                      <td>6 to 10</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_20 } </td>
-                      <td>11 to 20</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_21 } </td>
-                      <td>21 or more</td>
-                    </tr>
+                    <thead>
+                      <tr>
+                        <th>Number of Members</th>
+                        <th>Communities Joined</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.getUserperCommunity()}
+                    </tbody>
                   </table>
                 </div>
 
@@ -951,7 +920,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   <table>
                     <thead>
                       <tr>
-                        <th>Storage Usage Range</th>
+                        <th>Storage percentage Range</th>
                         <th>Number of Communities</th>
                       </tr>
                     </thead>
@@ -978,7 +947,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
                 </Stack>
               </Stack>
-              <div style={{marginTop: '15px'}}>
+              </div>
+              <div className={styles.sourceFileCard}>
+                <h2 style={{textAlign:'center'}}>Source Files</h2>
                 <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
                   <StackItem align='center' >
                     <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('user')}>Download User Data</DefaultButton>
