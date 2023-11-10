@@ -21,8 +21,8 @@ import { forEach } from 'lodash';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = ' ';
-  private url = ' ';
+  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
+  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
 
 
@@ -58,6 +58,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       apiUserData: [],
       siteStorage: [],
       remainingStorage: [],
+      selectedDateDay: "",
     }
   }
 
@@ -65,6 +66,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
     requestHeaders.append("Cache-Control", "no-cache");
+
+
     const postOptions: IHttpClientOptions = {
       headers: requestHeaders,
       body: `{
@@ -114,7 +117,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
       const percentage = (item.usedStorage / item.totalStorage) * 100 ;
 
-      console.log("percentage", percentage);
+      // console.log("percentage", percentage);
       if( percentage > 0 && percentage <= range0To20) {
         results[0]++
       } else if ( percentage > range0To20 && percentage <= range21To40 ) {
@@ -617,7 +620,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
 
 
-
   public componentDidUpdate(prevProps, prevState) {
 
     if ((prevState.groupLoading === true && this.state.groupLoading === false) || (prevState.userLoading === true && this.state.userLoading === false)) {
@@ -626,6 +628,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
 
     if (this.state.selectedDate !== prevState.selectedDate ) {
+
+      console.log("I UPDATED");
 
       this.setState({
         allUsers: [],
@@ -642,6 +646,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       this.getSiteStorage();
 
     }
+
   }
 
 
@@ -706,13 +711,17 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   private onSelectDate = (date: Date): void => {
+    const dayofWeek = date.getDay();
     const day = ("0" + (date.getDate())).slice(-2)
     const month =  ("0" + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
     const formattedSelectedDate = day + '-' + month + '-' +  year;
 
+    const selectedDatewithDayofWeek = dayofWeek + "-" + month + "-" + year;
+
     this.setState({
       selectedDate: formattedSelectedDate,
+      selectedDateDay:  selectedDatewithDayofWeek ,
       userLoading: true,
       groupLoading: true,
     });
@@ -813,8 +822,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   showGoToToday= {true}
                   firstDayOfWeek={DayOfWeek.Sunday}
                   value={new Date(convertedDate)}
-
-
                 />
               </div>
               <div>
@@ -915,6 +922,24 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </table>
                 </div>
 
+                </Stack>
+              </Stack>
+              </div>
+
+              <div >
+                <div>
+                  <DatePicker
+                    className = {styles.calendarFieldStyles}
+                    placeholder="Select a date..."
+                    ariaLabel="Select a date"
+                    minDate={new Date(2000,12,30)}
+                    onSelectDate={this.onSelectDate}
+                    showGoToToday= {true}
+                    firstDayOfWeek={DayOfWeek.Sunday}
+                    value={new Date(convertedDate)}
+                  />
+                </div>
+                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
                 <div style={{marginBottom: "12px"}}>
                   <h2>Communities Storage Capacity</h2>
                   <table>
@@ -944,9 +969,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                       </tbody>
                   </table>
                 </div>
-
                 </Stack>
-              </Stack>
               </div>
               <div className={styles.sourceFileCard}>
                 <h2 style={{textAlign:'center'}}>Source Files</h2>
