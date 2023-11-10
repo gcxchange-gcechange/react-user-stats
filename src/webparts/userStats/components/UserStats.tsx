@@ -58,7 +58,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       apiUserData: [],
       siteStorage: [],
       remainingStorage: [],
-      selectedDateDay: "",
     }
   }
 
@@ -717,11 +716,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     const year = date.getFullYear();
     const formattedSelectedDate = day + '-' + month + '-' +  year;
 
-    const selectedDatewithDayofWeek = dayofWeek + "-" + month + "-" + year;
 
     this.setState({
       selectedDate: formattedSelectedDate,
-      selectedDateDay:  selectedDatewithDayofWeek ,
       userLoading: true,
       groupLoading: true,
     });
