@@ -20,8 +20,8 @@ import * as moment from 'moment';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
-  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
+  private clientId = ' ';
+  private url = ' ';
   // *********************
 
 
