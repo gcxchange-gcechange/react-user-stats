@@ -15,7 +15,6 @@ import styles from './UserStats.module.scss';
 import { IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import * as moment from 'moment';
-import { forEach } from 'lodash';
 
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
@@ -24,6 +23,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
   private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
+
 
 
 
@@ -58,8 +58,11 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       apiUserData: [],
       siteStorage: [],
       remainingStorage: [],
+      siteStorageSelectDate: new Date()
     }
   }
+
+
 
   private async getSiteStorage(): Promise<any> {
     const requestHeaders: Headers = new Headers();
@@ -67,11 +70,24 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     requestHeaders.append("Cache-Control", "no-cache");
 
 
+
+
+    let day = new Date(this.state.siteStorageSelectDate);
+    const dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek == 0 ? -6 : 1);
+    day.setDate(diff);
+
+    const getdate =  ("0" + (day.getDate())).slice(-2);
+    const getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
+    const getYear = day.getFullYear();
+
+    let selectReportDate = getdate + "-" + getMonth + '-' + getYear ;
+
+
     const postOptions: IHttpClientOptions = {
       headers: requestHeaders,
       body: `{
         "containerName": "groupsitestorage",
-        "selectedDate":"${this.state.selectedDate}"
+        "selectedDate":"${selectReportDate}"
       }`
     };
 
@@ -116,7 +132,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
       const percentage = (item.usedStorage / item.totalStorage) * 100 ;
 
-      // console.log("percentage", percentage);
       if( percentage > 0 && percentage <= range0To20) {
         results[0]++
       } else if ( percentage > range0To20 && percentage <= range21To40 ) {
@@ -628,8 +643,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     if (this.state.selectedDate !== prevState.selectedDate ) {
 
-      console.log("I UPDATED");
-
       this.setState({
         allUsers: [],
         countByMonth: [],
@@ -641,7 +654,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
       this.getAadUsers();
       this.getAadGroups();
-      this.getAadActive();
       this.getSiteStorage();
 
     }
@@ -715,12 +727,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     const month =  ("0" + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
     const formattedSelectedDate = day + '-' + month + '-' +  year;
+    // const formattedSiteStorageDate = dayofWeek + '-' + day + '-' + month + '-' +  year;
 
 
     this.setState({
       selectedDate: formattedSelectedDate,
       userLoading: true,
       groupLoading: true,
+      siteStorageSelectDate: date
     });
 
   }
@@ -924,7 +938,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               </div>
 
               <div >
-                <div>
+                {/* <div>
                   <DatePicker
                     className = {styles.calendarFieldStyles}
                     placeholder="Select a date..."
@@ -935,7 +949,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     firstDayOfWeek={DayOfWeek.Sunday}
                     value={new Date(convertedDate)}
                   />
-                </div>
+                </div> */}
                 <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
                 <div style={{marginBottom: "12px"}}>
                   <h2>Communities Storage Capacity</h2>

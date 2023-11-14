@@ -26,6 +26,7 @@ export interface IUserStatsState {
   apiUserData: any;
   siteStorage: any;
   remainingStorage: any;
+  siteStorageSelectDate: any;
 
 }
 
