@@ -20,9 +20,10 @@ import * as moment from 'moment';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
-  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
+  private clientId = ' ';
+  private url = ' ';
   // *********************
+
 
 
 
@@ -55,8 +56,167 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       nmb_member_per_comm_21: 0,
       apiGroupData: [],
       apiUserData: [],
+      siteStorage: [],
+      remainingStorage: [],
+      siteStorageSelectDate: new Date()
     }
   }
+
+
+
+  private async getSiteStorage(): Promise<any> {
+    const requestHeaders: Headers = new Headers();
+    requestHeaders.append("Content-type", "application/json");
+    requestHeaders.append("Cache-Control", "no-cache");
+
+
+
+
+    let day = new Date(this.state.siteStorageSelectDate);
+    const dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek == 0 ? -6 : 1);
+    day.setDate(diff);
+
+    const getdate =  ("0" + (day.getDate())).slice(-2);
+    const getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
+    const getYear = day.getFullYear();
+
+    let selectReportDate = getdate + "-" + getMonth + '-' + getYear ;
+
+
+    const postOptions: IHttpClientOptions = {
+      headers: requestHeaders,
+      body: `{
+        "containerName": "groupsitestorage",
+        "selectedDate":"${selectReportDate}"
+      }`
+    };
+
+    this.props.context.aadHttpClientFactory
+      .getClient(this.clientId)
+      .then((client: AadHttpClient) => {
+        client
+          .post(this.url, AadHttpClient.configurations.v1, postOptions)
+          .then((response: HttpClientResponse): Promise<any> => {
+            return response.json().then(((r) => {
+              console.log("R", r);
+              this.setState({siteStorage: r});
+
+            }));
+          });
+        })
+  }
+
+  public bytesToGB(bytes) {
+    const GB = (bytes / (1000 * 1000 * 1000))
+    return Math.round(GB);
+  }
+
+  public bytesToMB(bytes) {
+    return (bytes / Math.pow(1024, 2))
+  }
+
+  public renderStorageTableRows() {
+
+
+    const siteStorageData = this.state.siteStorage;
+
+    const range0To20 = 0.20;
+    const range21To40 = 0.40;
+    const range41To60 = 0.60;
+    const range60To80 = 0.80;
+    const range81To100 = 1.0;
+
+    let results = [0,0,0,0,0];
+
+    siteStorageData.forEach(item => {
+
+      const percentage = (item.usedStorage / item.totalStorage) * 100 ;
+
+      if( percentage > 0 && percentage <= range0To20) {
+        results[0]++
+      } else if ( percentage > range0To20 && percentage <= range21To40 ) {
+        results[1]++
+      } else if ( percentage > range21To40 && percentage <= range41To60 ) {
+        results[2]++
+      } else if ( percentage > range41To60 && percentage <= range41To60 ) {
+        results[3]++
+      } else if ( percentage > range60To80 && percentage <= range81To100 ) {
+        results[4]++
+      }
+
+    })
+
+    return (
+      <><tr>
+          <td>0 - 20%</td>
+          <td>{results[0]}</td>
+        </tr>
+        <tr>
+          <td>21-40%</td>
+          <td>{results[1]}</td>
+        </tr>
+        <tr>
+          <td>41-60%</td>
+          <td>{results[2]}</td>
+        </tr>
+        <tr>
+          <td>61-80%</td>
+          <td>{results[3]}</td>
+        </tr>
+        <tr>
+          <td>81-100%</td>
+          <td>{results[4]}</td>
+        </tr>
+      </>
+    )
+
+  }
+
+
+  public renderFolderTableRows() {
+
+    const documentData = this.state.siteStorage;
+
+    let results = [0,0,0,0];
+
+
+    documentData.forEach(item => {
+      if(item.folderlist.length <= 5) {
+        results[0]++
+      }
+      else if(item.folderlist.length >=6 && item.folderlist.length <= 20){
+        results[1]++
+      }
+      else if(item.folderlist.length >=21 && item.folderlist.length <= 30){
+        results[2]++
+      }
+      else if(item.folderlist.length > 31) {
+        results[3]++
+      }
+
+    });
+
+    return (
+      <><tr>
+          <td> 5 or less </td>
+          <td>{results[0]}</td>
+        </tr>
+        <tr>
+          <td> 6 - 20 </td>
+          <td>{results[1]}</td>
+        </tr>
+        <tr>
+          <td> 21 - 30 </td>
+          <td>{results[2]}</td>
+        </tr>
+        <tr>
+          <td> 31 or more </td>
+          <td>{results[3]}</td>
+        </tr>
+      </>
+    )
+  }
+
 
   // User Stats Call
   private async getAadUsers(): Promise<any> {
@@ -252,7 +412,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   }
                 }
               });
-              console.log("totalComm", totalCommunities);
+
               // Sort by creation date
               totalCommunities.sort( (a,b) =>  {
                 var keyA = a.creationDate.split('-').join('');
@@ -263,17 +423,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               var communitiesPerMonth = {};
               allMonths.forEach(e => communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1);
 
-              console.log("COMM - GROUPS", communitiesPerMonth);
               // Count duplicates to get the communities created per day
               let communitiesPerDay = {};
               totalCommunities.forEach(community => {
                 communitiesPerDay[community.creationDate] = (communitiesPerDay[community.creationDate] || 0) + 1;
               });
               communitiesPerDay = Object.keys(communitiesPerDay).map((key) => [key, communitiesPerDay[key]]);
-              console.log("commPerDAY- GROUPS", communitiesPerDay);
               // Filter out community groups by their type to leave mostly departments
               var filteredR = r.filter(item => item.groupType[0] !== 'Unified');
-              console.log("filtered", filteredR)
 
               var allDepartments = [];
               var allDepartmentsB2B = [];// Only depart that have a B2B group
@@ -319,9 +476,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 nmb_com_member_31: nmb_com_member_31,
                 groupLoading: false,
               });
-
-              // console.log("groupsDelta", this.state.groupsDelta);
-              this.getUserperCommunity(r);
             }));
           })
         });
@@ -329,13 +483,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
 
-  public getUserperCommunity(groups: any) {
+  public getUserperCommunity( ) {
 
-    const unifiedGroups = groups.filter((group) => group.groupType[0] === 'Unified');
+    const unifiedGroups = this.state.apiGroupData.filter((group) => group.groupType[0] === 'Unified');
 
     const allUsers = unifiedGroups.flatMap((item) => item.userlist).flat();
 
-    // console.log("AllUsers", allUsers);
     const countMap = new Map();
       allUsers.forEach(value =>  {
       if (countMap.has(value)) {
@@ -344,9 +497,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       countMap.set(value, 1);
       }
     });
-
-
-    // console.log("count", countMap);
 
     const result = [0, 0, 0, 0, 0];
 
@@ -368,26 +518,33 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         result[4]++
       }
 
-      // console.log("Res",result)
-
     })
 
-    const [nmb_member_per_comm_3, nmb_member_per_comm_5, nmb_member_per_comm_10, nmb_member_per_comm_20, nmb_member_per_comm_21] = result;
+    return (
+      <><tr>
+          <td>{result[0]}</td>
+          <td> None </td>
+        </tr>
+        <tr>
+          <td>{result[1]}</td>
+          <td> 1 - 3 </td>
+        </tr>
+        <tr>
+          <td>{result[2]}</td>
+          <td> 4 - 5 </td>
+        </tr>
+        <tr>
+          <td>{result[3]}</td>
+          <td> 6 - 10</td>
+        </tr>
+        <tr>
+          <td>{result[4]}</td>
+          <td> 11 - 20 </td>
+        </tr>
+      </>
+    )
 
-    const arrayTotal = nmb_member_per_comm_3 + nmb_member_per_comm_5 + nmb_member_per_comm_10 + nmb_member_per_comm_20 + nmb_member_per_comm_21;
 
-    let totalUsers = this.state.allUsers.length;
-
-    const usersWithNoComm = totalUsers - arrayTotal;
-
-    this.setState({
-      nmb_member_per_comm_0: usersWithNoComm,
-      nmb_member_per_comm_3: nmb_member_per_comm_3,
-      nmb_member_per_comm_5: nmb_member_per_comm_5,
-      nmb_member_per_comm_10: nmb_member_per_comm_10,
-      nmb_member_per_comm_20: nmb_member_per_comm_20,
-      nmb_member_per_comm_21: nmb_member_per_comm_21
-    })
   }
 
   private generateEntry(year, month) {
@@ -471,8 +628,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     this.getAadUsers();
     this.getAadGroups();
     this.getAadActive();
-  }
+    this.getSiteStorage();
 
+  }
 
 
 
@@ -491,13 +649,15 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         communityCount: [],
         communitiesPerDay: [],
         communitiesPerMonth: [],
+        siteStorage: [],
       })
 
       this.getAadUsers();
       this.getAadGroups();
-      this.getAadActive();
+      this.getSiteStorage();
 
     }
+
   }
 
 
@@ -562,15 +722,19 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   private onSelectDate = (date: Date): void => {
+    const dayofWeek = date.getDay();
     const day = ("0" + (date.getDate())).slice(-2)
     const month =  ("0" + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
     const formattedSelectedDate = day + '-' + month + '-' +  year;
+    // const formattedSiteStorageDate = dayofWeek + '-' + day + '-' + month + '-' +  year;
+
 
     this.setState({
       selectedDate: formattedSelectedDate,
       userLoading: true,
       groupLoading: true,
+      siteStorageSelectDate: date
     });
 
   }
@@ -585,11 +749,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     } else if (dataType === 'group') {
       data = this.state.apiGroupData;
       fileName = this.state.selectedDate + "-" +"GroupStats" + ".txt";
+    } else if (dataType === 'siteStorage') {
+      data = this.state.siteStorage;
+      fileName = this.state.selectedDate + "-" + "SiteStorage" + ".txt";
     }
 
     const dataStr =
       'data:text/json;chatset=utf-8,' +
-      encodeURIComponent(JSON.stringify(data));
+      encodeURIComponent(JSON.stringify(data, null, 2));
 
     const link = document.createElement("a");
     link.setAttribute("href", dataStr);
@@ -666,8 +833,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   showGoToToday= {true}
                   firstDayOfWeek={DayOfWeek.Sunday}
                   value={new Date(convertedDate)}
-
-
                 />
               </div>
               <div>
@@ -696,6 +861,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               <div>
                 {this.state.groupLoading && 'Loading Groups...'}
               </div>
+              <div style={{marginBottom: '30px'}}>
               <Stack horizontal disableShrink horizontalAlign="space-evenly" >
                 <div className={styles.statsHolder}>
                   <h2>Total Communities:</h2>
@@ -754,48 +920,79 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 </div>
                 <div style={{overflowX: 'auto'}}>
                   <h2>Members per Community</h2>
-
                   <table>
-                    <tr>
-                      <th>Total Members</th>
-                      <th>Number of Communities Joined</th>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_0 }</td>
-                      <td>None</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_3 } </td>
-                      <td>1 to 3</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_5 } </td>
-                      <td>4 to 5</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_10 } </td>
-                      <td>6 to 10</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_20 } </td>
-                      <td>11 to 20</td>
-                    </tr>
-                    <tr>
-                      <td>{ this.state.nmb_member_per_comm_21 } </td>
-                      <td>21 or more</td>
-                    </tr>
+                    <thead>
+                      <tr>
+                        <th>Number of Members</th>
+                        <th>Communities Joined</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {this.getUserperCommunity()}
+                    </tbody>
                   </table>
                 </div>
 
                 </Stack>
               </Stack>
-              <div>
+              </div>
+
+              <div >
+                {/* <div>
+                  <DatePicker
+                    className = {styles.calendarFieldStyles}
+                    placeholder="Select a date..."
+                    ariaLabel="Select a date"
+                    minDate={new Date(2000,12,30)}
+                    onSelectDate={this.onSelectDate}
+                    showGoToToday= {true}
+                    firstDayOfWeek={DayOfWeek.Sunday}
+                    value={new Date(convertedDate)}
+                  />
+                </div> */}
+                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
+                <div style={{marginBottom: "12px"}}>
+                  <h2>Communities Storage Capacity</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Storage percentage Range</th>
+                        <th>Number of Communities</th>
+                      </tr>
+                    </thead>
+                      <tbody>
+                      {this.renderStorageTableRows()}
+                      </tbody>
+                  </table>
+                </div>
+
+                <div style={{marginBottom: "12px"}}>
+                  <h2>File Count per Community</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Number of Communities</th>
+                        <th>Document Count</th>
+                      </tr>
+                    </thead>
+                      <tbody>
+                      {this.renderFolderTableRows()}
+                      </tbody>
+                  </table>
+                </div>
+                </Stack>
+              </div>
+              <div className={styles.sourceFileCard}>
+                <h2 style={{textAlign:'center'}}>Source Files</h2>
                 <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
                   <StackItem align='center' >
                     <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('user')}>Download User Data</DefaultButton>
                   </StackItem>
                   <StackItem align='center' >
                     <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('group')}>Download Group Data</DefaultButton>
+                  </StackItem>
+                  <StackItem align='center' >
+                    <DefaultButton id="siteStorage" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('siteStorage')}>Download Site Storage Data</DefaultButton>
                   </StackItem>
                 </Stack>
               </div>
