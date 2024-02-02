@@ -179,28 +179,32 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     let results = [0,0,0,0];
 
+    console.log(documentData)
+    if (documentData) {
 
-    documentData.forEach(folder => {
+      documentData.forEach(folder => {
 
-      const driveList = folder.drivesList;
+        const driveList = folder.drivesList;
+        if (driveList ) {
+          driveList.forEach((item) => {
+            const folderList = item.folderListItems.length
+            console.log("I", item.folderListItems);
 
-      driveList.forEach((item) => {
-        const folderList = item.folderListItems.length
-        console.log("I", item.folderListItems);
+              if (folderList <= 5) {
+              results[0]++
+              } else if(folderList >=6 && folderList <= 20){
+                  results[1]++
+              }
+              else if (folderList >=21 && folderList <= 30){
+                  results[2]++
+              } else if (folderList > 31) {
+                  results[3]++
+              }
+          })
+        }
 
-          if (folderList <= 5) {
-          results[0]++
-          } else if(folderList >=6 && folderList <= 20){
-              results[1]++
-          }
-          else if (folderList >=21 && folderList <= 30){
-              results[2]++
-          } else if (folderList > 31) {
-              results[3]++
-          }
-      })
-
-    });
+      });
+    }
 
     return (
       <><tr>
