@@ -20,8 +20,8 @@ import * as moment from 'moment';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = ' ';
-  private url = ' ';
+  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
+  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
 
 
@@ -180,19 +180,25 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     let results = [0,0,0,0];
 
 
-    documentData.forEach(item => {
-      if(item.folderlist.length <= 5) {
-        results[0]++
-      }
-      else if(item.folderlist.length >=6 && item.folderlist.length <= 20){
-        results[1]++
-      }
-      else if(item.folderlist.length >=21 && item.folderlist.length <= 30){
-        results[2]++
-      }
-      else if(item.folderlist.length > 31) {
-        results[3]++
-      }
+    documentData.forEach(folder => {
+
+      const driveList = folder.drivesList;
+
+      driveList.forEach((item) => {
+        const folderList = item.folderListItems.length
+        console.log("I", item.folderListItems);
+
+          if (folderList <= 5) {
+          results[0]++
+          } else if(folderList >=6 && folderList <= 20){
+              results[1]++
+          }
+          else if (folderList >=21 && folderList <= 30){
+              results[2]++
+          } else if (folderList > 31) {
+              results[3]++
+          }
+      })
 
     });
 
