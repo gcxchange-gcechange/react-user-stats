@@ -76,11 +76,13 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     const dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek == 0 ? -6 : 1);
     day.setDate(diff);
 
-    const getdate =  ("0" + (day.getDate())).slice(-2);
-    const getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
-    const getYear = day.getFullYear();
+     //const getdate =  ("0" + (day.getDate())).slice(-2);
+     const getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
+     const getYear = day.getFullYear();
 
-    let selectReportDate = getdate + "-" + getMonth + '-' + getYear ;
+     let selectReportDate = '09' + "-" + getMonth + '-' + getYear ;
+     console.log("dateSeleted", selectReportDate)
+
 
 
     const postOptions: IHttpClientOptions = {
@@ -183,12 +185,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     if (documentData) {
 
       documentData.forEach(folder => {
-
+        console.log("Folder", folder);
         const driveList = folder.drivesList;
         if (driveList ) {
           driveList.forEach((item) => {
             const folderList = item.folderListItems.length
-            console.log("I", item.folderListItems);
+            console.log("Items", item.folderListItems);
 
               if (folderList <= 5) {
               results[0]++
@@ -1006,6 +1008,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </StackItem>
                 </Stack>
               </div>
+              <p>Modified Date: 02/09/2024</p>
             </div>
           </div>
         </div>
