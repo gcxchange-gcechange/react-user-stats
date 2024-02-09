@@ -76,11 +76,11 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     const dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek == 0 ? -6 : 1);
     day.setDate(diff);
 
-     //const getdate =  ("0" + (day.getDate())).slice(-2);
+     const getdate =  ("0" + (day.getDate())).slice(-2);
      const getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
      const getYear = day.getFullYear();
 
-     let selectReportDate = '09' + "-" + getMonth + '-' + getYear ;
+     let selectReportDate = getdate + "-" + getMonth + '-' + getYear ;
      console.log("dateSeleted", selectReportDate)
 
 
