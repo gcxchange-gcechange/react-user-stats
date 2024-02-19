@@ -1,11 +1,16 @@
 {
   "@microsoft/generator-sharepoint": {
-    "version": "1.11.0",
+    "plusBeta": false,
+    "isCreatingSolution": true,
+    "nodeVersion": "16.14.0",
+    "sdksVersions": {
+      "@microsoft/microsoft-graph-client": "3.0.2"
+    },
+    "version": "1.17.4.0",
     "libraryName": "user-stats",
     "libraryId": "195502b1-b4bf-4f51-b0ab-66d4927f909b",
     "environment": "spo",
     "packageManager": "npm",
-    "isCreatingSolution": true,
     "isDomainIsolated": false,
     "componentType": "webpart"
   }
