@@ -20,8 +20,8 @@ import * as moment from 'moment';
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
   // *** replace these ***
-  private clientId = ' ';
-  private url = ' ';
+  private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
+  private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
 
 
@@ -73,8 +73,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
 
     let day = new Date(this.state.siteStorageSelectDate);
-    // const dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek == 0 ? -6 : 1);
-    // day.setDate(diff);
+     const dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek === 0 ? 0 : 0);
+     day.setDate(diff);
+     console.log("DAYOFWEEK", dayofWeek);
 
      const getdate =  ("0" + (day.getDate())).slice(-2);
      const getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
@@ -185,12 +186,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     if (documentData) {
 
       documentData.forEach(folder => {
-        console.log("Folder", folder);
+        //console.log("Folder", folder);
         const driveList = folder.drivesList;
         if (driveList ) {
           driveList.forEach((item) => {
             const folderList = item.folderListItems.length
-            console.log("Items", item.folderListItems);
+            //console.log("Items", item.folderListItems);
 
               if (folderList <= 5) {
               results[0]++
@@ -1008,7 +1009,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </StackItem>
                 </Stack>
               </div>
-              <p>Modified Date: 02/09/2024</p>
+              <p>Modified Date: 02/19/2024</p>
             </div>
           </div>
         </div>
