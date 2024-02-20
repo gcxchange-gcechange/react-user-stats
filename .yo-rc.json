@@ -2,15 +2,19 @@
   "@microsoft/generator-sharepoint": {
     "plusBeta": false,
     "isCreatingSolution": true,
-    "nodeVersion": "16.14.0",
+    "nodeVersion": "16.15.1",
     "sdksVersions": {
-      "@microsoft/microsoft-graph-client": "3.0.2"
+      "@microsoft/microsoft-graph-client": "3.0.2",
+      "@microsoft/teams-js": "2.9.1"
     },
-    "version": "1.17.4.0",
+    "version": "1.17.4",
     "libraryName": "user-stats",
     "libraryId": "195502b1-b4bf-4f51-b0ab-66d4927f909b",
     "environment": "spo",
     "packageManager": "npm",
+    "solutionName": "user-stats-client-side-solution",
+    "solutionShortDescription": "user-stats-client-side-solution",
+    "skipFeatureDeployment": true,
     "isDomainIsolated": false,
     "componentType": "webpart"
   }

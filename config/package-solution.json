@@ -7,7 +7,7 @@
     "includeClientSideAssets": true,
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
-    "webApiPermissionRequests": [  
+    "webApiPermissionRequests": [
       {
         "resource": "dgcx_dev_appreg_userstats_auth",
         "scope": "user_impersonation"
