@@ -1,4 +1,5 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
+/*eslint no-constant-condition: ["error", { "checkLoops": false }]*/
 
 import * as React from 'react';
 import { AadHttpClient, HttpClientResponse, IHttpClientOptions } from '@microsoft/sp-http';
@@ -70,22 +71,17 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     requestHeaders.append("Content-type", "application/json");
     requestHeaders.append("Cache-Control", "no-cache");
 
+    const day = new Date(this.state.siteStorageSelectDate);
+    const dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek === 0 ? 0 : 0);
+    day.setDate(diff);
+    console.log("DAYOFWEEK", dayofWeek);
 
+    const getdate =  ("0" + (day.getDate())).slice(-2);
+    const getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
+    const getYear = day.getFullYear();
 
-
-    let day = new Date(this.state.siteStorageSelectDate);
-     const dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek === 0 ? 0 : 0);
-     day.setDate(diff);
-     console.log("DAYOFWEEK", dayofWeek);
-
-     const getdate =  ("0" + (day.getDate())).slice(-2);
-     const getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
-     const getYear = day.getFullYear();
-
-     let selectReportDate = getdate + "-" + getMonth + '-' + getYear ;
+    const selectReportDate = getdate + "-" + getMonth + '-' + getYear ;
      console.log("dateSeleted", selectReportDate)
-
-
 
     const postOptions: IHttpClientOptions = {
       headers: requestHeaders,
@@ -95,11 +91,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       }`
     };
 
-    this.props.context.aadHttpClientFactory
-      .getClient(this.clientId)
-      .then((client: AadHttpClient) => {
-        client
-          .post(this.url, AadHttpClient.configurations.v1, postOptions)
+        await this.props.context.aadHttpClientFactory
+        .getClient(this.clientId)
+        .then(async(client: AadHttpClient) => {
+          await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
               console.log("R", r);
@@ -110,16 +105,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         })
   }
 
-  public bytesToGB(bytes:any) {
+  public bytesToGB(bytes:any): number {
     const GB = (bytes / (1000 * 1000 * 1000))
     return Math.round(GB);
   }
 
-  public bytesToMB(bytes:any) {
+  public bytesToMB(bytes:any): number {
     return (bytes / Math.pow(1024, 2))
   }
 
-  public renderStorageTableRows() {
+  public renderStorageTableRows(): string | JSX.Element {
 
 
     const siteStorageData = this.state.siteStorage;
@@ -130,7 +125,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     const range60To80 = 0.80;
     const range81To100 = 1.0;
 
-    let results = [0,0,0,0,0];
+    const results = [0,0,0,0,0];
 
     siteStorageData.forEach((item:any )=> {
 
@@ -177,11 +172,11 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
 
-  public renderFolderTableRows() {
+  public renderFolderTableRows(): JSX.Element {
 
     const documentData = this.state.siteStorage;
 
-    let results = [0,0,0,0];
+    const results = [0,0,0,0];
 
     console.log(documentData)
     if (documentData) {
@@ -246,11 +241,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       }`
     };
 
-    this.props.context.aadHttpClientFactory
+    await this.props.context.aadHttpClientFactory
       .getClient(this.clientId)
-      .then((client: AadHttpClient) => {
-        client
-          .post(this.url, AadHttpClient.configurations.v1, postOptions)
+      .then(async(client: AadHttpClient) => {
+        await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
 
@@ -271,17 +265,32 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
               // Count duplicates
               const duplicateMonthCount: any[] = [];
-              allMonths.forEach((e: any) => duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1);
-              const duplicateDayCount: any[] = [];
-              allDays.forEach((e: any) => duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1);
+              allMonths.forEach((e: any) => {
+                duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1;
+              });
 
-              const resultByMonth = Object.keys(duplicateMonthCount).map((e:any) => {return {key:e, count:duplicateMonthCount[e], communities: 0, report: {
-                title: "gcx-stats-" + e,
-                csv: [
-                  ["Date", "New Users", "New Communities"]
-                ]
+              const duplicateDayCount: any[] = [];
+              allDays.forEach((e: any) => {
+                duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1
+              });
+
+              const resultByMonth = Object.keys(duplicateMonthCount).map((e:any) => {
+                return {
+                  key:e,
+                  count:duplicateMonthCount[e],
+                  communities: 0,
+                  report: {
+                  title: "gcx-stats-" + e,
+                  csv: [
+                    ["Date", "New Users", "New Communities"]
+                  ]
               }}});
-              const resultByDay = Object.keys(duplicateDayCount).map((e:any) => { return {key:e, count:duplicateDayCount[e]};});
+              const resultByDay = Object.keys(duplicateDayCount).map((e:any) => {
+                return {
+                  key:e,
+                  count:duplicateDayCount[e]
+                };
+              });
 
               // Sort the dates
               resultByMonth.sort((a,b) =>  {
@@ -321,22 +330,22 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               const currYear = `${year}`;
               const currMonth = `${monthFormat}`;
 
-              let startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]); //output = 2021
+              const startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]); //output = 2021
 
-              let startMonth = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]);// output = 10 (October)
+              const startMonth = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]);// output = 10 (October)
 
               // Get the number of months from selected  date to the oldest date in the list
-              let monthsDifference = parseInt(currMonth) + 1 - startMonth + 12 * (parseInt(currYear) - startYear);
+              const monthsDifference = parseInt(currMonth) + 1 - startMonth + 12 * (parseInt(currYear) - startYear);
 
-              let fullResults = [];
-              let earliestDate = moment(startYear + '-' + startMonth);
+              const fullResults = [];
+              const earliestDate = moment(startYear + '-' + startMonth);
 
               for(let i = 0; i < monthsDifference; i++) {
 
                 if(i !== 0)
                   earliestDate.add(1, 'months');
 
-                let entry = this.generateEntry(earliestDate.format('YYYY'), earliestDate.format('MM'));
+                const entry = this.generateEntry(earliestDate.format('YYYY'), earliestDate.format('MM'));
                 fullResults.push(entry);
 
                 for(let c = 0; c < resultByMonth.length; c++) {
@@ -381,11 +390,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       }`
     };
 
-    this.props.context.aadHttpClientFactory
+    await this.props.context.aadHttpClientFactory
       .getClient(this.clientId)
-      .then((client: AadHttpClient) => {
-        client
-          .post(this.url, AadHttpClient.configurations.v1, postOptions)
+      .then(async(client: AadHttpClient) => {
+        await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
               console.log("GroupsRes", r);
@@ -399,11 +407,11 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 //const unified = [];
                 if (c.groupType[0] === 'Unified') {
 
-                  let splitDate = c.creationDate.split(" ")[0].split("/");
+                  const splitDate = c.creationDate.split(" ")[0].split("/");
 
 
                   // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
-                  let formattedDate = splitDate[2] + "-"
+                  const formattedDate = splitDate[2] + "-"
                     + (splitDate[0].length === 1 ? "0" + splitDate[0] : splitDate[0]) + "-"
                     + (splitDate[1].length === 1 ? "0" + splitDate[1] : splitDate[1]);
 
@@ -436,8 +444,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               });
 
               const communitiesPerMonth: string|number[] = [];
-              allMonths.forEach(e => communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1);
-
+              allMonths.forEach((e) => { communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1 });
               // Count duplicates to get the communities created per day
               let communitiesPerDay: any [] = [];
               totalCommunities.forEach((community:any) => {
@@ -498,7 +505,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
 
-  public getUserperCommunity( ) {
+  public getUserperCommunity( ): JSX.Element {
 
     const unifiedGroups = this.state.apiGroupData.filter((group:any) => group.groupType[0] === 'Unified');
 
@@ -562,8 +569,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   }
 
-  private generateEntry(year:any, month:any) {
-    let formattedMonth = this.formatMonth(month);
+  private generateEntry(year:any, month:any): any {
+    const formattedMonth = this.formatMonth(month);
     return {
       key: year + '-' + formattedMonth,
       count: 0,
@@ -578,18 +585,18 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     };
   }
 
-  private formatMonth(month: any) {
+  private formatMonth(month: any) : string {
     return month.toString().length === 1 ? '0' + month : month;
   }
 
   // https://stackoverflow.com/a/14966131
-  private downloadCSV(title: string, data: any) {
+  private downloadCSV(title: string, data: any): void {
 
     console.log("data", data)
     let content = "data:text/csv;charset=utf-8,";
 
     data.forEach((rowArray:any) => {
-      let row = rowArray.join(",");
+      const row = rowArray.join(",");
       content += row + "\r\n";
     });
 
@@ -606,7 +613,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   // Active user Stats Call
 
-  private getAadActive(): void {
+  private async getAadActive(): Promise<any> {
 
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
@@ -619,11 +626,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       }`
     };
 
-    this.props.context.aadHttpClientFactory
+    await this.props.context.aadHttpClientFactory
       .getClient(this.clientId)
-      .then((client: AadHttpClient) => {
-        client
-          .post(this.url, AadHttpClient.configurations.v1, postOptions)
+      .then(async(client: AadHttpClient) => {
+        await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
               let activeusers = ""
@@ -639,17 +645,17 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       })
   }
 
-  public componentDidMount() {
-    this.getAadUsers();
-    this.getAadGroups();
-    this.getAadActive();
-    this.getSiteStorage();
+  public async componentDidMount():Promise<void> {
+    await this.getAadUsers();
+    await this.getAadGroups();
+    await  this.getAadActive();
+    await this.getSiteStorage();
 
   }
 
 
 
-  public componentDidUpdate(prevProps: any, prevState: any) {
+  public async componentDidUpdate(prevProps: any, prevState: any): Promise<void>{
 
     if ((prevState.groupLoading === true && this.state.groupLoading === false) || (prevState.userLoading === true && this.state.userLoading === false)) {
       this.buildCSV();
@@ -667,16 +673,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         siteStorage: [],
       })
 
-      this.getAadUsers();
-      this.getAadGroups();
-      this.getSiteStorage();
+      await this.getAadUsers();
+      await this.getAadGroups();
+      await this.getSiteStorage();
 
     }
 
   }
 
 
-  private buildCSV() {
+  private buildCSV(): void {
     const monthCount = JSON.parse(JSON.stringify(this.state.countByMonth));
     const communitiesPerDay = JSON.parse(JSON.stringify(this.state.communitiesPerDay));
 
@@ -756,18 +762,18 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   private downloadDataFile = (dataType: string): void => {
 
-    let data: any, fileName: any;
+    let data: any, fileName: string;
     const selectedDate = this.state.selectedDate;
 
     if (dataType === 'user') {
       data = this.state.apiUserData;
-      fileName =  selectedDate + "-" +"UserStats" + ".txt";
+      fileName = selectedDate + "-UserStats.txt";
     } else if (dataType === 'group') {
       data = this.state.apiGroupData;
-      fileName = selectedDate + "-" +"GroupStats" + ".txt";
+      fileName = selectedDate  + "-GroupStats.txt";
     } else if (dataType === 'siteStorage') {
       data = this.state.siteStorage;
-      fileName = selectedDate + "-" + "SiteStorage" + ".txt";
+      fileName = selectedDate  + "-SiteStorage.txt";
     }
 
     const dataStr =
