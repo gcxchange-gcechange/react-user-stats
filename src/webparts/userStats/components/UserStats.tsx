@@ -12,12 +12,10 @@ import {
   Stack,
   StackItem
 } from 'office-ui-fabric-react';
-
 import styles from './UserStats.module.scss';
-import { IUserStatsProps } from './IUserStatsProps';
+import { IDomainCount, IUser, IUserStatsProps  } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import * as moment from 'moment';
-
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
 
@@ -26,8 +24,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
   // *********************
 
-
-
+  private domainCount: IDomainCount[] = [];
 
   constructor(props: IUserStatsProps, state: IUserStatsState) {
     super(props);
@@ -63,8 +60,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       siteStorageSelectDate: new Date()
     }
   }
-
-
 
   private async getSiteStorage(): Promise<any> {
     const requestHeaders: Headers = new Headers();
@@ -226,10 +221,21 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     )
   }
 
+  public renderDomainCountTableRows(): string | JSX.Element {
+      const rowData = this.domainCount.sort((a,b) => a.domain.toLowerCase().localeCompare(b.domain.toLowerCase())).map((row: IDomainCount) => {
+      return (
+          <tr key={row.domain}>
+            <td>{row.domain ? row.domain: "n/a"}</td>
+            <td>{row.count}</td>
+          </tr>
+      )
+    });
 
-  // User Stats Call
+    return (<>{rowData}</>);
+  }
+
+ // User Stats Call
   private async getAadUsers(): Promise<any> {
-
     const requestHeaders: Headers = new Headers();
     requestHeaders.append("Content-type", "application/json");
     requestHeaders.append("Cache-Control", "no-cache");
@@ -355,6 +361,25 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   }
                 }
               }
+
+              r.map((user: IUser) => {
+                let domain: string = "";
+               
+                if (user.mail !== null) {
+                  domain = user.mail.substring(user.mail.indexOf("@") + 1);
+                } else {
+                  domain = "";
+                }
+
+                const idx: number = this.domainCount.findIndex((elem) => {return  elem.domain === domain;});
+
+                if (idx > -1) {
+                  this.domainCount[idx].count += 1;
+                } else {
+                  const dCount: IDomainCount = { domain: domain, count: 1 };
+                  this.domainCount.push(dCount);
+                }
+              });
 
               // Set the state
               this.setState({
@@ -1003,7 +1028,25 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </table>
                 </div>
                 </Stack>
+
+                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center">
+                  <div style={{marginBottom: "12px"}}>
+                    <h2>User Count by Domain</h2>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Domain</th>
+                          <th>User Count</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        {this.renderDomainCountTableRows()}
+                      </tbody>
+                    </table>
+                  </div>
+                </Stack>
               </div>
+              <br />
               <div className={styles.sourceFileCard}>
                 <h2 style={{textAlign:'center'}}>Source Files</h2>
                 <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >

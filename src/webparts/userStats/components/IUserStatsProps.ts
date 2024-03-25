@@ -4,3 +4,14 @@ export interface IUserStatsProps {
   description: string;
   context: WebPartContext;
 }
+
+export interface IDomainCount {
+  domain: string;
+  count: number;
+}
+
+export interface IUser {
+  Id: string;
+  creationDate: Date;
+  mail: string;
+}
