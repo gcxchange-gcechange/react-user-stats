@@ -362,10 +362,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 }
               }
 
+              this.domainCount.length = 0;
+
               r.map((user: IUser) => {
                 let domain: string = "";
                
-                if (user.mail !== null) {
+                if ((user.mail !== undefined) && (user.mail !== null)) {
                   domain = user.mail.substring(user.mail.indexOf("@") + 1);
                 } else {
                   domain = "";
@@ -876,6 +878,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   placeholder="Select a date..."
                   ariaLabel="Select a date"
                   minDate={new Date(2000,12,30)}
+                  maxDate={new Date()}
                   onSelectDate={this.onSelectDate}
                   showGoToToday= {true}
                   firstDayOfWeek={DayOfWeek.Sunday}
