@@ -15,3 +15,9 @@ export interface IUser {
   creationDate: Date;
   mail: string;
 }
+
+export interface IActiveUserCount {
+  name: string;
+  countActiveusers: number;
+  countByDomain: IDomainCount[];
+}
