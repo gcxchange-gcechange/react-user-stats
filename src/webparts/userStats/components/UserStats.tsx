@@ -13,7 +13,7 @@ import {
   StackItem
 } from 'office-ui-fabric-react';
 import styles from './UserStats.module.scss';
-import { IDomainCount, IUser, IUserStatsProps  } from './IUserStatsProps';
+import { IActiveUserCount, IDomainCount, IUser, IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import * as moment from 'moment';
 
@@ -25,6 +25,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   // *********************
 
   private domainCount: IDomainCount[] = [];
+  private domainCountActive: IDomainCount[] = [];
 
   constructor(props: IUserStatsProps, state: IUserStatsState) {
     super(props);
@@ -233,6 +234,19 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     return (<>{rowData}</>);
   }
+
+  public renderDomainCountActiveTableRows(): string | JSX.Element {
+    const rowData = this.domainCountActive.sort((a,b) => a.domain.toLowerCase().localeCompare(b.domain.toLowerCase())).map((row: IDomainCount) => {
+    return (
+        <tr key={row.domain}>
+          <td>{row.domain ? row.domain: "n/a"}</td>
+          <td>{row.count}</td>
+        </tr>
+    )
+  });
+
+  return (<>{rowData}</>);
+}
 
  // User Stats Call
   private async getAadUsers(): Promise<any> {
@@ -659,15 +673,22 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
-              let activeusers = ""
-              r.map((c: any )=> {
-                activeusers = c.countActiveusers;
+              let activeusers: string = "";
+
+              r.map((c: IActiveUserCount )=> {
+                activeusers = c.countActiveusers.toString();
+
+                this.domainCountActive.length = 0;
+
+                if ((c.countByDomain !== undefined) && (c.countByDomain !== null)) {
+                  this.domainCountActive = c.countByDomain;
+                }
               })
+
               this.setState({
-                totalactiveuser: activeusers,
+                totalactiveuser: activeusers
               });
             }));
-
           })
       })
   }
@@ -677,20 +698,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     await this.getAadGroups();
     await  this.getAadActive();
     await this.getSiteStorage();
-
   }
 
-
-
   public async componentDidUpdate(prevProps: any, prevState: any): Promise<void>{
-
     if ((prevState.groupLoading === true && this.state.groupLoading === false) || (prevState.userLoading === true && this.state.userLoading === false)) {
       this.buildCSV();
     }
 
-
     if (this.state.selectedDate !== prevState.selectedDate ) {
-
       this.setState({
         allUsers: [],
         countByMonth: [],
@@ -703,11 +718,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       await this.getAadUsers();
       await this.getAadGroups();
       await this.getSiteStorage();
-
+      await this.getAadActive();
     }
-
   }
-
 
   private buildCSV(): void {
     const monthCount = JSON.parse(JSON.stringify(this.state.countByMonth));
@@ -988,53 +1001,37 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               </div>
 
               <div >
-                {/* <div>
-                  <DatePicker
-                    className = {styles.calendarFieldStyles}
-                    placeholder="Select a date..."
-                    ariaLabel="Select a date"
-                    minDate={new Date(2000,12,30)}
-                    onSelectDate={this.onSelectDate}
-                    showGoToToday= {true}
-                    firstDayOfWeek={DayOfWeek.Sunday}
-                    value={new Date(convertedDate)}
-                  />
-                </div> */}
-                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
-                <div style={{marginBottom: "12px"}}>
-                  <h2>Communities Storage Capacity</h2>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Storage percentage Range</th>
-                        <th>Number of Communities</th>
-                      </tr>
-                    </thead>
-                      <tbody>
-                      {this.renderStorageTableRows()}
-                      </tbody>
-                  </table>
-                </div>
+                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="start" >
+                  <div style={{marginBottom: "12px"}}>
+                    <h2>Communities Storage Capacity</h2>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Storage percentage Range</th>
+                          <th>Number of Communities</th>
+                        </tr>
+                      </thead>
+                      <tbody>{this.renderStorageTableRows()}</tbody>
+                    </table>
+                  </div>
 
-                <div style={{marginBottom: "12px"}}>
-                  <h2>File Count per Community</h2>
-                  <table>
-                    <thead>
-                      <tr>
-                        <th>Number of Communities</th>
-                        <th>Document Count</th>
-                      </tr>
-                    </thead>
-                      <tbody>
-                      {this.renderFolderTableRows()}
-                      </tbody>
-                  </table>
-                </div>
+                  <div style={{marginBottom: "12px"}}>
+                    <h2>File Count per Community</h2>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Number of Communities</th>
+                          <th>Document Count</th>
+                        </tr>
+                      </thead>
+                      <tbody>{this.renderFolderTableRows()}</tbody>
+                    </table>
+                  </div>
                 </Stack>
 
-                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center">
+                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="start">
                   <div style={{marginBottom: "12px"}}>
-                    <h2>User Count by Domain</h2>
+                    <h2>Active User Count by Domain</h2>
                     <table>
                       <thead>
                         <tr>
@@ -1042,9 +1039,20 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                           <th>User Count</th>
                         </tr>
                       </thead>
-                      <tbody>
-                        {this.renderDomainCountTableRows()}
-                      </tbody>
+                      <tbody>{this.renderDomainCountActiveTableRows()}</tbody>
+                    </table>
+                  </div>
+
+                  <div style={{marginBottom: "12px"}}>
+                    <h2>Total User Count by Domain</h2>
+                    <table>
+                      <thead>
+                        <tr>
+                          <th>Domain</th>
+                          <th>User Count</th>
+                        </tr>
+                      </thead>
+                      <tbody>{this.renderDomainCountTableRows()}</tbody>
                     </table>
                   </div>
                 </Stack>
