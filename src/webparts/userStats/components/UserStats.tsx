@@ -18,7 +18,6 @@ import { IUserStatsState } from './IUserStatsState';
 import * as moment from 'moment';
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
-
   // *** replace these ***
   private clientId = '9f778828-4248-474a-aa2b-ade60459fb87';
   private url = 'https://appsvc-function-dev-stats-dotnet001.azurewebsites.net/api/RetreiveData';
@@ -106,13 +105,16 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     return Math.round(GB);
   }
 
-  public bytesToMB(bytes:any): number {
-    return (bytes / Math.pow(1024, 2))
+  public bytesToTB(bytes:any): number {
+    const TB = (bytes / (1000 * 1000 * 1000 * 1000))
+    return Math.round(TB * 1000) / 1000;  // round to 3 decimal places
+  }
+
+  public numberWithCommas(x:number): string {
+    return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, " ");
   }
 
   public renderStorageTableRows(): string | JSX.Element {
-
-
     const siteStorageData = this.state.siteStorage;
 
     const range0To20 = 0.20;
@@ -123,9 +125,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     const results = [0,0,0,0,0];
 
-    siteStorageData.forEach((item:any )=> {
+    let usedStorage: number = 0;
 
-      const percentage = (item.usedStorage / item.totalStorage) * 100 ;
+    siteStorageData.forEach((item:any )=> {
+      usedStorage += parseInt(item.usedStorage);
+
+      const percentage = (item.usedStorage / item.totalStorage) * 100;
 
       if( percentage > 0 && percentage <= range0To20) {
         results[0]++
@@ -138,8 +143,21 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       } else if ( percentage > range60To80 && percentage <= range81To100 ) {
         results[4]++
       }
-
     })
+
+    const storageCapacity: number = this.props.storageCapacity * (1000 * 1000 * 1000 * 1000);
+    const availableStorage: number = storageCapacity - usedStorage;
+
+    let usedStorageDisplay: string;
+    let availableStorageDisplay: string;
+
+    if (this.props.storageUnit === "TB") {
+      usedStorageDisplay = this.numberWithCommas(this.bytesToTB(usedStorage)) + " " + this.props.storageUnit;
+      availableStorageDisplay = this.numberWithCommas(this.bytesToTB(availableStorage)) + " " + this.props.storageUnit;
+    } else {
+      usedStorageDisplay = this.numberWithCommas(this.bytesToGB(usedStorage)) + " " + this.props.storageUnit;
+      availableStorageDisplay = this.numberWithCommas(this.bytesToGB(availableStorage)) + " " + this.props.storageUnit;
+    }
 
     return (
       <><tr>
@@ -162,11 +180,17 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           <td>81-100%</td>
           <td>{results[4]}</td>
         </tr>
+        <tr>
+          <th>Used storage (total)</th>
+          <th>Available storage (total)</th>
+        </tr>
+        <tr>
+          <td>{usedStorageDisplay}</td>
+          <td>{availableStorageDisplay}</td>
+        </tr>
       </>
     )
-
   }
-
 
   public renderFolderTableRows(): JSX.Element {
 
@@ -1072,7 +1096,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </StackItem>
                 </Stack>
               </div>
-              <p>Modified Date: 02/19/2024</p>
+              <p>Modified Date: 05/01/2024</p>
             </div>
           </div>
         </div>
