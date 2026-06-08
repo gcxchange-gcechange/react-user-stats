@@ -11,11 +11,11 @@ import {
   IButtonStyles,
   Stack,
   StackItem
-} from 'office-ui-fabric-react';
+}  from '@fluentui/react';
 import styles from './UserStats.module.scss';
 import { IActiveUserCount, IDomainCount, IUser, IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
-import * as moment from 'moment';
+import moment from 'moment';
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
   // *** replace these ***
@@ -806,14 +806,21 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     });
   }
 
-  private onSelectDate = (date: Date): void => {
-    //const dayofWeek = date.getDay();
-    const day = ("0" + (date.getDate())).slice(-2)
-    const month =  ("0" + (date.getMonth() + 1)).slice(-2);
-    const year = date.getFullYear();
-    const formattedSelectedDate = day + '-' + month + '-' +  year;
-    // const formattedSiteStorageDate = dayofWeek + '-' + day + '-' + month + '-' +  year;
+  private onSelectDate = (date: Date | null | undefined): void => {
+    if (!date) {
+      this.setState({
+        selectedDate: '',
+        userLoading: true,
+        groupLoading: true,
+        siteStorageSelectDate: date
+      });
+      return;
+    }
 
+    const day = ("0" + date.getDate()).slice(-2);
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
+    const year = date.getFullYear();
+    const formattedSelectedDate = day + '-' + month + '-' + year;
 
     this.setState({
       selectedDate: formattedSelectedDate,
@@ -826,7 +833,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   private downloadDataFile = (dataType: string): void => {
 
-    let data: any, fileName: string;
+    let data: any = null;
+    let fileName = '';
     const selectedDate = this.state.selectedDate;
 
     if (dataType === 'user') {
@@ -838,6 +846,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     } else if (dataType === 'siteStorage') {
       data = this.state.siteStorage;
       fileName = selectedDate  + "-SiteStorage.txt";
+    } else {
+      return;
     }
 
     const dataStr =

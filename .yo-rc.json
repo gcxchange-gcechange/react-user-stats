@@ -7,7 +7,7 @@
       "@microsoft/microsoft-graph-client": "3.0.2",
       "@microsoft/teams-js": "2.24.0"
     },
-    "version": "1.21.1",
+    "version": "1.22.2",
     "libraryName": "user-stats",
     "libraryId": "195502b1-b4bf-4f51-b0ab-66d4927f909b",
     "environment": "spo",
@@ -16,6 +16,7 @@
     "solutionShortDescription": "user-stats-client-side-solution",
     "skipFeatureDeployment": true,
     "isDomainIsolated": false,
-    "componentType": "webpart"
+    "componentType": "webpart",
+    "useGulp": false
   }
 }
