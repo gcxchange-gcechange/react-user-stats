@@ -182,25 +182,19 @@ var UserStats = /** @class */ (function (_super) {
         _this.domainCount = [];
         _this.domainCountActive = [];
         _this.onSelectDate = function (date) {
-            if (!date) {
+            console.log("date", date);
+            if (date) {
+                var day = ("0" + date.getDate()).slice(-2);
+                var month = ("0" + (date.getMonth() + 1)).slice(-2);
+                var year = date.getFullYear();
+                var formattedSelectedDate = day + '-' + month + '-' + year;
                 _this.setState({
-                    selectedDate: '',
+                    selectedDate: formattedSelectedDate,
                     userLoading: true,
                     groupLoading: true,
                     siteStorageSelectDate: date
                 });
-                return;
             }
-            var day = ("0" + date.getDate()).slice(-2);
-            var month = ("0" + (date.getMonth() + 1)).slice(-2);
-            var year = date.getFullYear();
-            var formattedSelectedDate = day + '-' + month + '-' + year;
-            _this.setState({
-                selectedDate: formattedSelectedDate,
-                userLoading: true,
-                groupLoading: true,
-                siteStorageSelectDate: date
-            });
         };
         _this.downloadDataFile = function (dataType) {
             var data = null;
@@ -476,11 +470,12 @@ var UserStats = /** @class */ (function (_super) {
                                                         return date.creationDate;
                                                     });
                                                     // Count duplicates
-                                                    var duplicateMonthCount = [];
+                                                    var duplicateMonthCount = {};
                                                     allMonths.forEach(function (e) {
                                                         duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1;
                                                     });
-                                                    var duplicateDayCount = [];
+                                                    console.log("duplicateMonth", duplicateMonthCount);
+                                                    var duplicateDayCount = {};
                                                     allDays.forEach(function (e) {
                                                         duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1;
                                                     });
@@ -533,9 +528,11 @@ var UserStats = /** @class */ (function (_super) {
                                                     });
                                                     // Add entries up to the current date (if no new users for those months) so there are no gaps
                                                     var selectedDate = _this.state.selectedDate;
+                                                    console.log("selectedDate", _this.state.selectedDate);
                                                     var _a = selectedDate.split('-'), day = _a[0], monthFormat = _a[1], year = _a[2];
                                                     console.log('day:', day);
                                                     var currYear = "".concat(year);
+                                                    console.log('currentYear', currYear);
                                                     var currMonth = "".concat(monthFormat);
                                                     var startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]); //output = 2021
                                                     var startMonth = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]); // output = 10 (October)
@@ -61145,7 +61142,7 @@ module.exports = __WEBPACK_EXTERNAL_MODULE__8398__;
 /******/ 	
 /******/ 	/* webpack/runtime/getFullHash */
 /******/ 	(() => {
-/******/ 		__webpack_require__.h = () => ("a75911917026d6ade026")
+/******/ 		__webpack_require__.h = () => ("23fe08662ea36710780d")
 /******/ 	})();
 /******/ 	
 /******/ 	/* webpack/runtime/global */

@@ -308,17 +308,18 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               });
 
               // Count duplicates
-              const duplicateMonthCount: any[] = [];
-              allMonths.forEach((e: any) => {
+              const duplicateMonthCount: Record<string, number> = {};
+              allMonths.forEach((e: string) => {
                 duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1;
               });
+              console.log("duplicateMonth", duplicateMonthCount)
 
-              const duplicateDayCount: any[] = [];
-              allDays.forEach((e: any) => {
-                duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1
+              const duplicateDayCount: Record<string, number> = {};
+              allDays.forEach((e: string) => {
+                duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1;
               });
 
-              const resultByMonth = Object.keys(duplicateMonthCount).map((e:any) => {
+              const resultByMonth = Object.keys(duplicateMonthCount).map((e:string) => {
                 return {
                   key:e,
                   count:duplicateMonthCount[e],
@@ -369,9 +370,11 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               // Add entries up to the current date (if no new users for those months) so there are no gaps
 
               const selectedDate = this.state.selectedDate;
+              console.log("selectedDate", this.state.selectedDate)
               const [day,  monthFormat, year] = selectedDate.split('-');
               console.log('day:',day);
               const currYear = `${year}`;
+              console.log('currentYear', currYear)
               const currMonth = `${monthFormat}`;
 
               const startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]); //output = 2021
@@ -806,28 +809,21 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     });
   }
 
-  private onSelectDate = (date: Date | null | undefined): void => {
-    if (!date) {
-      this.setState({
-        selectedDate: '',
-        userLoading: true,
-        groupLoading: true,
-        siteStorageSelectDate: date
-      });
-      return;
-    }
+  private onSelectDate = (date:  Date | null | undefined): void => {
+ console.log("date", date)
 
+  if (date) {
     const day = ("0" + date.getDate()).slice(-2);
     const month = ("0" + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
     const formattedSelectedDate = day + '-' + month + '-' + year;
-
-    this.setState({
+     this.setState({
       selectedDate: formattedSelectedDate,
       userLoading: true,
       groupLoading: true,
       siteStorageSelectDate: date
     });
+  }
 
   }
 
