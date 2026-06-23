@@ -272,6 +272,67 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   return (<>{rowData}</>);
 }
 
+  /**
+   * name
+   */
+  public countDuplicates(allMonths: string[], allDays: string[]): void {
+    console.log("D", allDays);
+    console.log("M", allMonths);
+
+      // Count duplicates
+              const duplicateMonthCount: any[] = [];
+              if (allMonths) {
+                allMonths.forEach((e: any) => {
+                  duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1;
+                });
+
+              } 
+
+              const duplicateDayCount: any[] = [];
+              if (allDays) {
+                allDays.forEach((e: any) => {
+                  duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1
+                });
+              }
+
+              const resultByMonth = Object.keys(duplicateMonthCount).length!== 0 ? Object.keys(duplicateMonthCount).map((e:any) => {
+                return {
+                  key:e,
+                  count:duplicateMonthCount[e],
+                  communities: 0,
+                  report: {
+                  title: "gcx-stats-" + e,
+                  csv: [
+                    ["Date", "New Users", "New Communities"]
+                  ]
+              }}}) : null;
+
+              const resultByDay = Object.keys(duplicateDayCount).length!== 0 ? Object.keys(duplicateDayCount).map((e:any) => {
+                console.log("resultByDay", e)
+                return {
+                  key:e,
+                  count:duplicateDayCount[e]
+                };
+              }) : null ;
+
+               // Sort the dates
+              if (resultByMonth ) {
+                resultByMonth.sort((a,b) =>  {
+                  const keyA = a.key.replace('-', '');
+                  const keyB = b.key.replace('-', '');
+                  return parseInt(keyB) - parseInt(keyA);
+                });
+              }
+
+              if (resultByDay) {
+                resultByDay.sort((a,b) => {
+                  const keyA = a.key.split('-').join('');
+                  const keyB = b.key.split('-').join('');
+                  return parseInt(keyB) - parseInt(keyA);
+                });
+              }
+  }
+
  // User Stats Call
   private async getAadUsers(): Promise<any> {
     const requestHeaders: Headers = new Headers();
@@ -291,13 +352,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
-
+              console.log("r", r)
               this.setState({ apiUserData: r});
 
               const allDays: string[] = [];
               const allMonths: string[] = [];
 
               const allUserCount = r.map((date: any) => {
+                console.log("date", date)
                 const splitDate = date.creationDate.split("-");
 
                 allMonths.push(`${splitDate[0]}-${splitDate[1]}`);
@@ -306,7 +368,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
                 return date.creationDate
               });
-
+              
+              this.countDuplicates(allMonths, allDays);
               // Count duplicates
               const duplicateMonthCount: any[] = [];
               allMonths.forEach((e: any) => {
