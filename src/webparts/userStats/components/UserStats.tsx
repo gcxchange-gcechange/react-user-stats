@@ -9,13 +9,16 @@ import {
   DefaultButton,
   DetailsList,
   IButtonStyles,
+  // IStackTokens,
   Stack,
-  StackItem
+  StackItem, 
+  // Text
 } from 'office-ui-fabric-react';
 import styles from './UserStats.module.scss';
 import { IActiveUserCount, IDomainCount, IUser, IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import * as moment from 'moment';
+
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
   // *** replace these ***
@@ -69,14 +72,13 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     const day = new Date(this.state.siteStorageSelectDate);
     const dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek === 0 ? 0 : 0);
     day.setDate(diff);
-    console.log("DAYOFWEEK", dayofWeek);
+ 
 
     const getdate =  ("0" + (day.getDate())).slice(-2);
     const getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
     const getYear = day.getFullYear();
 
     const selectReportDate = getdate + "-" + getMonth + '-' + getYear ;
-     console.log("dateSeleted", selectReportDate)
 
     const postOptions: IHttpClientOptions = {
       headers: requestHeaders,
@@ -91,10 +93,10 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         .then(async(client: AadHttpClient) => {
           await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
-            return response.json().then(((r) => {
-              console.log("R", r);
-              this.setState({siteStorage: r});
-
+             return response.text().then(text => text ? JSON.parse(text) : null).then(((r) => {
+              if(r !== null) {
+                this.setState({siteStorage: r});
+              }
             }));
           });
         })
@@ -198,7 +200,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
     const results = [0,0,0,0];
 
-    console.log(documentData)
     if (documentData) {
 
       documentData.forEach((folder:any) => {
@@ -291,7 +292,6 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
             return response.json().then(((r) => {
-
               this.setState({ apiUserData: r});
 
               const allDays: string[] = [];
@@ -306,51 +306,78 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
                 return date.creationDate
               });
+              
 
               // Count duplicates
-              const duplicateMonthCount: any[] = [];
-              allMonths.forEach((e: any) => {
-                duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1;
-              });
+              
+              const duplicateMonthCount: Record<string, number> = {};
+                allMonths?.forEach((e: string) => {
+                  duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1;
+                });
 
-              const duplicateDayCount: any[] = [];
-              allDays.forEach((e: any) => {
+            
+              const duplicateDayCount: Record<string, number> = {};
+              allDays?.forEach((e: string) => {
                 duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1
               });
 
-              const resultByMonth = Object.keys(duplicateMonthCount).map((e:any) => {
-                return {
-                  key:e,
-                  count:duplicateMonthCount[e],
-                  communities: 0,
-                  report: {
-                  title: "gcx-stats-" + e,
-                  csv: [
-                    ["Date", "New Users", "New Communities"]
-                  ]
-              }}});
-              const resultByDay = Object.keys(duplicateDayCount).map((e:any) => {
-                return {
-                  key:e,
-                  count:duplicateDayCount[e]
-                };
-              });
+              const resultByMonth = Object.keys(duplicateMonthCount).length!== 0 ?
+                Object.keys(duplicateMonthCount).map((e: string) => { 
+                  return {
+                    key:e,
+                    count:duplicateMonthCount[e],
+                    communities: 0,
+                    report: {
+                      title: "gcx-stats-" + e,
+                      csv: [
+                        ["Date", "New Users", "New Communities"]
+                      ]
+                    }
+                  }
+                }) 
+                : [
+                    {
+                      key:'0',
+                      count:0,
+                      communities: 0,
+                      report: {
+                        title: "No CSV Available",
+                        csv: [
+                          ["No CSV data available", "", ""]
+                        ]
+                      }
+                    }
+                  ];
+              
+              const resultByDay = Object.keys(duplicateDayCount).length!== 0 ? 
+                Object.keys(duplicateDayCount).map((e:any) => {
+                  return {
+                    key:e,
+                    count:duplicateDayCount[e]
+                  };
+                }) 
+                : [
+                    {
+                      key:'0',
+                      count:0,
+                    }
+                  ];
 
-              // Sort the dates
-              resultByMonth.sort((a,b) =>  {
+               // Sort the dates
+              resultByMonth?.sort((a,b) =>  {
                 const keyA = a.key.replace('-', '');
                 const keyB = b.key.replace('-', '');
                 return parseInt(keyB) - parseInt(keyA);
               });
 
-              resultByDay.sort((a,b) => {
+              resultByDay?.sort((a,b) => {
                 const keyA = a.key.split('-').join('');
                 const keyB = b.key.split('-').join('');
                 return parseInt(keyB) - parseInt(keyA);
               });
 
               // Build the csv for each month
-              resultByMonth.forEach(month => {
+              resultByMonth?.forEach(month => {
 
                 let index = 0;
                 while(true) {
@@ -369,14 +396,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               // Add entries up to the current date (if no new users for those months) so there are no gaps
 
               const selectedDate = this.state.selectedDate;
-              const [day,  monthFormat, year] = selectedDate.split('-');
-              console.log('day:',day);
+              const [,  monthFormat, year] = selectedDate.split('-');
+              // console.log('day:', day);
               const currYear = `${year}`;
               const currMonth = `${monthFormat}`;
 
-              const startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]); //output = 2021
+              const startYear = Object.keys(resultByMonth).length !== 0 ? parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]) : 0; //output = 2021
 
-              const startMonth = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]);// output = 10 (October)
+              const startMonth = Object.keys(resultByMonth).length !== 0 ? parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]) : 0;// output = 10 (October)
 
               // Get the number of months from selected  date to the oldest date in the list
               const monthsDifference = parseInt(currMonth) + 1 - startMonth + 12 * (parseInt(currYear) - startYear);
@@ -435,7 +462,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   // Group Stats Call
 
   private async getAadGroups(): Promise<any> {
-
+  
     let nmb_com_member_3 = 0;
     let nmb_com_member_5 = 0;
     let nmb_com_member_10 = 0;
@@ -460,110 +487,109 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       .then(async(client: AadHttpClient) => {
         await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
-            return response.json().then(((r) => {
-              console.log("GroupsRes", r);
 
-              this.setState({apiGroupData: r});
-
-              // Get a count of communities (Unified group type)
-              const totalCommunities: any[] = [];
-              const allMonths:any[] = [];
-              r.map((c: any) => {
-                //const unified = [];
-                if (c.groupType[0] === 'Unified') {
-
-                  const splitDate = c.creationDate.split(" ")[0].split("/");
-
-
-                  // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
-                  const formattedDate = splitDate[2] + "-"
-                    + (splitDate[0].length === 1 ? "0" + splitDate[0] : splitDate[0]) + "-"
-                    + (splitDate[1].length === 1 ? "0" + splitDate[1] : splitDate[1]);
-
-                  allMonths.push(formattedDate.substring(0, 7));
-
-
-                  totalCommunities.push({ title: c.displayName, creationDate: formattedDate });
-
-                  if (c.countMember <= 3) {
-                    nmb_com_member_3++
-                  } else if (c.countMember <= 5) {
-                    nmb_com_member_5++
-                  } else if (c.countMember <= 10) {
-                    nmb_com_member_10++
-                  } else if (c.countMember <= 20) {
-                    nmb_com_member_20++
-                  } else if (c.countMember <= 30) {
-                    nmb_com_member_30++
-                  } else {
-                    nmb_com_member_31++
+            return response.text().then(text => text ? JSON.parse(text) : null).then(((r) => {
+              this.setState({groupLoading:false})
+             
+              if (r !== null) {
+            
+                this.setState({apiGroupData: r});
+                // Get a count of communities (Unified group type)
+                const totalCommunities: any[] = [];
+                const allMonths:any[] = [];
+                r.map((c: any) => {
+    
+                  //const unified = [];
+                  if (c.groupType[0] === 'Unified') {
+  
+                    const splitDate = c.creationDate?.split(" ")[0].split("/");
+  
+  
+                    // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
+                    const formattedDate = splitDate[2] + "-"
+                      + (splitDate[0].length === 1 ? "0" + splitDate[0] : splitDate[0]) + "-"
+                      + (splitDate[1].length === 1 ? "0" + splitDate[1] : splitDate[1]);
+  
+                    allMonths?.push(formattedDate.substring(0, 7));
+  
+  
+                    totalCommunities.push({ title: c.displayName, creationDate: formattedDate });
+  
+                    if (c.countMember <= 3) {
+                      nmb_com_member_3++
+                    } else if (c.countMember <= 5) {
+                      nmb_com_member_5++
+                    } else if (c.countMember <= 10) {
+                      nmb_com_member_10++
+                    } else if (c.countMember <= 20) {
+                      nmb_com_member_20++
+                    } else if (c.countMember <= 30) {
+                      nmb_com_member_30++
+                    } else {
+                      nmb_com_member_31++
+                    }
                   }
-                }
-              });
-
-              // Sort by creation date
-              totalCommunities.sort( (a,b) =>  {
-                const keyA = a.creationDate.split('-').join('');
-                const keyB = b.creationDate.split('-').join('');
-                return parseInt(keyB) - parseInt(keyA);
-              });
-
-              const communitiesPerMonth: string|number[] = [];
-              allMonths.forEach((e) => { communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1 });
-              // Count duplicates to get the communities created per day
-              let communitiesPerDay: any [] = [];
-              totalCommunities.forEach((community:any) => {
-                communitiesPerDay[community.creationDate] = (communitiesPerDay[community.creationDate] || 0) + 1;
-              });
-              communitiesPerDay = Object.keys(communitiesPerDay).map((key:any) => [key, communitiesPerDay[key]]);
-              // Filter out community groups by their type to leave mostly departments
-              const filteredR = r.filter((item:any) => item.groupType[0] !== 'Unified');
-
-              const allDepartments: string[] = [];
-              const allDepartmentsB2B: string[] = [];// Only depart that have a B2B group
-              const allDepartmentsFinal:string[] = []; //Final array that is use
-
-              filteredR.map((s:any) => {
-                const splitS = s.displayName.split("_")
-
-
-               if (splitS.length > 1){
-                  if (splitS[2] === "B2B") {
-                    allDepartmentsB2B.push(`${splitS[1]} - ${s.countMember}`); //Create an array of B2B to compare
-                    allDepartmentsFinal.push(`${splitS[1]} - ${s.countMember}`);// B2B are the final group
-                  } else {
-                    allDepartments.push(`${splitS[1]} - ${s.countMember}`);
+                });
+                // Sort by creation date
+                totalCommunities.sort( (a,b) =>  {
+                  const keyA = a.creationDate.split('-').join('');
+                  const keyB = b.creationDate.split('-').join('');
+                  return parseInt(keyB) - parseInt(keyA);
+                });
+                const communitiesPerMonth: string|number[] = [];
+                allMonths?.forEach((e) => { communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1 });
+                // Count duplicates to get the communities created per day
+                let communitiesPerDay: any [] = [];
+                totalCommunities.forEach((community:any) => {
+                  communitiesPerDay[community.creationDate] = (communitiesPerDay[community.creationDate] || 0) + 1;
+                });
+                communitiesPerDay = Object.keys(communitiesPerDay).map((key:any) => [key, communitiesPerDay[key]]);
+                // Filter out community groups by their type to leave mostly departments
+                const filteredR = r.filter((item:any) => item.groupType[0] !== 'Unified');
+                const allDepartments: string[] = [];
+                const allDepartmentsB2B: string[] = [];// Only depart that have a B2B group
+                const allDepartmentsFinal:string[] = []; //Final array that is use
+                filteredR.map((s:any) => {
+                  const splitS = s.displayName.split("_")
+  
+  
+                 if (splitS.length > 1){
+                    if (splitS[2] === "B2B") {
+                      allDepartmentsB2B.push(`${splitS[1]} - ${s.countMember}`); //Create an array of B2B to compare
+                      allDepartmentsFinal.push(`${splitS[1]} - ${s.countMember}`);// B2B are the final group
+                    } else {
+                      allDepartments.push(`${splitS[1]} - ${s.countMember}`);
+                    }
                   }
-                }
-              });
+                });
+                allDepartments.map(s => {
+                  const splits = s.split("-")
+  
+                  if (allDepartmentsB2B.find((user) => user.includes(splits[0])) === undefined) { // If no b2b group exist for the depart, add the regular group to the final list
+                    // console.log(" IN B2B" + splits[0]);
+                    allDepartmentsFinal.push(`${s}`);
+  
+                  }
+                });
+                // Set the state
+                this.setState({
+                  groupsDelta: filteredR,
+                  communityCount: totalCommunities,
+                  communitiesPerDay: communitiesPerDay,
+                  communitiesPerMonth: communitiesPerMonth,
+                  filteredDepartments: allDepartmentsFinal,
+                  nmb_com_member_3: nmb_com_member_3,
+                  nmb_com_member_5: nmb_com_member_5,
+                  nmb_com_member_10: nmb_com_member_10,
+                  nmb_com_member_20: nmb_com_member_20,
+                  nmb_com_member_30: nmb_com_member_30,
+                  nmb_com_member_31: nmb_com_member_31,
+                  groupLoading: false
+                });
+              } 
 
-              allDepartments.map(s => {
-                const splits = s.split("-")
-
-                if (allDepartmentsB2B.find((user) => user.includes(splits[0])) === undefined) { // If no b2b group exist for the depart, add the regular group to the final list
-                  // console.log(" IN B2B" + splits[0]);
-                  allDepartmentsFinal.push(`${s}`);
-
-                }
-              });
-
-
-              // Set the state
-              this.setState({
-                groupsDelta: filteredR,
-                communityCount: totalCommunities,
-                communitiesPerDay: communitiesPerDay,
-                communitiesPerMonth: communitiesPerMonth,
-                filteredDepartments: allDepartmentsFinal,
-                nmb_com_member_3: nmb_com_member_3,
-                nmb_com_member_5: nmb_com_member_5,
-                nmb_com_member_10: nmb_com_member_10,
-                nmb_com_member_20: nmb_com_member_20,
-                nmb_com_member_30: nmb_com_member_30,
-                nmb_com_member_31: nmb_com_member_31,
-                groupLoading: false,
-              });
             }));
+
           })
         });
 
@@ -657,7 +683,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   // https://stackoverflow.com/a/14966131
   private downloadCSV(title: string, data: any): void {
 
-    console.log("data", data)
+ 
     let content = "data:text/csv;charset=utf-8,";
 
     data.forEach((rowArray:any) => {
@@ -696,22 +722,30 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       .then(async(client: AadHttpClient) => {
         await client.post(this.url, AadHttpClient.configurations.v1, postOptions)
           .then((response: HttpClientResponse): Promise<any> => {
-            return response.json().then(((r) => {
+
+            // return response.json()
+             return response.text().then(text => text ? JSON.parse(text) : null).then(((r) => {
+
+
               let activeusers: string = "";
 
-              r.map((c: IActiveUserCount )=> {
-                activeusers = c.countActiveusers.toString();
+              if (r !== null ) {
 
-                this.domainCountActive.length = 0;
+                r.map((c: IActiveUserCount ) => {
+                  activeusers = c.countActiveusers.toString();
+  
+                  this.domainCountActive.length = 0;
+  
+                  if ((c.countByDomain !== undefined) && (c.countByDomain !== null)) {
+                    this.domainCountActive = c.countByDomain;
+                  }
+                })
+  
+                this.setState({
+                  totalactiveuser: activeusers
+                });
 
-                if ((c.countByDomain !== undefined) && (c.countByDomain !== null)) {
-                  this.domainCountActive = c.countByDomain;
-                }
-              })
-
-              this.setState({
-                totalactiveuser: activeusers
-              });
+              }
             }));
           })
       })
@@ -736,7 +770,26 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
         communityCount: [],
         communitiesPerDay: [],
         communitiesPerMonth: [],
+        apiGroupData: [],
+        apiUserData: [],
         siteStorage: [],
+        remainingStorage: [],
+        filteredDepartments: [],
+        totalactiveuser: "",
+        nmb_member_per_comm_0: 0,
+        nmb_member_per_comm_3: 0,
+        nmb_member_per_comm_5: 0,
+        nmb_member_per_comm_10: 0,
+        nmb_member_per_comm_20: 0,
+        nmb_member_per_comm_21: 0,
+        nmb_com_member_3: 0,
+        nmb_com_member_5: 0,
+        nmb_com_member_10: 0,
+        nmb_com_member_20: 0,
+        nmb_com_member_30: 0,
+        nmb_com_member_31: 0,
+        
+  
       })
 
       await this.getAadUsers();
@@ -797,8 +850,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       }
     }
     catch(e) {
-      console.log("Error creating CSV");
-      console.log(e);
+      console.log("Error creating CSV", e);
     }
 
     this.setState({
@@ -808,6 +860,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
   private onSelectDate = (date: Date): void => {
     //const dayofWeek = date.getDay();
+    this.domainCountActive = [];
     const day = ("0" + (date.getDate())).slice(-2)
     const month =  ("0" + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
@@ -902,9 +955,13 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       iconHovered: { color: '#c19c00'},
       rootHovered: { color: '#c19c00'}
     }
+    
+    // const sectionStackTokens: IStackTokens = { childrenGap: '8%'};
+
 
 
     return (
+<>
       <div className={ styles.userStats }>
         <div>
           <div>
@@ -1086,13 +1143,13 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 <h2 style={{textAlign:'center'}}>Source Files</h2>
                 <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
                   <StackItem align='center' >
-                    <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('user')}>Download User Data</DefaultButton>
+                    <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('user')} disabled={this.state.apiUserData.length === 0}>Download User Data</DefaultButton>
                   </StackItem>
                   <StackItem align='center' >
-                    <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('group')}>Download Group Data</DefaultButton>
+                    <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('group')} disabled={this.state.apiGroupData.length === 0}>Download Group Data</DefaultButton>
                   </StackItem>
                   <StackItem align='center' >
-                    <DefaultButton id="siteStorage" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('siteStorage')}>Download Site Storage Data</DefaultButton>
+                    <DefaultButton id="siteStorage" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('siteStorage')} disabled={this.state.siteStorage.length === 0}>Download Site Storage Data</DefaultButton>
                   </StackItem>
                 </Stack>
               </div>
@@ -1101,6 +1158,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           </div>
         </div>
       </div>
+      </>
     );
   }
 }
