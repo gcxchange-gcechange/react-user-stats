@@ -11,14 +11,12 @@ import {
   IButtonStyles,
   // IStackTokens,
   Stack,
-  StackItem, 
-  // Text
-} from 'office-ui-fabric-react';
+  StackItem
+}  from '@fluentui/react';
 import styles from './UserStats.module.scss';
 import { IActiveUserCount, IDomainCount, IUser, IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
-import * as moment from 'moment';
-
+import moment from 'moment';
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
   // *** replace these ***
@@ -315,10 +313,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1;
                 });
 
-            
               const duplicateDayCount: Record<string, number> = {};
-              allDays?.forEach((e: string) => {
-                duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1
+              allDays.forEach((e: string) => {
+                duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1;
               });
 
               const resultByMonth = Object.keys(duplicateMonthCount).length!== 0 ?
@@ -399,6 +396,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
               const [,  monthFormat, year] = selectedDate.split('-');
               // console.log('day:', day);
               const currYear = `${year}`;
+              console.log('currentYear', currYear)
               const currMonth = `${monthFormat}`;
 
               const startYear = Object.keys(resultByMonth).length !== 0 ? parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]) : 0; //output = 2021
@@ -858,28 +856,28 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     });
   }
 
-  private onSelectDate = (date: Date): void => {
-    //const dayofWeek = date.getDay();
+  private onSelectDate = (date:  Date | null | undefined): void => {
+
+  if (date) {
     this.domainCountActive = [];
-    const day = ("0" + (date.getDate())).slice(-2)
-    const month =  ("0" + (date.getMonth() + 1)).slice(-2);
+    const day = ("0" + date.getDate()).slice(-2);
+    const month = ("0" + (date.getMonth() + 1)).slice(-2);
     const year = date.getFullYear();
-    const formattedSelectedDate = day + '-' + month + '-' +  year;
-    // const formattedSiteStorageDate = dayofWeek + '-' + day + '-' + month + '-' +  year;
-
-
-    this.setState({
+    const formattedSelectedDate = day + '-' + month + '-' + year;
+     this.setState({
       selectedDate: formattedSelectedDate,
       userLoading: true,
       groupLoading: true,
       siteStorageSelectDate: date
     });
+  }
 
   }
 
   private downloadDataFile = (dataType: string): void => {
 
-    let data: any, fileName: string;
+    let data: any = null;
+    let fileName = '';
     const selectedDate = this.state.selectedDate;
 
     if (dataType === 'user') {
@@ -891,6 +889,8 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     } else if (dataType === 'siteStorage') {
       data = this.state.siteStorage;
       fileName = selectedDate  + "-SiteStorage.txt";
+    } else {
+      return;
     }
 
     const dataStr =
