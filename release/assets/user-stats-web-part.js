@@ -16,6 +16,7 @@ __webpack_require__.r(__webpack_exports__);
 // Imports
 
 
+<<<<<<< HEAD
 _node_modules_microsoft_spfx_heft_plugins_node_modules_microsoft_load_themed_styles_lib_es6_index_js__WEBPACK_IMPORTED_MODULE_0__.loadStyles("#workbenchPageContent,.CanvasComponent.LCS .CanvasZone{max-width:100%!important}.userStats_e117e975 .container_e117e975{box-shadow:0 2px 4px 0 rgba(0,0,0,.2),0 25px 50px 0 rgba(0,0,0,.1);margin:0;max-width:700px;padding:20px}.userStats_e117e975 .row_e117e975{padding:20px}.userStats_e117e975 .statsHolder_e117e975{margin-right:65px;text-align:center}.userStats_e117e975 .statsHolder_e117e975 .userCount_e117e975{font-size:20px}.userStats_e117e975 .departList_e117e975{border-bottom:1px solid #edebe9;margin:8px;padding-bottom:8px}.userStats_e117e975 .button_e117e975{-webkit-font-smoothing:antialiased;background-color:#0078d4;border-color:#0078d4;border-width:0;color:#fff;cursor:pointer;display:inline-block;font-family:Segoe UI WestEuropean,Segoe UI,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;font-size:14px;font-weight:400;height:32px;min-width:80px;outline:transparent;padding:0 16px;position:relative;text-align:center;text-decoration:none}.userStats_e117e975 .button_e117e975 .label_e117e975{display:inline-block;font-size:14px;font-weight:600;height:32px;line-height:32px;margin:0 4px;vertical-align:top}.userStats_e117e975 .calendarFieldStyles_e117e975{margin-bottom:20px;width:37%}.userStats_e117e975 table{border-collapse:collapse}.userStats_e117e975 td,.userStats_e117e975 th{border:1px solid;padding:10px;width:30%}.downloadData_e117e975{background-color:#000;border-radius:5px;color:#fff;font-size:19px;height:50px;justify-content:center!important;width:275px}.downloadData_e117e975:hover{color:#c19c00}.sourceFileCard_e117e975{border-radius:5px;box-shadow:0 2px 4px 0 rgba(14,30,37,.12),0 2px 16px 0 rgba(14,30,37,.32);display:flex;flex-direction:column;height:150px}", true);
 
 // Exports
@@ -31,6 +32,32 @@ _node_modules_microsoft_spfx_heft_plugins_node_modules_microsoft_load_themed_sty
   downloadData: "downloadData_e117e975",
   sourceFileCard: "sourceFileCard_e117e975",
   container: "container_e117e975"
+=======
+_node_modules_microsoft_sp_css_loader_node_modules_microsoft_load_themed_styles_lib_es6_index_js__WEBPACK_IMPORTED_MODULE_0__.loadStyles("#workbenchPageContent,.CanvasComponent.LCS .CanvasZone{max-width:100%!important}.userStats_0214e69f .container_0214e69f{box-shadow:0 2px 4px 0 rgba(0,0,0,.2),0 25px 50px 0 rgba(0,0,0,.1);margin:0;max-width:700px;padding:20px}.userStats_0214e69f .row_0214e69f{zoom:1;background-color:#005a9e;box-sizing:border-box;color:#fff;margin:0 -8px;padding:20px}.userStats_0214e69f .row_0214e69f:after,.userStats_0214e69f .row_0214e69f:before{content:\"\";display:table;line-height:0}.userStats_0214e69f .row_0214e69f:after{clear:both}.userStats_0214e69f .column_0214e69f{box-sizing:border-box;min-height:1px;padding-left:8px;padding-right:8px;position:relative}[dir=ltr] .userStats_0214e69f .column_0214e69f{float:left}[dir=rtl] .userStats_0214e69f .column_0214e69f{float:right}.userStats_0214e69f .column_0214e69f .ms-Grid_0214e69f{padding:0}@media (min-width:640px){.userStats_0214e69f .column_0214e69f{width:83.3333333333%}}@media (min-width:1024px){.userStats_0214e69f .column_0214e69f{width:66.6666666667%}[dir=ltr] .userStats_0214e69f .column_0214e69f{left:16.6666666667%}[dir=rtl] .userStats_0214e69f .column_0214e69f{right:16.6666666667%}}@media (min-width:640px){[dir=ltr] .userStats_0214e69f .column_0214e69f{left:8.3333333333%}[dir=rtl] .userStats_0214e69f .column_0214e69f{right:8.3333333333%}}.userStats_0214e69f .title_0214e69f{color:#fff;font-size:21px;font-weight:100}.userStats_0214e69f .description_0214e69f,.userStats_0214e69f .subTitle_0214e69f{color:#fff;font-size:17px;font-weight:300}.userStats_0214e69f .statsHolder_0214e69f{margin-right:65px;text-align:center}.userStats_0214e69f .statsHolder_0214e69f .userCount_0214e69f{font-size:20px}.userStats_0214e69f .departList_0214e69f{border-bottom:1px solid #edebe9;margin:8px;padding-bottom:8px}.userStats_0214e69f .button_0214e69f{-webkit-font-smoothing:antialiased;background-color:#0078d4;border-color:#0078d4;border-width:0;color:#fff;cursor:pointer;display:inline-block;font-family:Segoe UI WestEuropean,Segoe UI,-apple-system,BlinkMacSystemFont,Roboto,Helvetica Neue,sans-serif;font-size:14px;font-weight:400;height:32px;min-width:80px;outline:transparent;padding:0 16px;position:relative;text-align:center;text-decoration:none}.userStats_0214e69f .button_0214e69f .label_0214e69f{display:inline-block;font-size:14px;font-weight:600;height:32px;line-height:32px;margin:0 4px;vertical-align:top}.userStats_0214e69f .calendarFieldStyles_0214e69f{margin-bottom:20px;width:37%}.userStats_0214e69f table{border-collapse:collapse}.userStats_0214e69f td,.userStats_0214e69f th{border:1px solid;padding:10px;width:30%}.downloadData_0214e69f{background-color:#000;border-radius:5px;color:#fff;font-size:19px;height:50px;justify-content:center!important;width:275px}.downloadData_0214e69f:hover{color:#c19c00}.downloadData_0214e69f:disabled{background-color:#f3f2f1;color:#a19fad}.sourceFileCard_0214e69f{border-radius:5px;box-shadow:0 2px 4px 0 rgba(14,30,37,.12),0 2px 16px 0 rgba(14,30,37,.32);display:flex;flex-direction:column;height:150px}\n/*# sourceMappingURL=data:application/json;base64,eyJ2ZXJzaW9uIjozLCJzb3VyY2VzIjpbImZpbGU6Ly8vQzovVXNlcnMvR01SQU1JUkUvRGV2ZWxvcG1lbnQvU3RhdHMvcmVhY3QtdXNlci1zdGF0cy9zcmMvd2VicGFydHMvdXNlclN0YXRzL2NvbXBvbmVudHMvVXNlclN0YXRzLm1vZHVsZS5zY3NzIiwiZmlsZTovLy9DOi9Vc2Vycy9HTVJBTUlSRS9EZXZlbG9wbWVudC9TdGF0cy9yZWFjdC11c2VyLXN0YXRzL25vZGVfbW9kdWxlcy9vZmZpY2UtdWktZmFicmljLXJlYWN0L2Rpc3Qvc2Fzcy9taXhpbnMvX0dlbmVyYWwuTWl4aW5zLnNjc3MiLCJmaWxlOi8vL0M6L1VzZXJzL0dNUkFNSVJFL0RldmVsb3BtZW50L1N0YXRzL3JlYWN0LXVzZXItc3RhdHMvbm9kZV9tb2R1bGVzL29mZmljZS11aS1mYWJyaWMtcmVhY3QvZGlzdC9zYXNzL21peGlucy9fQ29sb3IuTWl4aW5zLk1ETDIuc2NzcyIsImZpbGU6Ly8vQzovVXNlcnMvR01SQU1JUkUvRGV2ZWxvcG1lbnQvU3RhdHMvcmVhY3QtdXNlci1zdGF0cy9ub2RlX21vZHVsZXMvb2ZmaWNlLXVpLWZhYnJpYy1yZWFjdC9kaXN0L3Nhc3MvbWl4aW5zL19HcmlkLk1peGlucy5zY3NzIiwiZmlsZTovLy9DOi9Vc2Vycy9HTVJBTUlSRS9EZXZlbG9wbWVudC9TdGF0cy9yZWFjdC11c2VyLXN0YXRzL25vZGVfbW9kdWxlcy9vZmZpY2UtdWktZmFicmljLXJlYWN0L2Rpc3Qvc2Fzcy9taXhpbnMvX0RpcmVjdGlvbmFsaXR5Lk1peGlucy5zY3NzIiwiZmlsZTovLy9DOi9Vc2Vycy9HTVJBTUlSRS9EZXZlbG9wbWVudC9TdGF0cy9yZWFjdC11c2VyLXN0YXRzL25vZGVfbW9kdWxlcy9vZmZpY2UtdWktZmFicmljLXJlYWN0L2Rpc3Qvc2Fzcy9taXhpbnMvX1Jlc3BvbnNpdmUuTWl4aW5zLnNjc3MiLCJmaWxlOi8vL0M6L1VzZXJzL0dNUkFNSVJFL0RldmVsb3BtZW50L1N0YXRzL3JlYWN0LXVzZXItc3RhdHMvbm9kZV9tb2R1bGVzL29mZmljZS11aS1mYWJyaWMtcmVhY3QvZGlzdC9zYXNzL21peGlucy9fRm9udC5NaXhpbnMuTURMMi5zY3NzIl0sIm5hbWVzIjpbXSwibWFwcGluZ3MiOiJBQUdFLHVEQUNFLHdCQUFBLENBTUYsd0NBR0Usa0VBQUEsQ0FEQSxRQUFBLENBREEsZUFBQSxDQUdBLFlBQUEsQ0FJRixrQ0N3SUEsTUFBQSxDRHJJRSx3QkFBQSxDQzJIRixxQkFBQSxDQ2tGQSxVQUFBLENDaE5BLGFBQUEsQ0hJRSxZQUFBLENDcUlGLGlGQUdFLFVBQUEsQ0FEQSxhQUFBLENBRUEsYUFBQSxDQUVGLHdDQUNFLFVBQUEsQ0R6SUYscUNDdUhBLHFCQUFBLENFcEhBLGNBQUEsQ0FDQSxnQkFBQSxDQUNBLGlCQUFBLENBSEEsaUJGcUhBLENHdklBLCtDQTJLSSxVQUFBLENBcEtKLCtDQXdLSSxXQUFBLENEckpKLHVEQUNFLFNBQUEsQ0VrWUYseUJMN1lBLHFDSzhZRSxvQkFBQSxDQUFBLENBdVFGLDBCTHJwQkEscUNLc3BCRSxvQkFBQSxDRHRxQkYsK0NBK0xFLG1CQUFBLENBeExGLCtDQTRMRSxvQkFBQSxDQ21lQSxDQS9GRix5QkR2a0JBLCtDQStMRSxrQkFBQSxDQXhMRiwrQ0E0TEUsbUJBQUEsQ0FBQSxDSjNLRixvQ0VpTUEsVUFBQSxDSTFNQSxjQUFBLENBQ0EsZUp5TUEsQ0Z2TEEsaUZFdUxBLFVBQUEsQ0lwTUEsY0FBQSxDQUNBLGVKbU1BLENGbExBLDBDQUNFLGlCQUFBLENBQ0EsaUJBQUEsQ0FHQSw4REFDRSxjQUFBLENBSUoseUNBQ0UsK0JBQUEsQ0FDQSxVQUFBLENBQ0Esa0JBQUEsQ0FXRixxQ0FlRSxrQ0FBQSxDQVJBLHdCQUFBLENBQ0Esb0JBQUEsQ0FVQSxjQUFBLENBVEEsVUFBQSxDQVdBLGNBQUEsQ0FDQSxvQkFBQSxDQVBBLDRHQUFBLENBRUEsY0FBQSxDQUNBLGVBQUEsQ0FkQSxXQUFBLENBR0EsY0FBQSxDQU1BLG1CQUFBLENBVUEsY0FBQSxDQVRBLGlCQUFBLENBTUEsaUJBQUEsQ0FqQkEsb0JBb0JBLENBRUEscURBT0Usb0JBQUEsQ0FMQSxjQUFBLENBREEsZUFBQSxDQUVBLFdBQUEsQ0FDQSxnQkFBQSxDQUNBLFlBQUEsQ0FDQSxrQkFDQSxDQUdKLGtEQUVFLGtCQUFBLENBREEsU0FDQSxDQUlGLDBCQUNJLHdCQUFBLENBR0osOENBR0UsZ0JBQUEsQ0FEQSxZQUFBLENBREEsU0FFQSxDQUtKLHVCQUdFLHFCQUFBLENBR0EsaUJBQUEsQ0FGQSxVQUFBLENBQ0EsY0FBQSxDQUhBLFdBQUEsQ0FLQSxnQ0FBQSxDQU5BLFdBTUEsQ0FFQSw2QkFDQyxhQUFBLENBRUQsZ0NBQ0Usd0JBQUEsQ0FDQSxhQUFBLENBS0oseUJBS0UsaUJBQUEsQ0FEQSx5RUFBQSxDQUhBLFlBQUEsQ0FDQSxxQkFBQSxDQUNBLFlBRUEiLCJmaWxlIjoiVXNlclN0YXRzLm1vZHVsZS5jc3MifQ== */", true);
+
+// Exports
+/* harmony default export */ const __WEBPACK_DEFAULT_EXPORT__ = ({
+  workbenchPageContent: "workbenchPageContent",
+  CanvasComponent: "CanvasComponent",
+  LCS: "LCS",
+  CanvasZone: "CanvasZone",
+  userStats_0214e69f: "userStats_0214e69f",
+  container_0214e69f: "container_0214e69f",
+  row_0214e69f: "row_0214e69f",
+  column_0214e69f: "column_0214e69f",
+  "ms-Grid_0214e69f": "ms-Grid_0214e69f",
+  title_0214e69f: "title_0214e69f",
+  subTitle_0214e69f: "subTitle_0214e69f",
+  description_0214e69f: "description_0214e69f",
+  statsHolder_0214e69f: "statsHolder_0214e69f",
+  userCount_0214e69f: "userCount_0214e69f",
+  departList_0214e69f: "departList_0214e69f",
+  button_0214e69f: "button_0214e69f",
+  label_0214e69f: "label_0214e69f",
+  calendarFieldStyles_0214e69f: "calendarFieldStyles_0214e69f",
+  downloadData_0214e69f: "downloadData_0214e69f",
+  sourceFileCard_0214e69f: "sourceFileCard_0214e69f"
+>>>>>>> 2e3f9b1a4d9d1519a25435e9eff5b7f7369c78e9
 });
 
 
@@ -182,6 +209,7 @@ var UserStats = /** @class */ (function (_super) {
         _this.domainCount = [];
         _this.domainCountActive = [];
         _this.onSelectDate = function (date) {
+<<<<<<< HEAD
             console.log("date", date);
             if (date) {
                 var day = ("0" + date.getDate()).slice(-2);
@@ -195,6 +223,21 @@ var UserStats = /** @class */ (function (_super) {
                     siteStorageSelectDate: date
                 });
             }
+=======
+            //const dayofWeek = date.getDay();
+            _this.domainCountActive = [];
+            var day = ("0" + (date.getDate())).slice(-2);
+            var month = ("0" + (date.getMonth() + 1)).slice(-2);
+            var year = date.getFullYear();
+            var formattedSelectedDate = day + '-' + month + '-' + year;
+            // const formattedSiteStorageDate = dayofWeek + '-' + day + '-' + month + '-' +  year;
+            _this.setState({
+                selectedDate: formattedSelectedDate,
+                userLoading: true,
+                groupLoading: true,
+                siteStorageSelectDate: date
+            });
+>>>>>>> 2e3f9b1a4d9d1519a25435e9eff5b7f7369c78e9
         };
         _this.downloadDataFile = function (dataType) {
             var data = null;
@@ -268,12 +311,10 @@ var UserStats = /** @class */ (function (_super) {
                         day = new Date(this.state.siteStorageSelectDate);
                         dayofWeek = day.getDay(), diff = day.getDate() - dayofWeek + (dayofWeek === 0 ? 0 : 0);
                         day.setDate(diff);
-                        console.log("DAYOFWEEK", dayofWeek);
                         getdate = ("0" + (day.getDate())).slice(-2);
                         getMonth = ("0" + (day.getMonth() + 1)).slice(-2);
                         getYear = day.getFullYear();
                         selectReportDate = getdate + "-" + getMonth + '-' + getYear;
-                        console.log("dateSeleted", selectReportDate);
                         postOptions = {
                             headers: requestHeaders,
                             body: "{\n        \"containerName\": \"groupsitestorage\",\n        \"selectedDate\":\"".concat(selectReportDate, "\"\n      }")
@@ -286,9 +327,10 @@ var UserStats = /** @class */ (function (_super) {
                                     switch (_a.label) {
                                         case 0: return [4 /*yield*/, client.post(this.url, _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_1__.AadHttpClient.configurations.v1, postOptions)
                                                 .then(function (response) {
-                                                return response.json().then((function (r) {
-                                                    console.log("R", r);
-                                                    _this.setState({ siteStorage: r });
+                                                return response.text().then(function (text) { return text ? JSON.parse(text) : null; }).then((function (r) {
+                                                    if (r !== null) {
+                                                        _this.setState({ siteStorage: r });
+                                                    }
                                                 }));
                                             })];
                                         case 1:
@@ -381,7 +423,6 @@ var UserStats = /** @class */ (function (_super) {
     UserStats.prototype.renderFolderTableRows = function () {
         var documentData = this.state.siteStorage;
         var results = [0, 0, 0, 0];
-        console.log(documentData);
         if (documentData) {
             documentData.forEach(function (folder) {
                 //console.log("Folder", folder);
@@ -471,46 +512,75 @@ var UserStats = /** @class */ (function (_super) {
                                                     });
                                                     // Count duplicates
                                                     var duplicateMonthCount = {};
+<<<<<<< HEAD
                                                     allMonths.forEach(function (e) {
                                                         duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1;
                                                     });
                                                     console.log("duplicateMonth", duplicateMonthCount);
                                                     var duplicateDayCount = {};
                                                     allDays.forEach(function (e) {
+=======
+                                                    allMonths === null || allMonths === void 0 ? void 0 : allMonths.forEach(function (e) {
+                                                        duplicateMonthCount[e] = duplicateMonthCount[e] ? duplicateMonthCount[e] + 1 : 1;
+                                                    });
+                                                    var duplicateDayCount = {};
+                                                    allDays === null || allDays === void 0 ? void 0 : allDays.forEach(function (e) {
+>>>>>>> 2e3f9b1a4d9d1519a25435e9eff5b7f7369c78e9
                                                         duplicateDayCount[e] = duplicateDayCount[e] ? duplicateDayCount[e] + 1 : 1;
                                                     });
-                                                    var resultByMonth = Object.keys(duplicateMonthCount).map(function (e) {
-                                                        return {
-                                                            key: e,
-                                                            count: duplicateMonthCount[e],
-                                                            communities: 0,
-                                                            report: {
-                                                                title: "gcx-stats-" + e,
-                                                                csv: [
-                                                                    ["Date", "New Users", "New Communities"]
-                                                                ]
+                                                    var resultByMonth = Object.keys(duplicateMonthCount).length !== 0 ?
+                                                        Object.keys(duplicateMonthCount).map(function (e) {
+                                                            return {
+                                                                key: e,
+                                                                count: duplicateMonthCount[e],
+                                                                communities: 0,
+                                                                report: {
+                                                                    title: "gcx-stats-" + e,
+                                                                    csv: [
+                                                                        ["Date", "New Users", "New Communities"]
+                                                                    ]
+                                                                }
+                                                            };
+                                                        })
+                                                        : [
+                                                            {
+                                                                key: '0',
+                                                                count: 0,
+                                                                communities: 0,
+                                                                report: {
+                                                                    title: "No CSV Available",
+                                                                    csv: [
+                                                                        ["No CSV data available", "", ""]
+                                                                    ]
+                                                                }
                                                             }
-                                                        };
-                                                    });
-                                                    var resultByDay = Object.keys(duplicateDayCount).map(function (e) {
-                                                        return {
-                                                            key: e,
-                                                            count: duplicateDayCount[e]
-                                                        };
-                                                    });
+                                                        ];
+                                                    var resultByDay = Object.keys(duplicateDayCount).length !== 0 ?
+                                                        Object.keys(duplicateDayCount).map(function (e) {
+                                                            return {
+                                                                key: e,
+                                                                count: duplicateDayCount[e]
+                                                            };
+                                                        })
+                                                        : [
+                                                            {
+                                                                key: '0',
+                                                                count: 0,
+                                                            }
+                                                        ];
                                                     // Sort the dates
-                                                    resultByMonth.sort(function (a, b) {
+                                                    resultByMonth === null || resultByMonth === void 0 ? void 0 : resultByMonth.sort(function (a, b) {
                                                         var keyA = a.key.replace('-', '');
                                                         var keyB = b.key.replace('-', '');
                                                         return parseInt(keyB) - parseInt(keyA);
                                                     });
-                                                    resultByDay.sort(function (a, b) {
+                                                    resultByDay === null || resultByDay === void 0 ? void 0 : resultByDay.sort(function (a, b) {
                                                         var keyA = a.key.split('-').join('');
                                                         var keyB = b.key.split('-').join('');
                                                         return parseInt(keyB) - parseInt(keyA);
                                                     });
                                                     // Build the csv for each month
-                                                    resultByMonth.forEach(function (month) {
+                                                    resultByMonth === null || resultByMonth === void 0 ? void 0 : resultByMonth.forEach(function (month) {
                                                         var index = 0;
                                                         while (true) {
                                                             if (resultByDay[index] === undefined) {
@@ -528,14 +598,19 @@ var UserStats = /** @class */ (function (_super) {
                                                     });
                                                     // Add entries up to the current date (if no new users for those months) so there are no gaps
                                                     var selectedDate = _this.state.selectedDate;
+<<<<<<< HEAD
                                                     console.log("selectedDate", _this.state.selectedDate);
                                                     var _a = selectedDate.split('-'), day = _a[0], monthFormat = _a[1], year = _a[2];
                                                     console.log('day:', day);
+=======
+                                                    var _a = selectedDate.split('-'), monthFormat = _a[1], year = _a[2];
+                                                    // console.log('day:', day);
+>>>>>>> 2e3f9b1a4d9d1519a25435e9eff5b7f7369c78e9
                                                     var currYear = "".concat(year);
                                                     console.log('currentYear', currYear);
                                                     var currMonth = "".concat(monthFormat);
-                                                    var startYear = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]); //output = 2021
-                                                    var startMonth = parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]); // output = 10 (October)
+                                                    var startYear = Object.keys(resultByMonth).length !== 0 ? parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[0]) : 0; //output = 2021
+                                                    var startMonth = Object.keys(resultByMonth).length !== 0 ? parseInt(resultByMonth[resultByMonth.length - 1].key.split('-')[1]) : 0; // output = 10 (October)
                                                     // Get the number of months from selected  date to the oldest date in the list
                                                     var monthsDifference = parseInt(currMonth) + 1 - startMonth + 12 * (parseInt(currYear) - startYear);
                                                     var fullResults = [];
@@ -620,95 +695,98 @@ var UserStats = /** @class */ (function (_super) {
                                     switch (_a.label) {
                                         case 0: return [4 /*yield*/, client.post(this.url, _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_1__.AadHttpClient.configurations.v1, postOptions)
                                                 .then(function (response) {
-                                                return response.json().then((function (r) {
-                                                    console.log("GroupsRes", r);
-                                                    _this.setState({ apiGroupData: r });
-                                                    // Get a count of communities (Unified group type)
-                                                    var totalCommunities = [];
-                                                    var allMonths = [];
-                                                    r.map(function (c) {
-                                                        //const unified = [];
-                                                        if (c.groupType[0] === 'Unified') {
-                                                            var splitDate = c.creationDate.split(" ")[0].split("/");
-                                                            // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
-                                                            var formattedDate = splitDate[2] + "-"
-                                                                + (splitDate[0].length === 1 ? "0" + splitDate[0] : splitDate[0]) + "-"
-                                                                + (splitDate[1].length === 1 ? "0" + splitDate[1] : splitDate[1]);
-                                                            allMonths.push(formattedDate.substring(0, 7));
-                                                            totalCommunities.push({ title: c.displayName, creationDate: formattedDate });
-                                                            if (c.countMember <= 3) {
-                                                                nmb_com_member_3++;
+                                                return response.text().then(function (text) { return text ? JSON.parse(text) : null; }).then((function (r) {
+                                                    _this.setState({ groupLoading: false });
+                                                    if (r !== null) {
+                                                        _this.setState({ apiGroupData: r });
+                                                        // Get a count of communities (Unified group type)
+                                                        var totalCommunities_1 = [];
+                                                        var allMonths_1 = [];
+                                                        r.map(function (c) {
+                                                            var _a;
+                                                            //const unified = [];
+                                                            if (c.groupType[0] === 'Unified') {
+                                                                var splitDate = (_a = c.creationDate) === null || _a === void 0 ? void 0 : _a.split(" ")[0].split("/");
+                                                                // Format the date to match the user/csv info (mm/dd/yyyy to yyyy-mm-dd)
+                                                                var formattedDate = splitDate[2] + "-"
+                                                                    + (splitDate[0].length === 1 ? "0" + splitDate[0] : splitDate[0]) + "-"
+                                                                    + (splitDate[1].length === 1 ? "0" + splitDate[1] : splitDate[1]);
+                                                                allMonths_1 === null || allMonths_1 === void 0 ? void 0 : allMonths_1.push(formattedDate.substring(0, 7));
+                                                                totalCommunities_1.push({ title: c.displayName, creationDate: formattedDate });
+                                                                if (c.countMember <= 3) {
+                                                                    nmb_com_member_3++;
+                                                                }
+                                                                else if (c.countMember <= 5) {
+                                                                    nmb_com_member_5++;
+                                                                }
+                                                                else if (c.countMember <= 10) {
+                                                                    nmb_com_member_10++;
+                                                                }
+                                                                else if (c.countMember <= 20) {
+                                                                    nmb_com_member_20++;
+                                                                }
+                                                                else if (c.countMember <= 30) {
+                                                                    nmb_com_member_30++;
+                                                                }
+                                                                else {
+                                                                    nmb_com_member_31++;
+                                                                }
                                                             }
-                                                            else if (c.countMember <= 5) {
-                                                                nmb_com_member_5++;
+                                                        });
+                                                        // Sort by creation date
+                                                        totalCommunities_1.sort(function (a, b) {
+                                                            var keyA = a.creationDate.split('-').join('');
+                                                            var keyB = b.creationDate.split('-').join('');
+                                                            return parseInt(keyB) - parseInt(keyA);
+                                                        });
+                                                        var communitiesPerMonth_1 = [];
+                                                        allMonths_1 === null || allMonths_1 === void 0 ? void 0 : allMonths_1.forEach(function (e) { communitiesPerMonth_1[e] = communitiesPerMonth_1[e] ? communitiesPerMonth_1[e] + 1 : 1; });
+                                                        // Count duplicates to get the communities created per day
+                                                        var communitiesPerDay_1 = [];
+                                                        totalCommunities_1.forEach(function (community) {
+                                                            communitiesPerDay_1[community.creationDate] = (communitiesPerDay_1[community.creationDate] || 0) + 1;
+                                                        });
+                                                        communitiesPerDay_1 = Object.keys(communitiesPerDay_1).map(function (key) { return [key, communitiesPerDay_1[key]]; });
+                                                        // Filter out community groups by their type to leave mostly departments
+                                                        var filteredR = r.filter(function (item) { return item.groupType[0] !== 'Unified'; });
+                                                        var allDepartments_1 = [];
+                                                        var allDepartmentsB2B_1 = []; // Only depart that have a B2B group
+                                                        var allDepartmentsFinal_1 = []; //Final array that is use
+                                                        filteredR.map(function (s) {
+                                                            var splitS = s.displayName.split("_");
+                                                            if (splitS.length > 1) {
+                                                                if (splitS[2] === "B2B") {
+                                                                    allDepartmentsB2B_1.push("".concat(splitS[1], " - ").concat(s.countMember)); //Create an array of B2B to compare
+                                                                    allDepartmentsFinal_1.push("".concat(splitS[1], " - ").concat(s.countMember)); // B2B are the final group
+                                                                }
+                                                                else {
+                                                                    allDepartments_1.push("".concat(splitS[1], " - ").concat(s.countMember));
+                                                                }
                                                             }
-                                                            else if (c.countMember <= 10) {
-                                                                nmb_com_member_10++;
+                                                        });
+                                                        allDepartments_1.map(function (s) {
+                                                            var splits = s.split("-");
+                                                            if (allDepartmentsB2B_1.find(function (user) { return user.includes(splits[0]); }) === undefined) { // If no b2b group exist for the depart, add the regular group to the final list
+                                                                // console.log(" IN B2B" + splits[0]);
+                                                                allDepartmentsFinal_1.push("".concat(s));
                                                             }
-                                                            else if (c.countMember <= 20) {
-                                                                nmb_com_member_20++;
-                                                            }
-                                                            else if (c.countMember <= 30) {
-                                                                nmb_com_member_30++;
-                                                            }
-                                                            else {
-                                                                nmb_com_member_31++;
-                                                            }
-                                                        }
-                                                    });
-                                                    // Sort by creation date
-                                                    totalCommunities.sort(function (a, b) {
-                                                        var keyA = a.creationDate.split('-').join('');
-                                                        var keyB = b.creationDate.split('-').join('');
-                                                        return parseInt(keyB) - parseInt(keyA);
-                                                    });
-                                                    var communitiesPerMonth = [];
-                                                    allMonths.forEach(function (e) { communitiesPerMonth[e] = communitiesPerMonth[e] ? communitiesPerMonth[e] + 1 : 1; });
-                                                    // Count duplicates to get the communities created per day
-                                                    var communitiesPerDay = [];
-                                                    totalCommunities.forEach(function (community) {
-                                                        communitiesPerDay[community.creationDate] = (communitiesPerDay[community.creationDate] || 0) + 1;
-                                                    });
-                                                    communitiesPerDay = Object.keys(communitiesPerDay).map(function (key) { return [key, communitiesPerDay[key]]; });
-                                                    // Filter out community groups by their type to leave mostly departments
-                                                    var filteredR = r.filter(function (item) { return item.groupType[0] !== 'Unified'; });
-                                                    var allDepartments = [];
-                                                    var allDepartmentsB2B = []; // Only depart that have a B2B group
-                                                    var allDepartmentsFinal = []; //Final array that is use
-                                                    filteredR.map(function (s) {
-                                                        var splitS = s.displayName.split("_");
-                                                        if (splitS.length > 1) {
-                                                            if (splitS[2] === "B2B") {
-                                                                allDepartmentsB2B.push("".concat(splitS[1], " - ").concat(s.countMember)); //Create an array of B2B to compare
-                                                                allDepartmentsFinal.push("".concat(splitS[1], " - ").concat(s.countMember)); // B2B are the final group
-                                                            }
-                                                            else {
-                                                                allDepartments.push("".concat(splitS[1], " - ").concat(s.countMember));
-                                                            }
-                                                        }
-                                                    });
-                                                    allDepartments.map(function (s) {
-                                                        var splits = s.split("-");
-                                                        if (allDepartmentsB2B.find(function (user) { return user.includes(splits[0]); }) === undefined) { // If no b2b group exist for the depart, add the regular group to the final list
-                                                            // console.log(" IN B2B" + splits[0]);
-                                                            allDepartmentsFinal.push("".concat(s));
-                                                        }
-                                                    });
-                                                    // Set the state
-                                                    _this.setState({
-                                                        groupsDelta: filteredR,
-                                                        communityCount: totalCommunities,
-                                                        communitiesPerDay: communitiesPerDay,
-                                                        communitiesPerMonth: communitiesPerMonth,
-                                                        filteredDepartments: allDepartmentsFinal,
-                                                        nmb_com_member_3: nmb_com_member_3,
-                                                        nmb_com_member_5: nmb_com_member_5,
-                                                        nmb_com_member_10: nmb_com_member_10,
-                                                        nmb_com_member_20: nmb_com_member_20,
-                                                        nmb_com_member_30: nmb_com_member_30,
-                                                        nmb_com_member_31: nmb_com_member_31,
-                                                        groupLoading: false,
-                                                    });
+                                                        });
+                                                        // Set the state
+                                                        _this.setState({
+                                                            groupsDelta: filteredR,
+                                                            communityCount: totalCommunities_1,
+                                                            communitiesPerDay: communitiesPerDay_1,
+                                                            communitiesPerMonth: communitiesPerMonth_1,
+                                                            filteredDepartments: allDepartmentsFinal_1,
+                                                            nmb_com_member_3: nmb_com_member_3,
+                                                            nmb_com_member_5: nmb_com_member_5,
+                                                            nmb_com_member_10: nmb_com_member_10,
+                                                            nmb_com_member_20: nmb_com_member_20,
+                                                            nmb_com_member_30: nmb_com_member_30,
+                                                            nmb_com_member_31: nmb_com_member_31,
+                                                            groupLoading: false
+                                                        });
+                                                    }
                                                 }));
                                             })];
                                         case 1:
@@ -791,7 +869,6 @@ var UserStats = /** @class */ (function (_super) {
     };
     // https://stackoverflow.com/a/14966131
     UserStats.prototype.downloadCSV = function (title, data) {
-        console.log("data", data);
         var content = "data:text/csv;charset=utf-8,";
         data.forEach(function (rowArray) {
             var row = rowArray.join(",");
@@ -827,18 +904,21 @@ var UserStats = /** @class */ (function (_super) {
                                     switch (_a.label) {
                                         case 0: return [4 /*yield*/, client.post(this.url, _microsoft_sp_http__WEBPACK_IMPORTED_MODULE_1__.AadHttpClient.configurations.v1, postOptions)
                                                 .then(function (response) {
-                                                return response.json().then((function (r) {
+                                                // return response.json()
+                                                return response.text().then(function (text) { return text ? JSON.parse(text) : null; }).then((function (r) {
                                                     var activeusers = "";
-                                                    r.map(function (c) {
-                                                        activeusers = c.countActiveusers.toString();
-                                                        _this.domainCountActive.length = 0;
-                                                        if ((c.countByDomain !== undefined) && (c.countByDomain !== null)) {
-                                                            _this.domainCountActive = c.countByDomain;
-                                                        }
-                                                    });
-                                                    _this.setState({
-                                                        totalactiveuser: activeusers
-                                                    });
+                                                    if (r !== null) {
+                                                        r.map(function (c) {
+                                                            activeusers = c.countActiveusers.toString();
+                                                            _this.domainCountActive.length = 0;
+                                                            if ((c.countByDomain !== undefined) && (c.countByDomain !== null)) {
+                                                                _this.domainCountActive = c.countByDomain;
+                                                            }
+                                                        });
+                                                        _this.setState({
+                                                            totalactiveuser: activeusers
+                                                        });
+                                                    }
                                                 }));
                                             })];
                                         case 1:
@@ -890,7 +970,24 @@ var UserStats = /** @class */ (function (_super) {
                             communityCount: [],
                             communitiesPerDay: [],
                             communitiesPerMonth: [],
+                            apiGroupData: [],
+                            apiUserData: [],
                             siteStorage: [],
+                            remainingStorage: [],
+                            filteredDepartments: [],
+                            totalactiveuser: "",
+                            nmb_member_per_comm_0: 0,
+                            nmb_member_per_comm_3: 0,
+                            nmb_member_per_comm_5: 0,
+                            nmb_member_per_comm_10: 0,
+                            nmb_member_per_comm_20: 0,
+                            nmb_member_per_comm_21: 0,
+                            nmb_com_member_3: 0,
+                            nmb_com_member_5: 0,
+                            nmb_com_member_10: 0,
+                            nmb_com_member_20: 0,
+                            nmb_com_member_30: 0,
+                            nmb_com_member_31: 0,
                         });
                         return [4 /*yield*/, this.getAadUsers()];
                     case 1:
@@ -950,8 +1047,7 @@ var UserStats = /** @class */ (function (_super) {
             }
         }
         catch (e) {
-            console.log("Error creating CSV");
-            console.log(e);
+            console.log("Error creating CSV", e);
         }
         this.setState({
             countByMonth: monthCount,
@@ -994,11 +1090,13 @@ var UserStats = /** @class */ (function (_super) {
             iconHovered: { color: '#c19c00' },
             rootHovered: { color: '#c19c00' }
         };
-        return (react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].userStats },
-            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null,
+        // const sectionStackTokens: IStackTokens = { childrenGap: '8%'};
+        return (react__WEBPACK_IMPORTED_MODULE_0__.createElement(react__WEBPACK_IMPORTED_MODULE_0__.Fragment, null,
+            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].userStats },
                 react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null,
                     react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null,
                         react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null,
+<<<<<<< HEAD
                             react__WEBPACK_IMPORTED_MODULE_0__.createElement(_fluentui_react__WEBPACK_IMPORTED_MODULE_6__.DatePicker, { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].calendarFieldStyles, placeholder: "Select a date...", ariaLabel: "Select a date", minDate: new Date(2000, 12, 30), maxDate: new Date(), onSelectDate: this.onSelectDate, showGoToToday: true, firstDayOfWeek: _fluentui_react__WEBPACK_IMPORTED_MODULE_7__.DayOfWeek.Sunday, value: new Date(convertedDate) })),
                         react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.userLoading && 'Loading Users...'),
                         react__WEBPACK_IMPORTED_MODULE_0__.createElement(_fluentui_react__WEBPACK_IMPORTED_MODULE_8__.Stack, { horizontal: true, disableShrink: true, horizontalAlign: "space-evenly" },
@@ -1121,6 +1219,131 @@ var UserStats = /** @class */ (function (_super) {
                                 react__WEBPACK_IMPORTED_MODULE_0__.createElement(_fluentui_react__WEBPACK_IMPORTED_MODULE_10__.StackItem, { align: 'center' },
                                     react__WEBPACK_IMPORTED_MODULE_0__.createElement(_fluentui_react__WEBPACK_IMPORTED_MODULE_5__.DefaultButton, { id: "siteStorage", styles: IconStyle, className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].downloadData, iconProps: { iconName: 'CloudDownload' }, onClick: function () { return _this.downloadDataFile('siteStorage'); } }, "Download Site Storage Data")))),
                         react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Modified Date: 05/01/2024"))))));
+=======
+                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null,
+                                react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_5__.DatePicker, { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].calendarFieldStyles, placeholder: "Select a date...", ariaLabel: "Select a date", minDate: new Date(2000, 12, 30), maxDate: new Date(), onSelectDate: this.onSelectDate, showGoToToday: true, firstDayOfWeek: office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_6__.DayOfWeek.Sunday, value: new Date(convertedDate) })),
+                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.userLoading && 'Loading Users...'),
+                            react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_7__.Stack, { horizontal: true, disableShrink: true, horizontalAlign: "space-evenly" },
+                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].statsHolder },
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Total Users:"),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].userCount }, allusercountminus)),
+                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null,
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", { style: { textAlign: 'center' } }, "Breakdown by Month"),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null,
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_8__.DetailsList, { items: this.state.countByMonth ? this.state.countByMonth : testItem, compact: true, columns: testCols }))),
+                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].statsHolder },
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Total active Users"),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("h3", null, "In the last 30 days:"),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].userCount }, this.state.totalactiveuser))),
+                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null, this.state.groupLoading && 'Loading Groups...'),
+                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { style: { marginBottom: '30px' } },
+                                react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_7__.Stack, { horizontal: true, disableShrink: true, horizontalAlign: "space-evenly" },
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].statsHolder },
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Total Communities:"),
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].userCount }, this.state.communityCount.length)),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].statsHolder, style: { width: '400px' } },
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Department count"),
+                                        /**
+                                         * <DetailsList
+                                            items={this.state.groupsDelta ? this.state.groupsDelta : testDepart}
+                                            compact={true}
+                                            columns={departCols}
+                                            />
+                                         */
+                                        this.state.filteredDepartments &&
+                                            this.state.filteredDepartments.map(function (d) {
+                                                return react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].departList, key: d.key }, d);
+                                            })),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_7__.Stack, null,
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { style: { overflowX: 'auto' } },
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Community membership count"),
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("table", null,
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Number of Community Members"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Number of Communities")),
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, "3 or less"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, this.state.nmb_com_member_3)),
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, " 4 to 5"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null,
+                                                        this.state.nmb_com_member_5,
+                                                        " ")),
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, "6 to 10"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null,
+                                                        this.state.nmb_com_member_10,
+                                                        " ")),
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, "11 to 20"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null,
+                                                        this.state.nmb_com_member_20,
+                                                        " ")),
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, "21 to 30"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null,
+                                                        this.state.nmb_com_member_30,
+                                                        " ")),
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null, "31 or more"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("td", null,
+                                                        this.state.nmb_com_member_31,
+                                                        " ")))),
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { style: { overflowX: 'auto' } },
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Members per Community"),
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("table", null,
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Number of Members"),
+                                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Communities Joined"))),
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.getUserperCommunity())))))),
+                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", null,
+                                react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_7__.Stack, { horizontal: true, horizontalAlign: "space-evenly", verticalAlign: "start" },
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { style: { marginBottom: "12px" } },
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Communities Storage Capacity"),
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("table", null,
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null,
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Storage percentage Range"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Number of Communities"))),
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.renderStorageTableRows()))),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { style: { marginBottom: "12px" } },
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "File Count per Community"),
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("table", null,
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null,
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Number of Communities"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Document Count"))),
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.renderFolderTableRows())))),
+                                react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_7__.Stack, { horizontal: true, horizontalAlign: "space-evenly", verticalAlign: "start" },
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { style: { marginBottom: "12px" } },
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Active User Count by Domain"),
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("table", null,
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null,
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Domain"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "User Count"))),
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.renderDomainCountActiveTableRows()))),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { style: { marginBottom: "12px" } },
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", null, "Total User Count by Domain"),
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement("table", null,
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("thead", null,
+                                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("tr", null,
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "Domain"),
+                                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement("th", null, "User Count"))),
+                                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("tbody", null, this.renderDomainCountTableRows()))))),
+                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("br", null),
+                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("div", { className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].sourceFileCard },
+                                react__WEBPACK_IMPORTED_MODULE_0__.createElement("h2", { style: { textAlign: 'center' } }, "Source Files"),
+                                react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_7__.Stack, { horizontal: true, horizontalAlign: "space-evenly", verticalAlign: "center" },
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_9__.StackItem, { align: 'center' },
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_4__.DefaultButton, { id: "UserData", styles: IconStyle, className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].downloadData, iconProps: { iconName: 'CloudDownload' }, onClick: function () { return _this.downloadDataFile('user'); }, disabled: this.state.apiUserData.length === 0 }, "Download User Data")),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_9__.StackItem, { align: 'center' },
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_4__.DefaultButton, { id: "GroupData", styles: IconStyle, className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].downloadData, iconProps: { iconName: 'CloudDownload' }, onClick: function () { return _this.downloadDataFile('group'); }, disabled: this.state.apiGroupData.length === 0 }, "Download Group Data")),
+                                    react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_9__.StackItem, { align: 'center' },
+                                        react__WEBPACK_IMPORTED_MODULE_0__.createElement(office_ui_fabric_react__WEBPACK_IMPORTED_MODULE_4__.DefaultButton, { id: "siteStorage", styles: IconStyle, className: _UserStats_module_scss__WEBPACK_IMPORTED_MODULE_2__["default"].downloadData, iconProps: { iconName: 'CloudDownload' }, onClick: function () { return _this.downloadDataFile('siteStorage'); }, disabled: this.state.siteStorage.length === 0 }, "Download Site Storage Data")))),
+                            react__WEBPACK_IMPORTED_MODULE_0__.createElement("p", null, "Modified Date: 05/01/2024")))))));
+>>>>>>> 2e3f9b1a4d9d1519a25435e9eff5b7f7369c78e9
     };
     return UserStats;
 }(react__WEBPACK_IMPORTED_MODULE_0__.Component));
@@ -1147,6 +1370,7 @@ __webpack_require__.r(__webpack_exports__);
 /* harmony export */   formatMonthYear: () => (/* binding */ formatMonthYear),
 /* harmony export */   formatYear: () => (/* binding */ formatYear)
 /* harmony export */ });
+<<<<<<< HEAD
 /* harmony import */ var tslib__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! tslib */ 1069);
 
 /**
@@ -1161,6 +1385,26 @@ var formatDay = function (date) { return date.getDate().toString(); };
  */
 var formatMonthDayYear = function (date, strings) {
     return strings.months[date.getMonth()] + ' ' + date.getDate() + ', ' + date.getFullYear();
+=======
+__webpack_require__(/*! ./UserStats.module.css */ 4331);
+var styles = {
+    userStats: 'userStats_0214e69f',
+    container: 'container_0214e69f',
+    row: 'row_0214e69f',
+    column: 'column_0214e69f',
+    'ms-Grid': 'ms-Grid_0214e69f',
+    title: 'title_0214e69f',
+    subTitle: 'subTitle_0214e69f',
+    description: 'description_0214e69f',
+    statsHolder: 'statsHolder_0214e69f',
+    userCount: 'userCount_0214e69f',
+    departList: 'departList_0214e69f',
+    button: 'button_0214e69f',
+    label: 'label_0214e69f',
+    calendarFieldStyles: 'calendarFieldStyles_0214e69f',
+    downloadData: 'downloadData_0214e69f',
+    sourceFileCard: 'sourceFileCard_0214e69f'
+>>>>>>> 2e3f9b1a4d9d1519a25435e9eff5b7f7369c78e9
 };
 /**
  * Format date to a month-year string
