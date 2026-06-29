@@ -36,7 +36,7 @@
     "scriptResources": {
       "user-stats-web-part": {
         "type": "path",
-        "path": "user-stats-web-part.js"
+        "path": "user-stats-web-part_1a0f95ff483cc991a708.js"
       },
       "react": {
         "type": "component",
@@ -65,7 +65,7 @@
       },
       "UserStatsWebPartStrings": {
         "type": "path",
-        "path": "UserStatsWebPartStrings_en-us.js"
+        "path": "UserStatsWebPartStrings_en-us_15a24e74e45e6c45df111b601c24612e.js"
       },
       "@microsoft/sp-http": {
         "type": "component",

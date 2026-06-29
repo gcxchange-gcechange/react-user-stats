@@ -133,6 +133,7 @@
   color: white;
   font-size: 19px;
   border-radius: 5px;
+  border-color:#aeadaf;
   justify-content: center!important;
 
   &:hover {
@@ -146,10 +147,11 @@
 }
 
 .sourceFileCard {
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
   height: 150px;
-  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
-  border-radius: 5px;
-  // background: currentColor;
+  // box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  // border-radius: 20px;
+  // margin-top: 20px;
+  // background-color: #f3f3f3!important;
 }
