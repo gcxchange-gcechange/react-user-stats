@@ -1101,7 +1101,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 </div>
             </Stack>
 
-            <Stack horizontal wrap style={{marginTop: '20px'}}  tokens={sectionStackTokens}>
+            <Stack horizontal wrap style={{marginTop: '20px',marginBottom:'20px' }}  tokens={sectionStackTokens}>
             
                   <div style={{ width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
                     <h2>File Count per Community</h2>
@@ -1129,7 +1129,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     </table>
                   </div>
 
-                  <div style={{  width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                  <div style={{  width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD'}}>
                     <h2>Total User Count by Domain</h2>
                     <table>
                       <thead>
