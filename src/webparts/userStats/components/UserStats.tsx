@@ -1118,19 +1118,22 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
 
                   <div style={{  width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
                     <h2>Active User Count by Domain</h2>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Domain</th>
-                          <th>User Count</th>
-                        </tr>
-                      </thead>
-                      <tbody>{this.renderDomainCountActiveTableRows()}</tbody>
-                    </table>
+                    <ScrollablePane style={{ height: 250, position: 'relative' }}>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Domain</th>
+                            <th>User Count</th>
+                          </tr>
+                        </thead>
+                        <tbody>{this.renderDomainCountActiveTableRows()}</tbody>
+                      </table>
+                    </ScrollablePane>
                   </div>
 
                   <div style={{  width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD'}}>
                     <h2>Total User Count by Domain</h2>
+                    <ScrollablePane style={{ height: 250, position: 'relative' }}>
                     <table>
                       <thead>
                         <tr>
@@ -1138,8 +1141,9 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                           <th>User Count</th>
                         </tr>
                       </thead>
-                      <tbody>{this.renderDomainCountTableRows()}</tbody>
+                        <tbody>{this.renderDomainCountTableRows()}</tbody>
                     </table>
+                      </ScrollablePane>
                   </div>
             </Stack>
           
@@ -1149,6 +1153,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
             <Stack  wrap style={{marginBottom:'10px', marginTop:'10px'}} >
                <div style={{backgroundColor: 'white', padding: '10px', borderRadius: '10px', minWidth:'600px',  boxShadow: '5px 5px 17px 1px #ADADAD', marginBottom:'20px'}}>
                   <h2>Department count</h2>
+                  <ScrollablePane style={{ height: 500, position: 'relative' }}>
                   {
                     this.state.filteredDepartments &&
                     this.state.filteredDepartments.map(( d:any ) => {
@@ -1156,12 +1161,13 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     })
 
                   }
-
                   {
                     this.state.filteredDepartments.length === 0 && (
                      <div className={styles.departList}>No Available Data</div>
                   )      
                   }
+                  </ScrollablePane>
+
               </div>
 
               <div  style={{backgroundColor: 'white', padding: '10px', borderRadius: '10px',  minWidth:'600px'}}>
