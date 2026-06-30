@@ -16,12 +16,15 @@ import {
   ScrollablePane,
   IDetailsHeaderProps,
   Sticky,
-  StickyPositionType
+  StickyPositionType,
+  Icon
 }  from '@fluentui/react';
 import styles from './UserStats.module.scss';
 import { IActiveUserCount, IDomainCount, IUser, IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import moment from 'moment';
+// import { ChartControl, ChartType } from '@pnp/spfx-controls-react/lib/ChartControl';
+
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
   // *** replace these ***
@@ -985,6 +988,69 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
     
     const sectionStackTokens: IStackTokens = { childrenGap: '5%'};
 
+//     const data: any = {
+//       labels: [
+//         '3 or less members', '4 to 5 members', '6 to 10 members', '11 to 20 members', '21 to 30 members', '31 or more members'
+//       ],
+//       datasets:
+//       [{
+//         label: 'Number of communities',
+//         data: [
+//           this.state.nmb_com_member_3 ?? 0,
+//           this.state.nmb_com_member_5 ?? 0,
+//           this.state.nmb_com_member_10 ?? 0,
+//           this.state.nmb_com_member_20 ?? 0,
+//           this.state.nmb_com_member_30 ?? 0,
+//           this.state.nmb_com_member_31 ?? 0
+//         ],
+//         backgroundColor:
+//           [
+//             "#0078d4",
+//             "#0078d4",
+//             "#0078d4",
+//             "#0078d4",
+//             "#0078d4",
+//             "#0078d4",
+//           ]
+//       }]
+//   };
+//  const options: any = {
+//   indexAxis: "y",
+//   responsive: true,
+//   maintainAspectRatio: false,
+//   datasets: {
+//     bar: {
+//       categoryPercentage: 0.7, // space between categories (rows)
+//       barPercentage: 0.8       // thickness of each bar
+//     }
+//   },
+//   plugins: {
+//     legend: {
+//       display: false,
+//       labels: {
+//         font: {
+//           size: 18
+//         },
+//       }
+//     },
+//     tooltip: {
+//       enabled: true
+//     }
+//   },
+
+//   scales: {
+//     x: {
+//       beginAtZero: true,
+//     },
+//     y: {
+//       ticks: {
+//         autoSkip: false,
+//       }
+//     }
+//   }
+// };
+
+   
     return (
        <div className={ styles.userStats } style={{backgroundColor: '#f3f3f3', borderRadius: '20px', padding:'20px'}}>
         <Stack>
@@ -1018,32 +1084,69 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
           <StackItem grow={2}>
           
             <Stack wrap horizontal tokens={sectionStackTokens} style={{marginBottom:'10px', marginTop:'10px'}} >
-              <div style={{height:'200px', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+
+              <Stack horizontal style={{height:'200px', width:'26%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <StackItem>
+                    <Icon iconName={'contact'} style={{color: 'rgb(16 88 143)', fontSize: '40px', backgroundColor: 'rgb(0, 120, 212,0.5)', borderRadius: '50%', padding: '10px',marginRight:'40px', marginTop:'20px' }}/>
+                </StackItem>
+                <StackItem grow={2}>
+                  <h2>Users</h2>
+                  <Text variant={'mega'}  style={{color: 'rgb(16 88 143)'}}>{allusercountminus}</Text >
+                </StackItem>
+              </Stack>
+              {/* <div style={{height:'200px', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <Icon iconName={'group'} style={{color: 'blue', fontSize: '24px'}}/>
                 <h2>Users</h2>
                 <Text variant={'mega'}>{allusercountminus}</Text >
-              </div>
+              </div> */}
 
-              <div style={{height:'200px', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <Stack horizontal style={{height:'200px', width:'27%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <StackItem>
+                    <Icon iconName={'userFollowed'} style={{color: 'rgb(53, 116, 74)', fontSize: '40px', backgroundColor: 'rgba(111, 182, 135, 0.94)', borderRadius: '50%', padding: '10px',marginRight:'40px', marginTop:'20px' }}/>
+                </StackItem>
+                <StackItem grow={2}>
+                  <h2>Active Users</h2>
+                  <Text variant={'mega'}  style={{color: 'rgb(53, 116, 74)'}}>{this.state.totalactiveuser !== "" ? this.state.totalactiveuser : 0}</Text> 
+                  <p style={{marginTop:'0'}}>In the last 30 days</p>
+                </StackItem>
+              </Stack>
+
+              {/* <div style={{height:'200px', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
                 <Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
                   <h2>Active Users</h2>
                   <Text variant={'medium'}>In the last 30 days</Text>
                 </Stack>
                 <Text variant={'mega'}>{this.state.totalactiveuser !== "" ? this.state.totalactiveuser : 0}</Text> 
-              </div>
+              </div> */}
 
-              <div style={{height:'200px', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }} >
+               <Stack horizontal style={{height:'200px', width:'26%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <StackItem>
+                    <Icon iconName={'group'} style={{color: 'rgb(52, 44, 102)', fontSize: '40px', backgroundColor: 'rgba(154, 145, 214, 0.97)', borderRadius: '50%', padding: '10px',marginRight:'40px', marginTop:'20px' }}/>
+                </StackItem>
+                <StackItem grow={2}>
+                  <h2>Communities</h2>
+                  <Text variant={'mega'} style={{color: 'rgb(52, 44, 102)'}}>{this.state.communityCount.length}</Text>
+                </StackItem>
+              </Stack>
+
+              {/* <div style={{height:'200px', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }} >
                 <h2>Communities</h2>
                 <Text variant={'mega'}>{this.state.communityCount.length}</Text>
-              </div>
+              </div> */}
             </Stack>
 
             <Stack horizontal  wrap tokens={sectionStackTokens} style={{marginTop: '20px'}} >
                <div style={{overflowX: 'auto', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
                   <h2>Community membership count</h2>
+                  {/* <ChartControl
+                    type={ChartType.HorizontalBar}
+                    data={data}
+                    options={options}
+                  /> */}
                   <table>
                     <tr>
-                      <th>Number of Community Members</th>
-                      <th>Number of Communities</th>
+                      <th>Number of community members</th>
+                      <th>Number of communities</th>
                     </tr>
                     <tr>
                       <td>3 or less</td>
@@ -1073,12 +1176,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 </div>
 
                 <div style={{overflowX: 'auto', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
-                  <h2>Members per Community</h2>
+                  <h2>Members per community</h2>
                   <table>
                     <thead>
                       <tr>
-                        <th>Number of Members</th>
-                        <th>Communities Joined</th>
+                        <th>Number of members</th>
+                        <th>Communities joined</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1088,12 +1191,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                 </div>
 
                 <div style={{width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
-                  <h2>Communities Storage Capacity</h2>
+                  <h2>Communities storage capacity</h2>
                   <table>
                     <thead>
                       <tr>
-                        <th>Storage percentage Range</th>
-                        <th>Number of Communities</th>
+                        <th>Storage percentage range</th>
+                        <th>Number of communities</th>
                       </tr>
                     </thead>
                       <tbody>{this.renderStorageTableRows()}</tbody>
@@ -1104,12 +1207,12 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
             <Stack horizontal wrap style={{marginTop: '20px',marginBottom:'20px' }}  tokens={sectionStackTokens}>
             
                   <div style={{ width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
-                    <h2>File Count per Community</h2>
+                    <h2>File Count per community</h2>
                     <table>
                       <thead>
                         <tr>
-                          <th>Number of Communities</th>
-                          <th>Document Count</th>
+                          <th>Number of communities</th>
+                          <th>Document count</th>
                         </tr>
                       </thead>
                       <tbody>{this.renderFolderTableRows()}</tbody>
@@ -1117,7 +1220,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </div>
 
                   <div style={{  width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
-                    <h2>Active User Count by Domain</h2>
+                    <h2>Active user count by domain</h2>
                     <ScrollablePane style={{ height: 250, position: 'relative' }}>
                       <table>
                         <thead>
@@ -1132,7 +1235,7 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </div>
 
                   <div style={{  width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD'}}>
-                    <h2>Total User Count by Domain</h2>
+                    <h2>Total user count by domain</h2>
                     <ScrollablePane style={{ height: 250, position: 'relative' }}>
                     <table>
                       <thead>
