@@ -114,15 +114,36 @@
   }
 
 
-  table {
-      border-collapse: collapse;
-  }
+  // table {
+  //     border-collapse: collapse;
+  // }
 
-  th, td {
-    width: 30%;
-    padding: 10px;
-    border: 1px solid;
-  }
+  // th, td {
+  //   width: 30%;
+  //   padding: 10px;
+  //   border: 1px solid;
+  //   border-radius: 10px;
+  // }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th {
+  background: rgb(0, 120, 212);
+  color: white;
+  padding: 12px;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 
