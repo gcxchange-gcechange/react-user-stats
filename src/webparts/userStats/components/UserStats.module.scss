@@ -9,10 +9,11 @@
 
 .userStats {
   .container {
-    max-width: 700px;
     margin: 0px ;
     box-shadow: 0 2px 4px 0 rgba(0, 0, 0, 0.2), 0 25px 50px 0 rgba(0, 0, 0, 0.1);
     padding: 20px;
+    width: 100%;
+    max-width: 100%;
    // background-color: '#f3f3f3';
   }
 
@@ -114,15 +115,36 @@
   }
 
 
-  table {
-      border-collapse: collapse;
-  }
+  // table {
+  //     border-collapse: collapse;
+  // }
 
-  th, td {
-    width: 30%;
-    padding: 10px;
-    border: 1px solid;
-  }
+  // th, td {
+  //   width: 30%;
+  //   padding: 10px;
+  //   border: 1px solid;
+  //   border-radius: 10px;
+  // }
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: rgba(255,255,255,0.6);
+  backdrop-filter: blur(10px);
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+th {
+  background: rgb(0, 120, 212);
+  color: white;
+  padding: 12px;
+}
+
+td {
+  padding: 12px;
+  border-bottom: 1px solid rgba(0,0,0,0.05);
 }
 
 
@@ -133,6 +155,7 @@
   color: white;
   font-size: 19px;
   border-radius: 5px;
+  border-color:#aeadaf;
   justify-content: center!important;
 
   &:hover {
@@ -146,10 +169,11 @@
 }
 
 .sourceFileCard {
-  display: flex;
-  flex-direction: column;
+  // display: flex;
+  // flex-direction: column;
   height: 150px;
-  box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
-  border-radius: 5px;
-  // background: currentColor;
+  // box-shadow: rgba(14, 30, 37, 0.12) 0px 2px 4px 0px, rgba(14, 30, 37, 0.32) 0px 2px 16px 0px;
+  // border-radius: 20px;
+  // margin-top: 20px;
+  // background-color: #f3f3f3!important;
 }

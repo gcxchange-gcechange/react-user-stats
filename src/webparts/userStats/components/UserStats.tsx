@@ -9,14 +9,22 @@ import {
   DefaultButton,
   DetailsList,
   IButtonStyles,
-  // IStackTokens,
+  IStackTokens,
+  Text,
   Stack,
-  StackItem
+  StackItem,
+  ScrollablePane,
+  IDetailsHeaderProps,
+  Sticky,
+  StickyPositionType,
+  Icon
 }  from '@fluentui/react';
 import styles from './UserStats.module.scss';
 import { IActiveUserCount, IDomainCount, IUser, IUserStatsProps } from './IUserStatsProps';
 import { IUserStatsState } from './IUserStatsState';
 import moment from 'moment';
+// import { ChartControl, ChartType } from '@pnp/spfx-controls-react/lib/ChartControl';
+
 
 export default class UserStats extends React.Component<IUserStatsProps, IUserStatsState> {
   // *** replace these ***
@@ -246,7 +254,17 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
   }
 
   public renderDomainCountTableRows(): string | JSX.Element {
-      const rowData = this.domainCount.sort((a,b) => a.domain.toLowerCase().localeCompare(b.domain.toLowerCase())).map((row: IDomainCount) => {
+
+    if (this.domainCount.length === 0 ) {
+      return (
+         <tr>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+      )
+    }
+
+    const rowData = this.domainCount.sort((a,b) => a.domain.toLowerCase().localeCompare(b.domain.toLowerCase())).map((row: IDomainCount):JSX.Element => {
       return (
           <tr key={row.domain}>
             <td>{row.domain ? row.domain: "n/a"}</td>
@@ -255,10 +273,22 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       )
     });
 
-    return (<>{rowData}</>);
+    return (<>{rowData}</>)
+
+  
   }
 
   public renderDomainCountActiveTableRows(): string | JSX.Element {
+
+    if (this.domainCountActive.length === 0 ) {
+      return (
+         <tr>
+            <td>0</td>
+            <td>0</td>
+          </tr>
+      )
+    }
+
     const rowData = this.domainCountActive.sort((a,b) => a.domain.toLowerCase().localeCompare(b.domain.toLowerCase())).map((row: IDomainCount) => {
     return (
         <tr key={row.domain}>
@@ -956,85 +986,167 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
       rootHovered: { color: '#c19c00'}
     }
     
-    // const sectionStackTokens: IStackTokens = { childrenGap: '8%'};
+    const sectionStackTokens: IStackTokens = { childrenGap: '5%'};
 
+//     const data: any = {
+//       labels: [
+//         '3 or less members', '4 to 5 members', '6 to 10 members', '11 to 20 members', '21 to 30 members', '31 or more members'
+//       ],
+//       datasets:
+//       [{
+//         label: 'Number of communities',
+//         data: [
+//           this.state.nmb_com_member_3 ?? 0,
+//           this.state.nmb_com_member_5 ?? 0,
+//           this.state.nmb_com_member_10 ?? 0,
+//           this.state.nmb_com_member_20 ?? 0,
+//           this.state.nmb_com_member_30 ?? 0,
+//           this.state.nmb_com_member_31 ?? 0
+//         ],
+//         backgroundColor:
+//           [
+//             "#0078d4",
+//             "#0078d4",
+//             "#0078d4",
+//             "#0078d4",
+//             "#0078d4",
+//             "#0078d4",
+//           ]
+//       }]
+//   };
+//  const options: any = {
+//   indexAxis: "y",
+//   responsive: true,
+//   maintainAspectRatio: false,
+//   datasets: {
+//     bar: {
+//       categoryPercentage: 0.7, // space between categories (rows)
+//       barPercentage: 0.8       // thickness of each bar
+//     }
+//   },
+//   plugins: {
+//     legend: {
+//       display: false,
+//       labels: {
+//         font: {
+//           size: 18
+//         },
+//       }
+//     },
+//     tooltip: {
+//       enabled: true
+//     }
+//   },
 
+//   scales: {
+//     x: {
+//       beginAtZero: true,
+//     },
+//     y: {
+//       ticks: {
+//         autoSkip: false,
+//       }
+//     }
+//   }
+// };
 
+   
     return (
-<>
-      <div className={ styles.userStats }>
-        <div>
-          <div>
-            <div>
-              <div>
-                <DatePicker
-                  className = {styles.calendarFieldStyles}
-                  placeholder="Select a date..."
-                  ariaLabel="Select a date"
-                  minDate={new Date(2000,12,30)}
-                  maxDate={new Date()}
-                  onSelectDate={this.onSelectDate}
-                  showGoToToday= {true}
-                  firstDayOfWeek={DayOfWeek.Sunday}
-                  value={new Date(convertedDate)}
-                />
-              </div>
-              <div>
-                {this.state.userLoading && 'Loading Users...'}
-              </div>
-              <Stack horizontal disableShrink horizontalAlign="space-evenly">
-                <div className={styles.statsHolder}>
-                  <h2>Total Users:</h2>
-                  <div className={styles.userCount}>{allusercountminus}</div>
-                </div>
-                <div>
-                  <h2 style={{textAlign:'center'}}>Breakdown by Month</h2>
-                  <div>
-                    <DetailsList
-                      items={this.state.countByMonth ?  this.state.countByMonth : testItem}
-                      compact={true}
-                      columns={testCols}
-                    />
-                  </div>
-                </div>
-                <div className={styles.statsHolder}>
-                  <h2>Total active Users</h2><h3>In the last 30 days:</h3>
-                  <div className={styles.userCount}>{this.state.totalactiveuser}</div>
-                </div>
-              </Stack>
-              <div>
-                {this.state.groupLoading && 'Loading Groups...'}
-              </div>
-              <div style={{marginBottom: '30px'}}>
-              <Stack horizontal disableShrink horizontalAlign="space-evenly" >
-                <div className={styles.statsHolder}>
-                  <h2>Total Communities:</h2>
-                  <div className={styles.userCount}>{this.state.communityCount.length}</div>
-                </div>
-                <div className={styles.statsHolder} style={{width: '400px'}}>
-                  <h2>Department count</h2>
-                  {
-                    /**
-                     * <DetailsList
-                        items={this.state.groupsDelta ? this.state.groupsDelta : testDepart}
-                        compact={true}
-                        columns={departCols}
-                        />
-                     */
-                    this.state.filteredDepartments &&
-                    this.state.filteredDepartments.map(( d:any ) => {
-                      return <div className={styles.departList} key={d.key}>{d}</div>
-                    })
+       <div className={ styles.userStats } style={{backgroundColor: '#f3f3f3', borderRadius: '20px', padding:'20px'}}>
+        <Stack>
+            <DatePicker
+              className = {styles.calendarFieldStyles}
+              styles={{
+                textField: {
+                  '.ms-TextField-fieldGroup' : {
+                    borderColor: 'white',
+                    borderRadius: '8px',
+                    fontSize: '18px'
                   }
-                </div>
-                <Stack >
-                <div style={{overflowX: 'auto'}}>
-                  <h2>Community membership count</h2>
+                },
+                icon: {
+                  fontSize: '18px'
+                }
+              }}
+              placeholder="Select a date..."
+              ariaLabel="Select a date"
+              minDate={new Date(2000,12,30)}
+              maxDate={new Date()}
+              onSelectDate={this.onSelectDate}
+              showGoToToday= {true}
+              firstDayOfWeek={DayOfWeek.Sunday}
+              value={new Date(convertedDate)}
+            />
+        </Stack>
 
+        <Stack horizontal wrap style={{marginBottom:'10px', marginTop:'10px'}}>
+          {/* column one  */}
+          <StackItem grow={2}>
+          
+            <Stack wrap horizontal tokens={sectionStackTokens} style={{marginBottom:'10px', marginTop:'10px'}} >
+
+              <Stack horizontal style={{height:'200px', width:'26%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <StackItem>
+                    <Icon iconName={'contact'} style={{color: 'rgb(16 88 143)', fontSize: '40px', backgroundColor: 'rgb(0, 120, 212,0.5)', borderRadius: '50%', padding: '10px',marginRight:'40px', marginTop:'20px' }}/>
+                </StackItem>
+                <StackItem grow={2}>
+                  <h2>Users</h2>
+                  <Text variant={'mega'}  style={{color: 'rgb(16 88 143)'}}>{allusercountminus}</Text >
+                </StackItem>
+              </Stack>
+              {/* <div style={{height:'200px', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <Icon iconName={'group'} style={{color: 'blue', fontSize: '24px'}}/>
+                <h2>Users</h2>
+                <Text variant={'mega'}>{allusercountminus}</Text >
+              </div> */}
+
+                <Stack horizontal style={{height:'200px', width:'27%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <StackItem>
+                    <Icon iconName={'userFollowed'} style={{color: 'rgb(53, 116, 74)', fontSize: '40px', backgroundColor: 'rgba(111, 182, 135, 0.94)', borderRadius: '50%', padding: '10px',marginRight:'40px', marginTop:'20px' }}/>
+                </StackItem>
+                <StackItem grow={2}>
+                  <h2>Active Users</h2>
+                  <Text variant={'mega'}  style={{color: 'rgb(53, 116, 74)'}}>{this.state.totalactiveuser !== "" ? this.state.totalactiveuser : 0}</Text> 
+                  <p style={{marginTop:'0'}}>In the last 30 days</p>
+                </StackItem>
+              </Stack>
+
+              {/* <div style={{height:'200px', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <Stack horizontal horizontalAlign='space-between' verticalAlign='center'>
+                  <h2>Active Users</h2>
+                  <Text variant={'medium'}>In the last 30 days</Text>
+                </Stack>
+                <Text variant={'mega'}>{this.state.totalactiveuser !== "" ? this.state.totalactiveuser : 0}</Text> 
+              </div> */}
+
+               <Stack horizontal style={{height:'200px', width:'26%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                <StackItem>
+                    <Icon iconName={'group'} style={{color: 'rgb(52, 44, 102)', fontSize: '40px', backgroundColor: 'rgba(154, 145, 214, 0.97)', borderRadius: '50%', padding: '10px',marginRight:'40px', marginTop:'20px' }}/>
+                </StackItem>
+                <StackItem grow={2}>
+                  <h2>Communities</h2>
+                  <Text variant={'mega'} style={{color: 'rgb(52, 44, 102)'}}>{this.state.communityCount.length}</Text>
+                </StackItem>
+              </Stack>
+
+              {/* <div style={{height:'200px', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }} >
+                <h2>Communities</h2>
+                <Text variant={'mega'}>{this.state.communityCount.length}</Text>
+              </div> */}
+            </Stack>
+
+            <Stack horizontal  wrap tokens={sectionStackTokens} style={{marginTop: '20px'}} >
+               <div style={{overflowX: 'auto', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                  <h2>Community membership count</h2>
+                  {/* <ChartControl
+                    type={ChartType.HorizontalBar}
+                    data={data}
+                    options={options}
+                  /> */}
                   <table>
                     <tr>
-                      <th>Number of Community Members</th>
-                      <th>Number of Communities</th>
+                      <th>Number of community members</th>
+                      <th>Number of communities</th>
                     </tr>
                     <tr>
                       <td>3 or less</td>
@@ -1062,13 +1174,14 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                     </tr>
                   </table>
                 </div>
-                <div style={{overflowX: 'auto'}}>
-                  <h2>Members per Community</h2>
+
+                <div style={{overflowX: 'auto', width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                  <h2>Members per community</h2>
                   <table>
                     <thead>
                       <tr>
-                        <th>Number of Members</th>
-                        <th>Communities Joined</th>
+                        <th>Number of members</th>
+                        <th>Communities joined</th>
                       </tr>
                     </thead>
                     <tbody>
@@ -1077,42 +1190,53 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                   </table>
                 </div>
 
-                </Stack>
-              </Stack>
-              </div>
-
-              <div >
-                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="start" >
-                  <div style={{marginBottom: "12px"}}>
-                    <h2>Communities Storage Capacity</h2>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Storage percentage Range</th>
-                          <th>Number of Communities</th>
-                        </tr>
-                      </thead>
+                <div style={{width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                  <h2>Communities storage capacity</h2>
+                  <table>
+                    <thead>
+                      <tr>
+                        <th>Storage percentage range</th>
+                        <th>Number of communities</th>
+                      </tr>
+                    </thead>
                       <tbody>{this.renderStorageTableRows()}</tbody>
-                    </table>
-                  </div>
+                  </table>
+                </div>
+            </Stack>
 
-                  <div style={{marginBottom: "12px"}}>
-                    <h2>File Count per Community</h2>
+            <Stack horizontal wrap style={{marginTop: '20px',marginBottom:'20px' }}  tokens={sectionStackTokens}>
+            
+                  <div style={{ width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                    <h2>File Count per community</h2>
                     <table>
                       <thead>
                         <tr>
-                          <th>Number of Communities</th>
-                          <th>Document Count</th>
+                          <th>Number of communities</th>
+                          <th>Document count</th>
                         </tr>
                       </thead>
                       <tbody>{this.renderFolderTableRows()}</tbody>
                     </table>
                   </div>
-                </Stack>
 
-                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="start">
-                  <div style={{marginBottom: "12px"}}>
-                    <h2>Active User Count by Domain</h2>
+                  <div style={{  width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD' }}>
+                    <h2>Active user count by domain</h2>
+                    <ScrollablePane style={{ height: 250, position: 'relative' }}>
+                      <table>
+                        <thead>
+                          <tr>
+                            <th>Domain</th>
+                            <th>User Count</th>
+                          </tr>
+                        </thead>
+                        <tbody>{this.renderDomainCountActiveTableRows()}</tbody>
+                      </table>
+                    </ScrollablePane>
+                  </div>
+
+                  <div style={{  width:'25%', backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD'}}>
+                    <h2>Total user count by domain</h2>
+                    <ScrollablePane style={{ height: 250, position: 'relative' }}>
                     <table>
                       <thead>
                         <tr>
@@ -1120,45 +1244,273 @@ export default class UserStats extends React.Component<IUserStatsProps, IUserSta
                           <th>User Count</th>
                         </tr>
                       </thead>
-                      <tbody>{this.renderDomainCountActiveTableRows()}</tbody>
+                        <tbody>{this.renderDomainCountTableRows()}</tbody>
                     </table>
+                      </ScrollablePane>
                   </div>
+            </Stack>
+          
+          </StackItem>
+            {/* column two  */}
+          <StackItem grow={1} style={{backgroundColor: '#0078D4', padding:'10px', borderRadius: '20px'}}>
+            <Stack  wrap style={{marginBottom:'10px', marginTop:'10px'}} >
+               <div style={{backgroundColor: 'white', padding: '10px', borderRadius: '10px', minWidth:'600px',  boxShadow: '5px 5px 17px 1px #ADADAD', marginBottom:'20px'}}>
+                  <h2>Department count</h2>
+                  <ScrollablePane style={{ height: 500, position: 'relative' }}>
+                  {
+                    this.state.filteredDepartments &&
+                    this.state.filteredDepartments.map(( d:any ) => {
+                      return <div className={styles.departList} key={d.key}>{d}</div>
+                    })
 
-                  <div style={{marginBottom: "12px"}}>
-                    <h2>Total User Count by Domain</h2>
-                    <table>
-                      <thead>
-                        <tr>
-                          <th>Domain</th>
-                          <th>User Count</th>
-                        </tr>
-                      </thead>
-                      <tbody>{this.renderDomainCountTableRows()}</tbody>
-                    </table>
-                  </div>
-                </Stack>
+                  }
+                  {
+                    this.state.filteredDepartments.length === 0 && (
+                     <div className={styles.departList}>No Available Data</div>
+                  )      
+                  }
+                  </ScrollablePane>
+
               </div>
-              <br />
-              <div className={styles.sourceFileCard}>
-                <h2 style={{textAlign:'center'}}>Source Files</h2>
-                <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
-                  <StackItem align='center' >
-                    <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('user')} disabled={this.state.apiUserData.length === 0}>Download User Data</DefaultButton>
-                  </StackItem>
-                  <StackItem align='center' >
-                    <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('group')} disabled={this.state.apiGroupData.length === 0}>Download Group Data</DefaultButton>
-                  </StackItem>
-                  <StackItem align='center' >
-                    <DefaultButton id="siteStorage" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('siteStorage')} disabled={this.state.siteStorage.length === 0}>Download Site Storage Data</DefaultButton>
-                  </StackItem>
-                </Stack>
+
+              <div  style={{backgroundColor: 'white', padding: '10px', borderRadius: '10px',  minWidth:'600px'}}>
+                <h2 style={{textAlign:'center'}}>Breakdown by Month</h2>
+                <ScrollablePane style={{ height: 500, position: 'relative' }}>
+                  <DetailsList
+                    items={this.state.countByMonth ?  this.state.countByMonth : testItem}
+                    compact={true}
+                    columns={testCols}
+                    onRenderDetailsHeader={( props?: IDetailsHeaderProps, defaultRender?: any) => (
+                      <Sticky stickyPosition={StickyPositionType.Header}>
+                        {defaultRender?.(props)}
+                      </Sticky>
+                    )}
+                  />  
+                </ScrollablePane>
               </div>
-              <p>Modified Date: 05/01/2024</p>
-            </div>
+            </Stack>
+          </StackItem>
+        </Stack>
+
+        <div style={{  backgroundColor: 'white',  padding: '10px', borderRadius: '10px', boxShadow: '5px 5px 17px 1px #ADADAD', marginTop:'20px' }}>
+          <div className={styles.sourceFileCard}>
+            <h2 style={{textAlign:'center'}}>Source Files</h2>
+            <Stack wrap horizontal horizontalAlign="space-evenly" verticalAlign="center" >
+              <StackItem align='center' >
+                <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('user')} disabled={this.state.apiUserData.length === 0}>Download User Data</DefaultButton>
+              </StackItem>
+              <StackItem align='center' >
+                <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('group')} disabled={this.state.apiGroupData.length === 0}>Download Group Data</DefaultButton>
+              </StackItem>
+              <StackItem align='center' >
+                <DefaultButton id="siteStorage" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('siteStorage')} disabled={this.state.siteStorage.length === 0}>Download Site Storage Data</DefaultButton>
+              </StackItem>
+            </Stack>
           </div>
         </div>
+        <p>Modified Date: 05/01/2024</p>
       </div>
-      </>
     );
+
+    }
   }
-}
+
+
+    // return (
+    //   <div className={ styles.userStats }>
+    //     <div>
+    //       <div>
+    //         <div>
+    //           <div>
+    //             <DatePicker
+    //               className = {styles.calendarFieldStyles}
+    //               placeholder="Select a date..."
+    //               ariaLabel="Select a date"
+    //               minDate={new Date(2000,12,30)}
+    //               maxDate={new Date()}
+    //               onSelectDate={this.onSelectDate}
+    //               showGoToToday= {true}
+    //               firstDayOfWeek={DayOfWeek.Sunday}
+    //               value={new Date(convertedDate)}
+    //             />
+    //           </div>
+    //           <div>
+    //             {this.state.userLoading && 'Loading Users...'}
+    //           </div>
+    //           <Stack horizontal disableShrink horizontalAlign="space-evenly">
+    //             <div className={styles.statsHolder}>
+    //               <h2>Total Users:</h2>
+    //               <div className={styles.userCount}>{allusercountminus}</div>
+    //             </div>
+    //             <div>
+    //               <h2 style={{textAlign:'center'}}>Breakdown by Month</h2>
+    //               <div>
+    //                 <DetailsList
+    //                   items={this.state.countByMonth ?  this.state.countByMonth : testItem}
+    //                   compact={true}
+    //                   columns={testCols}
+    //                 />
+    //               </div>
+    //             </div>
+    //             <div className={styles.statsHolder}>
+    //               <h2>Total active Users</h2><h3>In the last 30 days:</h3>
+    //               <div className={styles.userCount}>{this.state.totalactiveuser}</div>
+    //             </div>
+    //           </Stack>
+    //           <div>
+    //             {this.state.groupLoading && 'Loading Groups...'}
+    //           </div>
+    //           <div style={{marginBottom: '30px'}}>
+    //           <Stack horizontal disableShrink horizontalAlign="space-evenly" >
+    //             <div className={styles.statsHolder}>
+    //               <h2>Total Communities:</h2>
+    //               <div className={styles.userCount}>{this.state.communityCount.length}</div>
+    //             </div>
+    //             <div className={styles.statsHolder} style={{width: '400px'}}>
+    //               <h2>Department count</h2>
+    //               {
+    //                 /**
+    //                  * <DetailsList
+    //                     items={this.state.groupsDelta ? this.state.groupsDelta : testDepart}
+    //                     compact={true}
+    //                     columns={departCols}
+    //                     />
+    //                  */
+    //                 this.state.filteredDepartments &&
+    //                 this.state.filteredDepartments.map(( d:any ) => {
+    //                   return <div className={styles.departList} key={d.key}>{d}</div>
+    //                 })
+    //               }
+    //             </div>
+    //             <Stack >
+    //             <div style={{overflowX: 'auto'}}>
+    //               <h2>Community membership count</h2>
+
+    //               <table>
+    //                 <tr>
+    //                   <th>Number of Community Members</th>
+    //                   <th>Number of Communities</th>
+    //                 </tr>
+    //                 <tr>
+    //                   <td>3 or less</td>
+    //                   <td>{this.state.nmb_com_member_3}</td>
+    //                 </tr>
+    //                 <tr>
+    //                   <td> 4 to 5</td>
+    //                   <td>{this.state.nmb_com_member_5} </td>
+    //                 </tr>
+    //                 <tr>
+    //                   <td>6 to 10</td>
+    //                   <td>{this.state.nmb_com_member_10} </td>
+    //                 </tr>
+    //                 <tr>
+    //                   <td>11 to 20</td>
+    //                   <td>{this.state.nmb_com_member_20} </td>
+    //                 </tr>
+    //                 <tr>
+    //                   <td>21 to 30</td>
+    //                   <td>{this.state.nmb_com_member_30} </td>
+    //                 </tr>
+    //                 <tr>
+    //                   <td>31 or more</td>
+    //                   <td>{this.state.nmb_com_member_31} </td>
+    //                 </tr>
+    //               </table>
+    //             </div>
+    //             <div style={{overflowX: 'auto'}}>
+    //               <h2>Members per Community</h2>
+    //               <table>
+    //                 <thead>
+    //                   <tr>
+    //                     <th>Number of Members</th>
+    //                     <th>Communities Joined</th>
+    //                   </tr>
+    //                 </thead>
+    //                 <tbody>
+    //                   {this.getUserperCommunity()}
+    //                 </tbody>
+    //               </table>
+    //             </div>
+
+    //             </Stack>
+    //           </Stack>
+    //           </div>
+
+    //           <div >
+    //             <Stack horizontal horizontalAlign="space-evenly" verticalAlign="start" >
+    //               <div style={{marginBottom: "12px"}}>
+    //                 <h2>Communities Storage Capacity</h2>
+    //                 <table>
+    //                   <thead>
+    //                     <tr>
+    //                       <th>Storage percentage Range</th>
+    //                       <th>Number of Communities</th>
+    //                     </tr>
+    //                   </thead>
+    //                   <tbody>{this.renderStorageTableRows()}</tbody>
+    //                 </table>
+    //               </div>
+
+    //               <div style={{marginBottom: "12px"}}>
+    //                 <h2>File Count per Community</h2>
+    //                 <table>
+    //                   <thead>
+    //                     <tr>
+    //                       <th>Number of Communities</th>
+    //                       <th>Document Count</th>
+    //                     </tr>
+    //                   </thead>
+    //                   <tbody>{this.renderFolderTableRows()}</tbody>
+    //                 </table>
+    //               </div>
+    //             </Stack>
+
+    //             <Stack horizontal horizontalAlign="space-evenly" verticalAlign="start">
+    //               <div style={{marginBottom: "12px"}}>
+    //                 <h2>Active User Count by Domain</h2>
+    //                 <table>
+    //                   <thead>
+    //                     <tr>
+    //                       <th>Domain</th>
+    //                       <th>User Count</th>
+    //                     </tr>
+    //                   </thead>
+    //                   <tbody>{this.renderDomainCountActiveTableRows()}</tbody>
+    //                 </table>
+    //               </div>
+
+    //               <div style={{marginBottom: "12px"}}>
+    //                 <h2>Total User Count by Domain</h2>
+    //                 <table>
+    //                   <thead>
+    //                     <tr>
+    //                       <th>Domain</th>
+    //                       <th>User Count</th>
+    //                     </tr>
+    //                   </thead>
+    //                   <tbody>{this.renderDomainCountTableRows()}</tbody>
+    //                 </table>
+    //               </div>
+    //             </Stack>
+    //           </div>
+    //           <br />
+    //           <div className={styles.sourceFileCard}>
+    //             <h2 style={{textAlign:'center'}}>Source Files</h2>
+    //             <Stack horizontal horizontalAlign="space-evenly" verticalAlign="center" >
+    //               <StackItem align='center' >
+    //                 <DefaultButton id="UserData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('user')} disabled={this.state.apiUserData.length === 0}>Download User Data</DefaultButton>
+    //               </StackItem>
+    //               <StackItem align='center' >
+    //                 <DefaultButton id="GroupData" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('group')} disabled={this.state.apiGroupData.length === 0}>Download Group Data</DefaultButton>
+    //               </StackItem>
+    //               <StackItem align='center' >
+    //                 <DefaultButton id="siteStorage" styles={IconStyle} className={styles.downloadData} iconProps={{ iconName: 'CloudDownload' }} onClick={() => this.downloadDataFile('siteStorage')} disabled={this.state.siteStorage.length === 0}>Download Site Storage Data</DefaultButton>
+    //               </StackItem>
+    //             </Stack>
+    //           </div>
+    //           <p>Modified Date: 05/01/2024</p>
+    //         </div>
+    //       </div>
+    //     </div>
+    //   </div> 
+    // );
